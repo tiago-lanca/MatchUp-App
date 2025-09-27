@@ -1,8 +1,10 @@
+<img src="./Documentos/Imagens/iade_ue.jpg" alt="IADE - Universidade Europeia" width="600" height="200" />
+
 # Proposta Inicial do Projeto - MatchUp
 ## 1. Identificação
 - **Grupo**: TG07 (Tiago Lança)
 - **Nome do Projeto**: MatchUp
-- **Github**: <a href="(https://github.com/tiago-lanca/MatchUp-Tiago-Lanca" target="_blank">Link MatchUp - Tiago Lança</a>
+- **Github**: <a href="https://github.com/tiago-lanca/MatchUp-Tiago-Lanca" target="_blank">Link MatchUp - Tiago Lança</a>
 
 ### Palavras-chave: Desporto, eventos, convivio, grupos, amigos, mobile.
 
