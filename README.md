@@ -58,7 +58,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 
 
 ## 9. Planeamento e Calendarização
-![Planeamento e Calendarização em gráfico](./Documentos/imagens/Online Gantt 20250927.png)
+![Planeamento e Calendarização em gráfico](./Documentos/Imagens/OnlineGantt20250927.png)
 
 
 ## 10. Conclusão
