@@ -1,4 +1,4 @@
-<img src="./Documentos/Imagens/iade_ue.jpg" alt="IADE - Universidade Europeia" width="600" height="200" />
+<img src="../Imagens/iade_ue.jpg" alt="IADE - Universidade Europeia" width="600" height="200" />
 
 # Proposta Inicial do Projeto - MatchUp
 ## 1. Identificação
@@ -58,7 +58,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 
 
 ## 9. Planeamento e Calendarização
-![Planeamento e Calendarização em gráfico](./Documentos/Imagens/OnlineGantt20250927.png)
+![Planeamento e Calendarização em gráfico](../Imagens/OnlineGantt20250927.png)
 
 
 ## 10. Conclusão
