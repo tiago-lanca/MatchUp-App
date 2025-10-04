@@ -28,14 +28,14 @@ Permite criar eventos de desportos entre amigos e aberto a que utilizadores se j
 Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que gostam de fazer desporto e pela prática do exercicio fisico e tambem pessoas introvertidas com poucos amigos, tendo a possibilidade de imiscuir num grupo promovendo assim a socialização e o exercicio fisico e combater o sedentarismo.
 
 
-## 6. Pesquisa de Mercado
+## 5. Pesquisa de Mercado
 1. Footy Addics - Apenas permite o eventos de futebol e não mostra a localização em formato maps para procurar por eventos.
 2. Footinho - Apenas permite o eventos de futebol e não mostra os eventos em formato maps.
 3. Chega+ - Tem bastantes funcionalidades como avaliações dos membros do grupo, gestão financeira do grupo, mas não mostra os eventos em formato maps.
 4. Mingle Sport - Não permite procura efetiva por localização em maps por eventos, obriga a juntar a uma equipa por link ou codigo ou a criar uma equipa.
 
 
-## 7. Três Guiões de Teste na Aplicação
+## 6. Três Guiões de Teste na Aplicação
 1. Uma pessoa com interesse no exercicio fisico e desporto mas introvertida sem grupos de amigos pode registar uma conta na aplicação e procurar por eventos filtrando por género, tipo de desporto e localização etc, juntando-se ao grupo permite então criar novas amizades e promover o convivio e a prática do exercicio fisico, facilitando a procurar por novos grupos de amigos.
 2. Um grupo de amigos porém com poucas pessoas, insuficientes para realizar uma especifica atividade desportiva, por exemplo, um grupo de amigos de 6 pessoas com interesse em jogar um jogo amigável de futsal, que por norma joga-se 5 contra 5 (total 10 jogadores), portanto precisando de encontrar mais 4 pessoas para se realizar o evento.
 
@@ -46,7 +46,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 3. Uma pessoa nova que chegou à cidade e procura integrar-se socialmente através do desporto, com a MatchUp consegue criar conta e procurar desportos em grupo na zona em questão, permitindo não só manter uma rotina saudável de exercicio fisico como tambem conhecer novas pessoas na nova cidade a que se mudou combatendo o isolamento social e a integração na nova comunidade local.
 
 
-## 8. Descrição da Solução a Implementar
+## 7. Descrição da Solução a Implementar
 1. A solução será implementada principalmente com o desenvolvimento de uma aplicação mobile interativa e de fácil uso. Terá uma base de dados onde guardará todas as informações necessárias para o uso da aplicação e uma API como ligação da aplicação à base de dados.
 
 
@@ -54,7 +54,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 
 3. Como tecnologias a utilizar para o desenvolvimento do projeto será Java para a criação da API com a utilização do IDE IntelliJ ou Visual Studio. Será usado o SQL Management para desenvolver a base de dados e o Android Studio para o desenvolvimento da aplicação mobile usando a framework Jetpack Compose.
 
-## 9. Mockups e Interfaces
+## 8. Mockups e Interfaces
 
 <p align="center">
    <img src="../Imagens/Startup1-portrait.png" alt="Mockup Startup" width="300" height="600">
@@ -62,16 +62,16 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
    <img src="../Imagens/SeeEvents-portrait.png" alt="Mockup See Events" width="300" height="600">
 </p>
 
-## 10. Planeamento e Calendarização
+## 9. Planeamento e Calendarização
 ![Planeamento e Calendarização em gráfico](../Imagens/OnlineGantt20251004.png)
 
 
-## 11. Conclusão
+## 10. Conclusão
 Com a criação desta aplicação, tem-se como principal objetivo facilitar o convivio entre as pessoas, grupos com falta de membros para se realizar uma especifica atividade fisica, uma pessoa introvertida com poucos amigos querendo melhorar a sua vida social e manter uma boa rotina saudavel de desporto, juntamente com uma aplicação interativa e fácil de se usar, bastante prática e uma sistema de localização e maps para facilitar a procura por eventos e uma pesquisa avançada com vários filtros como género, desporto, localidade, etc.
 
 
 
-## 12. Bibliografia
+## 17. Bibliografia
 1. Figma - www.figma.com
 2. Onlinegantt - www.onlinegantt.com
 3. MockUphone - https://mockuphone.com
