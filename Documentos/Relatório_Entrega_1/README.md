@@ -1,4 +1,4 @@
-<img src="../Imagens/iade_ue.jpg" alt="IADE - Universidade Europeia" width="600" height="200" />
+<img src="https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/iade_ue.jpg" alt="IADE - Universidade Europeia" width="600" height="200" />
 
 # Proposta Inicial do Projeto - MatchUp
 ## 1. Identificação
@@ -57,13 +57,13 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 ## 8. Mockups e Interfaces
 
 <p align="center">
-   <img src="../Imagens/Startup1-portrait.png" alt="Mockup Startup" width="300" height="600">
-   <img src="../Imagens/EventsNearby-portrait.png" alt="Mockup Events Nearby" width="300" height="600">
-   <img src="../Imagens/SeeEvents-portrait.png" alt="Mockup See Events" width="300" height="600">
+   <img src="https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/Startup1-portrait.png" alt="Mockup Startup" width="300" height="600">
+   <img src="https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/EventsNearby-portrait.png" alt="Mockup Events Nearby" width="300" height="600">
+   <img src="https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/SeeEvents-portrait.png" alt="Mockup See Events" width="300" height="600">
 </p>
 
 ## 9. Planeamento e Calendarização
-![Planeamento e Calendarização em gráfico](../Imagens/OnlineGantt20251004.png)
+![Planeamento e Calendarização em gráfico](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/OnlineGantt20251004.png)
 
 
 ## 10. Conclusão
