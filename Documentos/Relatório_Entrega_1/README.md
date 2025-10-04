@@ -52,20 +52,26 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 
 2. Como unidades curriculares, contará com a UC de **Programação de Dispositivos Móveis** para o desenvolvimento da aplicação mobile, a UC de **Base de Dados** para o desenvolvimento da própria base de dados da aplicação onde guardará as informações e dados, a UC de **Programação Orientada da Objetos** para o desenvolvimento da API para comunicação entre a base de dados e a aplicação móvel, a UC de **Matemática Discreta** nas funções, condições e cálculos a se usar no código da aplicação e a UC de **Competências Comunicacionais** para desenvolver e melhorar a nossa forma de expressar e apresentar do projeto bem como a nivel de imagem na criação de um video promocional da aplicação e um poster.
 
-3. Requisitos Técnicos para Desenvolvimento do Projeto
-4. Arquitetura do Projeto
-5. Tecnologias a Utilizar
+3. Como tecnologias a utilizar para o desenvolvimento do projeto será Java para a criação da API com a utilização do IDE IntelliJ ou Visual Studio. Será usado o SQL Management para desenvolver a base de dados e o Android Studio para o desenvolvimento da aplicação mobile usando a framework Jetpack Compose.
 
+## 9. Mockups e Interfaces
 
-## 9. Planeamento e Calendarização
+<p align="center">
+   <img src="../Imagens/Startup1-portrait.png" alt="Mockup Startup" width="300" height="600">
+   <img src="../Imagens/EventsNearby-portrait.png" alt="Mockup Events Nearby" width="300" height="600">
+   <img src="../Imagens/SeeEvents-portrait.png" alt="Mockup See Events" width="300" height="600">
+</p>
+
+## 10. Planeamento e Calendarização
 ![Planeamento e Calendarização em gráfico](../Imagens/OnlineGantt20251004.png)
 
 
-## 10. Conclusão
+## 11. Conclusão
 Com a criação desta aplicação, tem-se como principal objetivo facilitar o convivio entre as pessoas, grupos com falta de membros para se realizar uma especifica atividade fisica, uma pessoa introvertida com poucos amigos querendo melhorar a sua vida social e manter uma boa rotina saudavel de desporto, juntamente com uma aplicação interativa e fácil de se usar, bastante prática e uma sistema de localização e maps para facilitar a procura por eventos e uma pesquisa avançada com vários filtros como género, desporto, localidade, etc.
 
 
 
-## 11. Bibliografia
+## 12. Bibliografia
 1. Figma - www.figma.com
 2. Onlinegantt - www.onlinegantt.com
+3. MockUphone - https://mockuphone.com
