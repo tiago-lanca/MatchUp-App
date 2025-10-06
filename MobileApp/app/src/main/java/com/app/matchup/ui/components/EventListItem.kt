@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -37,7 +39,9 @@ fun EventListItem(){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
+            .fillMaxWidth()
             .background(Color(0xFF282828))
+            .padding(horizontal = 10.dp, vertical = 10.dp)
     ){
         Image(
             painter = painterResource(R.drawable.football_icon),
@@ -47,7 +51,9 @@ fun EventListItem(){
                 .height(height = 30.dp)
         )
 
-        Column {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Row {
                 Icon(
                     imageVector = Icons.Filled.LocationOn,
@@ -78,7 +84,7 @@ fun EventListItem(){
             ) {
                 Icon(
                     imageVector = Icons.Filled.Schedule,
-                    contentDescription = "Location Icon",
+                    contentDescription = "Schedule Icon",
                     tint = Color.White
                 )
                 Text(
@@ -88,37 +94,43 @@ fun EventListItem(){
                         .padding(start = 5.dp)
                 )
 
-                Icon(
-                    imageVector = Icons.Filled.Groups,
-                    contentDescription = "Members of the event",
-                    tint = Color.White,
+                Spacer(modifier = Modifier.weight(1f))
+
+                Row (
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(start = 20.dp)
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Green
-                            )
-                        ) {
-                            append("10")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = Color.Green
-                            )
-                        ) {
-                            append("/12")
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(start = 5.dp)
-                )
+                        .padding(end = 20.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Groups,
+                        contentDescription = "Members of the event",
+                        tint = Color.White
+                    )
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Green
+                                )
+                            ) {
+                                append("10")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.Green
+                                )
+                            ) {
+                                append("/12")
+                            }
+                        },
+                        modifier = Modifier
+                            .padding(start = 5.dp)
+                    )
+                }
 
 
             }
