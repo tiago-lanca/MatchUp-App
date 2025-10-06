@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,7 +73,8 @@ fun EventListItem(){
                     Text(
                         text = "Moscavide",
                         color = Color.Gray,
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
+                        lineHeight = 10.sp
                     )
                 }
             }
@@ -131,16 +133,20 @@ fun EventListItem(){
                             .padding(start = 5.dp)
                     )
                 }
-
-
             }
         }
-        Icon(
-            imageVector = Icons.Filled.ChevronRight,
-            contentDescription = "Click to see respective event details",
-            tint = Color.White,
-            modifier = Modifier
-        )
+
+        IconButton(
+            onClick = { },
+            modifier = Modifier.size(24.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ChevronRight,
+                contentDescription = "Click to see respective event details",
+                tint = Color.White,
+                modifier = Modifier
+            )
+        }
     }
 }
 

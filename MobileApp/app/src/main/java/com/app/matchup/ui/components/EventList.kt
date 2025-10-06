@@ -17,6 +17,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +33,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun EventList(){
+    val numberEvents = 5
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -42,7 +46,7 @@ fun EventList(){
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(350.dp)
+                .height(360.dp)
                 .align(Alignment.BottomCenter)
                 .background(
                     color = Color(0xFF282828),
@@ -82,8 +86,17 @@ fun EventList(){
                     }
 
                 }
-                items(5) {
+                items(numberEvents) { index ->
                     EventListItem()
+
+                    if(index < numberEvents - 1) {
+                        HorizontalDivider(
+                            modifier = Modifier,
+                            thickness = DividerDefaults.Thickness,
+                            color = Color.White
+                        )
+                    }
+
                 }
 
             }
