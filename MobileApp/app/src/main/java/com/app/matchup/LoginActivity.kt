@@ -6,25 +6,26 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.app.matchup.ui.components.Events.EventList
+import com.app.matchup.ui.components.Login.LoginScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 
-class MainActivity : ComponentActivity() {
+class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-                EventList()
+
             }
         }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
-fun MainActivityPreview() {
+fun LoginActivityPreview() {
     MatchUpTheme {
-        EventList()
+        LoginScreen()
     }
 }
