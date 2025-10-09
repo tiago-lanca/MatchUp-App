@@ -19,9 +19,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -35,7 +38,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,11 +73,11 @@ fun EventDetails(){
 
             Column {
                 // Row of Event Name and Close Icon
-                Row (
+                Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                ){
+                ) {
                     Text(
                         text = "Event Name",
                         color = Color.White,
@@ -91,7 +97,7 @@ fun EventDetails(){
                 )
 
                 // Row of Location Icon and Address
-                Row (
+                Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(top = 20.dp)
@@ -103,7 +109,7 @@ fun EventDetails(){
                         modifier = Modifier
                             .size(30.dp)
                     )
-                    Column (
+                    Column(
                         modifier = Modifier
                             .padding(start = 10.dp)
                     ) {
@@ -127,7 +133,7 @@ fun EventDetails(){
                 )
 
                 // Row of Date and Hour, and Information Icon
-                Row (
+                Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -152,12 +158,12 @@ fun EventDetails(){
                         modifier = Modifier
                             .fillMaxWidth()
                             .size(30.dp)
-                            .clickable{  }
+                            .clickable { }
                     )
                 }
 
                 // Row of Sport, Genre, Cost and Duration
-                Row (
+                Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -165,50 +171,96 @@ fun EventDetails(){
 
                 ) {
                     // Sport Column
-                    Column (
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        Text(
-                            text = "Sport:",
-                            color = Color.Gray
-                        )
-                        Row (
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(top = 5.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(R.drawable.football_icon),
-                                contentDescription = "Football Icon",
-                                modifier = Modifier
-                                    .size(25.dp)
-                            )
-                            Text(
-                                text = "Football",
-                                color = Color.White,
-                                fontSize = 18.sp,
-                                modifier = Modifier
-                                    .padding(start = 5.dp)
-                            )
-                        }
-                    }
+                    ColumnWithLabel(
+                        label = "Sport:",
+                        imageIcon = "football_icon",
+                        text = "Football",
+                    )
+
                     // Genre Column
-                    Column (
-                        horizontalAlignment = Alignment.Start
+                    ColumnWithLabel(
+                        label = "Genre:",
+                        text = "M",
+                        textColor = Color(0xFF1E90FF),
+                        textFontWeight = FontWeight.Bold
+                    )
+
+                    // Cost Column
+                    ColumnWithLabel(
+                        label = "Cost:",
+                        text = "3€",
+                        textFontSize = 18
+                    )
+
+
+                    // Duration Column
+                    ColumnWithLabel(
+                        label = "Duration:",
+                        text = "90min",
+                    )
+                }
+
+                Row {
+                    Column(
+                        modifier = Modifier
+                            .padding(top = 15.dp)
                     ) {
                         Text(
-                            text = "Genre:",
+                            text = "Members:",
                             color = Color.Gray
                         )
                         Text(
-                            text = "M",
-                            color = Color(0xFF1E90FF),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 30.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Green
+                                    )
+                                ) {
+                                    append("10")
+                                }
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color.Green
+                                    )
+                                ) {
+                                    append(" / 12")
+                                }
+                            }
                         )
+
                     }
                 }
 
+                // TODO() If has no login then disable button
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        colors = ButtonColors(
+                            contentColor = Color.White,
+                            containerColor = Color(0xFF31C848),
+                            disabledContentColor = Color(0xFF31C848),
+                            disabledContainerColor = Color.White
+                        ),
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = "Join Event",
+                            tint = Color.White,
+                            modifier = Modifier.padding(end = 5.dp)
+                        )
+                        Text(
+                            text = "JOIN",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
             }
         }
     }
