@@ -15,7 +15,7 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-
+                LoginScreen()
             }
         }
     }

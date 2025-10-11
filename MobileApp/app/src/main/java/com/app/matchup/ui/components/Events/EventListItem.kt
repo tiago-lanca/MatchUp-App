@@ -1,5 +1,7 @@
 package com.app.matchup.ui.components.Events
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -30,9 +32,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.R
+import com.app.matchup.models.Address
+import com.app.matchup.models.Event
+import com.app.matchup.models.Sport
+import com.app.matchup.models.User
+import com.app.matchup.samples.EventSamples
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EventListItem(){
+fun EventListItem(event: Event){
+
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -63,11 +77,11 @@ fun EventListItem(){
                         .padding(start = 5.dp)
                 ) {
                     Text(
-                        text = "Rua test teste nº10",
+                        text = event.address.street,
                         color = Color.White
                     )
                     Text(
-                        text = "Moscavide",
+                        text = event.address.city,
                         color = Color.Gray,
                         fontSize = 10.sp,
                         lineHeight = 10.sp
@@ -86,7 +100,7 @@ fun EventListItem(){
                     tint = Color.White
                 )
                 Text(
-                    text = "01/12/2025  18:00h",
+                    text = "${event.date.format(dateFormatter)} ${event.date.hour}:${event.date.minute}h",
                     color = Color.White,
                     modifier = Modifier
                         .padding(start = 5.dp)
@@ -146,8 +160,10 @@ fun EventListItem(){
     }
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun EventListItemPreview() {
-    EventListItem()
+    EventListItem(event = EventSamples.createSampleEvent())
 }

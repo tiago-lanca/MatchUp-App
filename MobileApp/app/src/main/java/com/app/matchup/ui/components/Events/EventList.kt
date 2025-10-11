@@ -1,19 +1,21 @@
 package com.app.matchup.ui.components.Events
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -25,10 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.matchup.models.Event
+import com.app.matchup.samples.EventSamples
+import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EventList(){
-    val numberEvents = 5
+fun EventList(eventList: List<Event>) {
+    val numberEvents = eventList.size
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -41,10 +49,10 @@ fun EventList(){
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(360.dp)
+                .heightIn(min = 100.dp, max = 360.dp)
                 .align(Alignment.BottomCenter)
                 .background(
-                    color = Color(0xFF282828),
+                    color = EVENT_BACKGROUND_COLOR,
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
                 .padding(16.dp)
@@ -54,7 +62,9 @@ fun EventList(){
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+
                 item {
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -70,7 +80,7 @@ fun EventList(){
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .background(
-                                    color = Color(0xFF282828),
+                                    color = EVENT_BACKGROUND_COLOR
                                 )
                         )
                         Icon(
@@ -79,29 +89,39 @@ fun EventList(){
                             tint = Color.Gray
                         )
                     }
-
                 }
-                items(numberEvents) { index ->
-                    EventListItem()
-
-                    if(index < numberEvents - 1) {
-                        HorizontalDivider(
-                            modifier = Modifier,
-                            thickness = DividerDefaults.Thickness,
-                            color = Color.White
+                if (eventList.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No events to be shown",
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
                         )
                     }
+                    } else {
+                        itemsIndexed(eventList, key = { _, event -> event.id }) { index, event ->
+                            EventListItem(event)
+
+                            if (index < eventList.lastIndex) {
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    thickness = 1.dp,
+                                    color = Color.Gray.copy(alpha = 0.3f)
+                                )
+                            }
+                        }
 
                 }
-
             }
         }
     }
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun EventListPreview(){
-        EventList()
+        EventList(EventSamples.createSampleListEvents())
 }

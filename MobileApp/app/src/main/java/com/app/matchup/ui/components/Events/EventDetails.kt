@@ -1,5 +1,7 @@
 package com.app.matchup.ui.components.Events
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,10 +37,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.R
+import com.app.matchup.models.Address
+import com.app.matchup.models.Event
+import com.app.matchup.models.Sport
+import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EventDetails(){
+fun EventDetails(event: Event){
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +60,6 @@ fun EventDetails(){
         // Google Maps on the background
 
         // Near Events Section
-        //Todo() Create model Event and fill with data to send here
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -69,8 +80,9 @@ fun EventDetails(){
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
+
                     Text(
-                        text = "Event Name",
+                        text = event.name,
                         color = Color.White,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
@@ -83,7 +95,7 @@ fun EventDetails(){
                 }
 
                 Text(
-                    text = "#123456789",
+                    text = "#${event.id}",
                     color = Color.Gray
                 )
 
@@ -105,12 +117,12 @@ fun EventDetails(){
                             .padding(start = 10.dp)
                     ) {
                         Text(
-                            text = "Rua test test test nº10",
+                            text = event.address.street,
                             color = Color.White,
                             fontSize = 18.sp
                         )
                         Text(
-                            text = "1886-502 Moscavide",
+                            text = "${event.address.zipCode} ${event.address.city}",
                             color = Color.White,
                             fontSize = 18.sp
                         )
@@ -129,12 +141,12 @@ fun EventDetails(){
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "01/12/2025",
+                        text = event.date.format(dateFormatter),
                         color = Color.White,
                         fontSize = 18.sp
                     )
                     Text(
-                        text = "18:00h",
+                        text = "${event.date.hour}h",
                         color = Color.White,
                         fontSize = 18.sp,
                         modifier = Modifier
@@ -143,14 +155,16 @@ fun EventDetails(){
 
 
                     // Only shows if there's notes in that event
-                    Image(
-                        painter = painterResource(R.drawable.information_icon_blue),
-                        contentDescription = "Information Icon",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .size(30.dp)
-                            .clickable { }
-                    )
+                    if(event.notes.isNullOrEmpty()) {
+                        Image(
+                            painter = painterResource(R.drawable.information_icon_blue),
+                            contentDescription = "Information Icon",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .size(30.dp)
+                                .clickable { }
+                        )
+                    }
                 }
 
                 // Row of Sport, Genre, Cost and Duration
@@ -165,13 +179,13 @@ fun EventDetails(){
                     ColumnWithLabel(
                         label = "Sport:",
                         imageIcon = "football_icon",
-                        text = "Football",
+                        text = event.sport.name,
                     )
 
                     // Genre Column
                     ColumnWithLabel(
                         label = "Genre:",
-                        text = "M",
+                        text = event.genre,
                         textColor = Color(0xFF1E90FF),
                         textFontWeight = FontWeight.Bold
                     )
@@ -179,7 +193,7 @@ fun EventDetails(){
                     // Cost Column
                     ColumnWithLabel(
                         label = "Cost:",
-                        text = "3€",
+                        text = "${event.cost.toString()}€",
                         textFontSize = 18
                     )
 
@@ -187,7 +201,7 @@ fun EventDetails(){
                     // Duration Column
                     ColumnWithLabel(
                         label = "Duration:",
-                        text = "90min",
+                        text = "${event.duration}min",
                     )
                 }
 
@@ -258,8 +272,35 @@ fun EventDetails(){
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun EventDetailsPreview(){
-    EventDetails()
+    val user = User(
+        id = UUID.randomUUID(),
+        name = "Tiago Lança",
+        email = "tiagotestest@email.com",
+        passwordHash = "1234"
+    )
+    val event = Event(
+        id = UUID.randomUUID(),
+        name = "Test Event",
+        date = LocalDateTime.now(),
+        address = Address(
+            id = UUID.randomUUID(),
+            street = "Rua dos Testes n10",
+            zipCode = "1886-502",
+            city = "Seixal"
+        ),
+        cost = 3.0,
+        duration = 60,
+        genre = "M",
+        sport = Sport(
+            id = UUID.randomUUID(),
+            name = "Football"
+        ),
+        admin = user,
+        notes = "This is a test event"
+    )
+    EventDetails(event = event)
 }

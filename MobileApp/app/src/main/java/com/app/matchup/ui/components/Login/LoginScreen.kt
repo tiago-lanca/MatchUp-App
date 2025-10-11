@@ -30,6 +30,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
@@ -40,15 +42,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.R
+import com.app.matchup.ui.theme.BACKGROUND_COLOR
+import com.app.matchup.ui.theme.SIGNIN_BUTTON_COLOR
 
 @Composable
 fun LoginScreen() {
     Scaffold(
-        containerColor = Color(0xFF0D0D1B),
+        containerColor = BACKGROUND_COLOR,
 
         bottomBar = {
             BottomAppBar(
-                containerColor = Color(0xFF0D0D1B),
+                containerColor = BACKGROUND_COLOR,
                 contentColor = Color.Gray,
                 tonalElevation = 0.dp,
                 modifier = Modifier
@@ -82,6 +86,7 @@ fun LoginScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                 ) {
+
                     // Logo
                     Image(
                         painter = painterResource(R.drawable.matchup_white),
@@ -111,8 +116,8 @@ fun LoginScreen() {
                 Button(
                     colors = ButtonColors(
                         contentColor = Color.White,
-                        containerColor = Color(0xFF0B7422),
-                        disabledContentColor = Color(0xFF0B7422),
+                        containerColor = SIGNIN_BUTTON_COLOR,
+                        disabledContentColor = SIGNIN_BUTTON_COLOR,
                         disabledContainerColor = Color.White
                     ),
                     onClick = { TODO() },
@@ -146,8 +151,26 @@ fun LoginScreen() {
                 }
             }
         }
+
+        // Little light above the logo
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .size(width = 300.dp, height = 250.dp)
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color(0xFFB0B0B0).copy(alpha = 0.12f),
+                            Color.Transparent
+                        ),
+                        start = Offset(300f, 0f),
+                        end = Offset(0f, 600f)
+                    )
+                )
+        )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
