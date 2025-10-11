@@ -37,6 +37,7 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.samples.EventSamples
+import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -51,7 +52,7 @@ fun EventListItem(event: Event){
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF282828))
+            .background(BACKGROUND_COLOR)
             .padding(horizontal = 10.dp, vertical = 10.dp)
     ){
         Image(
