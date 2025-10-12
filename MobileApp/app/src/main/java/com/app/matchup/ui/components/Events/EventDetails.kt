@@ -42,14 +42,17 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 import java.util.UUID
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EventDetails(event: Event){
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
     Box(
         modifier = Modifier
@@ -117,12 +120,12 @@ fun EventDetails(event: Event){
                             .padding(start = 10.dp)
                     ) {
                         Text(
-                            text = event.address.street,
+                            text = event.address!!.street,
                             color = Color.White,
                             fontSize = 18.sp
                         )
                         Text(
-                            text = "${event.address.zipCode} ${event.address.city}",
+                            text = "${event.address!!.zipCode} ${event.address?.city}",
                             color = Color.White,
                             fontSize = 18.sp
                         )
@@ -141,12 +144,12 @@ fun EventDetails(event: Event){
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = event.date.format(dateFormatter),
+                        text = dateFormatter.format(event.date),
                         color = Color.White,
                         fontSize = 18.sp
                     )
                     Text(
-                        text = "${event.date.hour}h",
+                        text = SimpleDateFormat("HH':'mm'h", Locale.getDefault()).format(event.date),
                         color = Color.White,
                         fontSize = 18.sp,
                         modifier = Modifier
@@ -179,13 +182,13 @@ fun EventDetails(event: Event){
                     ColumnWithLabel(
                         label = "Sport:",
                         imageIcon = "football_icon",
-                        text = event.sport.name,
+                        text = event.sport!!.name,
                     )
 
                     // Genre Column
                     ColumnWithLabel(
                         label = "Genre:",
-                        text = event.genre,
+                        text = event.gender,
                         textColor = Color(0xFF1E90FF),
                         textFontWeight = FontWeight.Bold
                     )
@@ -285,7 +288,7 @@ fun EventDetailsPreview(){
     val event = Event(
         id = UUID.randomUUID(),
         name = "Test Event",
-        date = LocalDateTime.now(),
+        date = Date(),
         address = Address(
             id = UUID.randomUUID(),
             street = "Rua dos Testes n10",
@@ -294,7 +297,7 @@ fun EventDetailsPreview(){
         ),
         cost = 3.0,
         duration = 60,
-        genre = "M",
+        gender = "M",
         sport = Sport(
             id = UUID.randomUUID(),
             name = "Football"

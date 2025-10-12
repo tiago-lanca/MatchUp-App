@@ -77,9 +77,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
     )
     val confirmPassword = ""
 
-    val maxHeightRowForm = 50.dp
     val user by viewModel.user.collectAsState()
-    var countryDropDownExpanded by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier

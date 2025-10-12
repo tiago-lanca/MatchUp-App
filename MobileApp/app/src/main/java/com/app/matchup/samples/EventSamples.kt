@@ -7,6 +7,7 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import java.time.LocalDateTime
+import java.util.Date
 import java.util.UUID
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -22,7 +23,7 @@ object EventSamples {
         return Event(
             id = UUID.randomUUID(),
             name = "Test Event",
-            date = LocalDateTime.now(),
+            date = Date(),
             address = Address(
                 id = UUID.randomUUID(),
                 street = "Rua dos Testes n10",
@@ -31,7 +32,7 @@ object EventSamples {
             ),
             cost = 3.0,
             duration = 60,
-            genre = "M",
+            gender = "M",
             sport = Sport(
                 id = UUID.randomUUID(),
                 name = "Football"
@@ -57,7 +58,7 @@ object EventSamples {
             Event(
                 id = UUID.randomUUID(),
                 name = "Test Event",
-                date = LocalDateTime.now(),
+                date = Date(),
                 address = Address(
                     id = UUID.randomUUID(),
                     street = "Rua dos Testes n10",
@@ -66,7 +67,7 @@ object EventSamples {
                 ),
                 cost = 3.0,
                 duration = 60,
-                genre = "M",
+                gender = "M",
                 sport = Sport(
                     id = UUID.randomUUID(),
                     name = "Football"
@@ -77,7 +78,7 @@ object EventSamples {
             Event(
                 id = UUID.randomUUID(),
                 name = "Test Event",
-                date = LocalDateTime.now(),
+                date = Date(),
                 address = Address(
                     id = UUID.randomUUID(),
                     street = "Rua de Lisboa n150",
@@ -86,7 +87,7 @@ object EventSamples {
                 ),
                 cost = 3.0,
                 duration = 60,
-                genre = "M",
+                gender = "M",
                 sport = Sport(
                     id = UUID.randomUUID(),
                     name = "Football"

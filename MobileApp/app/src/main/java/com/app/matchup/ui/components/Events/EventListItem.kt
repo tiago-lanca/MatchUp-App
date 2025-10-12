@@ -38,8 +38,11 @@ import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.samples.EventSamples
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
+import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -52,7 +55,7 @@ fun EventListItem(event: Event){
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .background(BACKGROUND_COLOR)
+            .background(EVENT_BACKGROUND_COLOR)
             .padding(horizontal = 10.dp, vertical = 10.dp)
     ){
         Image(
@@ -78,11 +81,11 @@ fun EventListItem(event: Event){
                         .padding(start = 5.dp)
                 ) {
                     Text(
-                        text = event.address.street,
+                        text = event.address!!.street,
                         color = Color.White
                     )
                     Text(
-                        text = event.address.city,
+                        text = event.address!!.city,
                         color = Color.Gray,
                         fontSize = 10.sp,
                         lineHeight = 10.sp
@@ -101,7 +104,8 @@ fun EventListItem(event: Event){
                     tint = Color.White
                 )
                 Text(
-                    text = "${event.date.format(dateFormatter)} ${event.date.hour}:${event.date.minute}h",
+                    text = SimpleDateFormat("dd/MM/yyyy HH:mm'h'", Locale.getDefault())
+                        .format(event.date),
                     color = Color.White,
                     modifier = Modifier
                         .padding(start = 5.dp)
