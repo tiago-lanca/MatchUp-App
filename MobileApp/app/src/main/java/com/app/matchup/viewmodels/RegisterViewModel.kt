@@ -33,11 +33,19 @@ class RegisterViewModel : ViewModel(){
         _user.value = _user.value.copy(favoriteSport = newFavSport)
     }
 
+    fun onGenderChanged(newGender: String) {
+        _user.value = _user.value.copy(gender = newGender)
+    }
+
     fun onCountryChanged(newCountry: Country) {
         _user.value = _user.value.copy(
             country = newCountry,
             mobileCountryCode = newCountry.phoneCode
         )
+    }
+
+    fun onCityChanged(newCity: String) {
+        _user.value = _user.value.copy(city = newCity)
     }
 
     fun onCreateUser() {

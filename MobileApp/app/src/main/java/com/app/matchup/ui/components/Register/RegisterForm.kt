@@ -1,20 +1,19 @@
 package com.app.matchup.ui.components.Register
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -27,16 +26,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.matchup.viewmodels.RegisterViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.models.Sport
 import com.app.matchup.R
+import com.app.matchup.models.Country
+import com.app.matchup.ui.components.DropdownMenu
+import com.app.matchup.ui.components.DropdownMenuGeneric
 
 @Composable
 fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
-
+    val countries = listOf<Country>(
+        Country(
+            name = "Portugal",
+            phoneCode = "+351"
+        ),
+        Country(
+            name = "Brasil",
+            phoneCode = "+55"
+        ),
+        Country(
+            name = "Estados Unidos",
+            phoneCode = "+1"
+        )
+    )
     val sports = listOf<Sport>(
         Sport(
             name = "Football",
@@ -51,6 +68,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
             icon = R.drawable.football_icon
         )
     )
+    val confirmPassword = ""
 
     val user by viewModel.user.collectAsState()
     var countryDropDownExpanded by remember { mutableStateOf(false) }
@@ -77,8 +95,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                 },
                 singleLine = true,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
+                    .fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.White,
                     focusedContainerColor = Color.White,
@@ -104,8 +121,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                 },
                 singleLine = true,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
+                    .fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.White,
                     focusedContainerColor = Color.White,
@@ -118,67 +134,44 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
             )
 
             Row (
-                modifier = Modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
-                Box (
-                    modifier = Modifier
-                        .weight(1f)
-                ){
-                    // Country Field
-                    OutlinedTextField(
-                        value = user.favoriteSport?.name ?: "",
-                        onValueChange = {},
-                        label = { Text("Favorite Sport") },
-                        readOnly = true,
-                        trailingIcon = {
-                            Icon(Icons.Default.ArrowDropDown, contentDescription = null)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.White,
-                            focusedContainerColor = Color.White,
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            cursorColor = Color(0xFF1565C0),
-                            focusedLabelColor = Color(0xFF1565C0),
-                            unfocusedLabelColor = Color.Gray
-                        )
-                    )
-
-                    DropdownMenu(
-                        expanded = countryDropDownExpanded,
-                        onDismissRequest = { countryDropDownExpanded = false }
-                    ) {
-                        sports.forEach { sport ->
-                            DropdownMenuItem(
-                                text = { Text(sport.name) },
-                                onClick = {
-                                    viewModel.onFavoriteSportChanged(sport)
-                                    countryDropDownExpanded = false
-                                }
+                // Country Field
+                DropdownMenuGeneric(
+                    label = "Country",
+                    items = countries,
+                    selectedItem = user.country,
+                    onItemSelected = { viewModel.onCountryChanged(it) },
+                    getName = { it.name },
+                    leadingIcon = {
+                        user.country?.let { country ->
+                            Icon(
+                                painter = painterResource(id = it),
+                                contentDescription = "Flag",
+                                tint = Color.Unspecified
                             )
                         }
-                    }
-                }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
                 // City Field
                 OutlinedTextField(
-                    value = user.name,
-                    onValueChange = { viewModel.onNameChanged(it) },
+                    value = user.city,
+                    onValueChange = { viewModel.onCityChanged(it) },
                     label = { Text("City") },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Rounded.Person,
+                            imageVector = Icons.Rounded.LocationOn,
                             contentDescription = "Email Icon",
                             tint = Color(0xFF1565C0)
                         )
                     },
                     singleLine = true,
                     modifier = Modifier
-                        .weight(1f)
-                        .height(50.dp),
+                        .weight(1f),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = Color.White,
                         focusedContainerColor = Color.White,
@@ -189,8 +182,121 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                         unfocusedLabelColor = Color.Gray
                     )
                 )
-
             }
+
+            // Mobile Phone Field
+            OutlinedTextField(
+                value = user.mobilePhone,
+                onValueChange = { viewModel.onMobilePhoneChanged(it) },
+                label = { Text("Mobile Phone") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Phone,
+                        contentDescription = "Phone Icon",
+                        tint = Color(0xFF1565C0)
+                    )
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = Color.Transparent,
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color.Gray
+                )
+            )
+
+            // Password Field
+            OutlinedTextField(
+                value = user.passwordHash,
+                onValueChange = { viewModel.onMobilePhoneChanged(it) },
+                label = {
+                    Text(
+                        text = "Password"
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Lock,
+                        contentDescription = "Password Icon",
+                        tint = Color(0xFF1565C0)
+                    )
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = Color.Transparent,
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color.Gray
+                ),
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            // Confirm Password Field
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = {  },
+                label = {
+                    Text(
+                        text = "Confirm Password"
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Lock,
+                        contentDescription = "Password Icon",
+                        tint = Color(0xFF1565C0)
+                    )
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = Color.Transparent,
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color.Gray
+                ),
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+            // Mobile Phone Field
+            OutlinedTextField(
+                value = user.mobilePhone,
+                onValueChange = { viewModel.onMobilePhoneChanged(it) },
+                label = { Text("Mobile Phone") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Phone,
+                        contentDescription = "Phone Icon",
+                        tint = Color(0xFF1565C0)
+                    )
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = Color.Transparent,
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color.Gray
+                )
+            )
         }
     }
 }
