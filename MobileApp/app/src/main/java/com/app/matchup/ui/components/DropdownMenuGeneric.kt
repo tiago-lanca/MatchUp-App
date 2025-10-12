@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import com.app.matchup.models.Country
 import com.app.matchup.R
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,27 +46,21 @@ fun <T> DropdownMenuGeneric(
 ){
     var expanded by remember { mutableStateOf(false) }
 
-    val countries = listOf(
-        Country("Portugal", "+351", R.drawable.football_icon),
-        Country("Spain", "+34", R.drawable.football_icon),
-        Country("Brazil", "+55", R.drawable.football_icon),
-        Country("France", "+33", R.drawable.football_icon)
-    )
-
     Box (modifier = modifier) {
         OutlinedTextField(
             value = selectedItem?.let(getName) ?: "",
             onValueChange = { },
             label = {
                 Text(
-                    text = "Country",
+                    text = label,
                     maxLines = 1,
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     modifier = Modifier
                         .heightIn(max = 56.dp)
                         .fillMaxWidth()
                 )
             },
+            readOnly = true,
             leadingIcon = leadingIcon,
             trailingIcon = {
                 IconButton(onClick = { expanded = !expanded }) {
@@ -85,14 +81,14 @@ fun <T> DropdownMenuGeneric(
                 cursorColor = Color(0xFF1565C0),
                 focusedLabelColor = Color(0xFF1565C0),
                 unfocusedLabelColor = Color.Gray
-            ),
-            textStyle = LocalTextStyle.current.copy(lineHeight = 18.sp)
+            )
         )
 
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
             items.forEach { item ->
                 DropdownMenuItem(
@@ -103,7 +99,7 @@ fun <T> DropdownMenuGeneric(
                                 painter = painterResource(R.drawable.football_icon),
                                 contentDescription = "Country Flag",
                                 tint = Color.Unspecified,
-                                modifier = Modifier.size(25.dp)
+                                modifier = Modifier.size(15.dp)
                             )
                             Text(
                                 item.let { getName(item) },

@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
@@ -24,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -35,23 +38,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.models.Sport
 import com.app.matchup.R
 import com.app.matchup.models.Country
-import com.app.matchup.ui.components.DropdownMenu
 import com.app.matchup.ui.components.DropdownMenuGeneric
+import com.app.matchup.ui.theme.GENDER_MALE_COLOR
 
 @Composable
 fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
     val countries = listOf<Country>(
         Country(
             name = "Portugal",
-            phoneCode = "+351"
+            phoneCode = "+351",
+            icon = R.drawable.football_icon
         ),
         Country(
             name = "Brasil",
-            phoneCode = "+55"
+            phoneCode = "+55",
+            icon = R.drawable.football_icon
+
         ),
         Country(
             name = "Estados Unidos",
-            phoneCode = "+1"
+            phoneCode = "+1",
+            icon = R.drawable.football_icon
         )
     )
     val sports = listOf<Sport>(
@@ -70,6 +77,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
     )
     val confirmPassword = ""
 
+    val maxHeightRowForm = 50.dp
     val user by viewModel.user.collectAsState()
     var countryDropDownExpanded by remember { mutableStateOf(false) }
 
@@ -135,6 +143,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
 
             Row (
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
@@ -146,15 +155,17 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                     onItemSelected = { viewModel.onCountryChanged(it) },
                     getName = { it.name },
                     leadingIcon = {
-                        user.country?.let { country ->
+                        user.country?.icon?.let { flagIcon ->
                             Icon(
-                                painter = painterResource(id = it),
+                                painter = painterResource(id = flagIcon),
                                 contentDescription = "Flag",
-                                tint = Color.Unspecified
+                                tint = Color.Unspecified,
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1.1f)
                 )
 
                 // City Field
@@ -213,7 +224,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
             // Password Field
             OutlinedTextField(
                 value = user.passwordHash,
-                onValueChange = { viewModel.onMobilePhoneChanged(it) },
+                onValueChange = { viewModel.onPasswordChanged(it) },
                 label = {
                     Text(
                         text = "Password"
@@ -272,30 +283,41 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                 visualTransformation = PasswordVisualTransformation()
             )
 
-            // Mobile Phone Field
-            OutlinedTextField(
-                value = user.mobilePhone,
-                onValueChange = { viewModel.onMobilePhoneChanged(it) },
-                label = { Text("Mobile Phone") },
+            // Gender Field
+            DropdownMenuGeneric(
+                label = "Gender",
+                items = listOf("M", "F"),
+                selectedItem = user.gender,
+                onItemSelected = { viewModel.onGenderChanged(it) },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Outlined.Phone,
-                        contentDescription = "Phone Icon",
-                        tint = Color(0xFF1565C0)
+                        imageVector = Icons.Filled.Male,
+                        contentDescription = "Flag",
+                        tint = GENDER_MALE_COLOR
                     )
                 },
-                singleLine = true,
+                getName = { it },
                 modifier = Modifier
-                    .fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = Color.Transparent,
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color.Gray
-                )
+            )
+
+            // Favorite Sport Field
+            DropdownMenuGeneric(
+                label = "Favorite Sport",
+                items = sports,
+                selectedItem = user.favoriteSport,
+                onItemSelected = { viewModel.onFavoriteSportChanged(it) },
+                leadingIcon = {
+                    user.favoriteSport?.icon?.let { sportIcon ->
+                        Icon(
+                            painter = painterResource(sportIcon),
+                            contentDescription = "Flag",
+                            modifier = Modifier.size(20.dp),
+                            tint = Color.Unspecified
+                        )
+                    }
+                },
+                getName = { it.name },
+                modifier = Modifier
             )
         }
     }

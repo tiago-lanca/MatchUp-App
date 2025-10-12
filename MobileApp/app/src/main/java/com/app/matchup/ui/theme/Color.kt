@@ -1,5 +1,6 @@
 package com.app.matchup.ui.theme
 
+import android.R
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -13,5 +14,9 @@ val Pink40 = Color(0xFF7D5260)
 val BACKGROUND_COLOR = Color(0xFF0D0D1B)
 
 val SIGNIN_BUTTON_COLOR = Color(0xFF0B7422)
+val REGISTER_BUTTON_COLOR = Color(0xFF1D61E7)
 
 val EVENT_BACKGROUND_COLOR = Color(0xFF282828)
+
+val GENDER_MALE_COLOR = Color(0xFF4287f5)
+val GENDER_FEMALE_COLOR = Color(0xFFf065db)

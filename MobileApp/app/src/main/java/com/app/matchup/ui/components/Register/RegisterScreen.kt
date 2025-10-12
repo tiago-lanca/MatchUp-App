@@ -1,5 +1,6 @@
 package com.app.matchup.ui.components.Register
 
+import android.text.style.UnderlineSpan
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material3.BottomAppBar
@@ -30,14 +32,19 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.R
 import com.app.matchup.ui.components.Login.LoginForm
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
+import com.app.matchup.ui.theme.REGISTER_BUTTON_COLOR
 import com.app.matchup.ui.theme.SIGNIN_BUTTON_COLOR
 
 
@@ -67,73 +74,88 @@ fun RegisterScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 22.dp),
-            contentAlignment = Alignment.TopCenter
+            contentAlignment = Alignment.TopStart
         ) {
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.Start,
             ) {
-                Spacer(modifier = Modifier.height(70.dp))
 
                 // Logo and Title
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
 
+                    Spacer(modifier = Modifier.height(10.dp))
                     // Logo
                     Image(
                         painter = painterResource(R.drawable.matchup_white),
                         contentDescription = "MatchUp Logo",
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
-                            .wrapContentHeight()
-                            .padding(bottom = 20.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .height(80.dp)
                     )
+
+                    Spacer(modifier = Modifier.height(40.dp))
 
                     Text(
                         text = "Register",
                         textAlign = TextAlign.Start,
                         color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 26.sp
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 32.sp,
+                        modifier = Modifier.padding(bottom = 15.dp)
                     )
 
                     Text(
-                        text = "Already have an account? Log in",
-                        textAlign = TextAlign.Start,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            ) {
+                                append("Already have an account?  ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF4D81E7),
+                                    textDecoration = TextDecoration.Underline
+                                )
+                            ) {
+                                append("Log in")
+                            }
+                        },
                     )
                 }
 
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 RegisterForm()
 
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Sign In Button
                 Button(
                     colors = ButtonColors(
                         contentColor = Color.White,
-                        containerColor = SIGNIN_BUTTON_COLOR,
-                        disabledContentColor = SIGNIN_BUTTON_COLOR,
+                        containerColor = REGISTER_BUTTON_COLOR,
+                        disabledContentColor = REGISTER_BUTTON_COLOR,
                         disabledContainerColor = Color.White
                     ),
                     onClick = { TODO() },
                     modifier = Modifier
-                        .width(200.dp)
+                        .width(250.dp)
+                        .align(Alignment.CenterHorizontally),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Login,
-                        contentDescription = "Login Icon",
-                        modifier = Modifier
-                            .padding(end = 5.dp)
-                    )
                     Text("Register")
                 }
             }
