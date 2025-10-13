@@ -46,6 +46,7 @@ fun <T>  DropdownMenuGeneric(
     label: String,
     items: List<T>,
     selectedItem: T?,
+    backgroundColor: Color = Color.White,
     onItemSelected: (T) -> Unit,
     getName: (T) -> String,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -56,7 +57,7 @@ fun <T>  DropdownMenuGeneric(
     Box (
         modifier = modifier
             .height(56.dp)
-            .background(Color.White, shape = RoundedCornerShape(5.dp))
+            .background(backgroundColor, shape = RoundedCornerShape(5.dp))
     ) {
         TextField(
             value = selectedItem?.let(getName) ?: "",
@@ -85,13 +86,7 @@ fun <T>  DropdownMenuGeneric(
             modifier = Modifier
                 .fillMaxSize(),
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White,
-                unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent,
-                cursorColor = Color(0xFF1565C0),
-                focusedLabelColor = Color(0xFF1565C0),
-                unfocusedLabelColor = Color.Gray
+
             )
         )
 

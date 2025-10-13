@@ -1,5 +1,7 @@
 package com.app.matchup.ui.components.Events
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,8 +40,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
+import com.app.matchup.ui.theme.REGISTER_BUTTON_COLOR
 import com.app.matchup.viewmodels.CreateEventViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CreateEventScreen(
     viewModel: CreateEventViewModel = viewModel()
@@ -73,8 +81,7 @@ fun CreateEventScreen(
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // Logo and Title
@@ -120,7 +127,27 @@ fun CreateEventScreen(
                         onCreateEvent = viewModel::onCreateEvent,
                         modifier = Modifier
                             .padding(innerPadding)
-                            .fillMaxSize()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(30.dp))
+                // Create Event Button
+                Button(
+                    colors = ButtonColors(
+                        contentColor = Color.White,
+                        containerColor = REGISTER_BUTTON_COLOR,
+                        disabledContentColor = REGISTER_BUTTON_COLOR,
+                        disabledContainerColor = Color.White
+                    ),
+                    onClick = { TODO() },
+                    modifier = Modifier
+                        .width(250.dp)
+                        .align(Alignment.CenterHorizontally),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = "CREATE EVENT",
+                        letterSpacing = 1.sp
                     )
                 }
             }
@@ -145,7 +172,8 @@ fun CreateEventScreen(
     }
 }
 
-@Preview(showBackground = true)
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true, device = "id:pixel_6")
 @Composable
 fun CreateEventScreenPreview(){
     CreateEventScreen()

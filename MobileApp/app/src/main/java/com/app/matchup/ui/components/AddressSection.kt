@@ -52,8 +52,7 @@ fun AddressSection(
             label = { Text("Street") },
             readOnly = true,
             singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            colors = textFieldColorsReadOnly()
+            modifier = Modifier.fillMaxWidth()
         )
 
         // City and Zip side by side
@@ -64,8 +63,7 @@ fun AddressSection(
                 label = { Text("City") },
                 readOnly = true,
                 singleLine = true,
-                modifier = Modifier.weight(2f),
-                colors = textFieldColorsReadOnly()
+                modifier = Modifier.weight(2f)
             )
 
             TextField(
@@ -74,8 +72,7 @@ fun AddressSection(
                 label = { Text("Zip Code") },
                 readOnly = true,
                 singleLine = true,
-                modifier = Modifier.weight(1f),
-                colors = textFieldColorsReadOnly()
+                modifier = Modifier.weight(1f)
             )
         }
     }
