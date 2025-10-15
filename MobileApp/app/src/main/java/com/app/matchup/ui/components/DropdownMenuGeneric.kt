@@ -24,6 +24,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun <T>  DropdownMenuGeneric(
     label: String,
+    labelColor: Color = Color.Gray,
     items: List<T>,
     selectedItem: T?,
     backgroundColor: Color = Color.White,
@@ -59,7 +61,7 @@ fun <T>  DropdownMenuGeneric(
             .height(56.dp)
             .background(backgroundColor, shape = RoundedCornerShape(5.dp))
     ) {
-        TextField(
+        OutlinedTextField(
             value = selectedItem?.let(getName) ?: "",
             onValueChange = { },
             label = {
@@ -67,6 +69,7 @@ fun <T>  DropdownMenuGeneric(
                     text = label,
                     maxLines = 1,
                     fontSize = 16.sp,
+                    color = labelColor,
                     overflow = TextOverflow.Ellipsis,
                     softWrap = false,
                     modifier = Modifier
@@ -86,7 +89,9 @@ fun <T>  DropdownMenuGeneric(
             modifier = Modifier
                 .fillMaxSize(),
             colors = OutlinedTextFieldDefaults.colors(
-
+                unfocusedBorderColor = Color.Transparent, // 🔥 borda fora de foco invisível
+                focusedBorderColor = Color.Transparent,   // 🔥 borda focada invisível
+                disabledBorderColor = Color.Transparent
             )
         )
 

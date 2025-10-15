@@ -142,7 +142,7 @@ fun RegisterScreen() {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Sign In Button
+                // Register Button
                 Button(
                     colors = ButtonColors(
                         contentColor = Color.White,

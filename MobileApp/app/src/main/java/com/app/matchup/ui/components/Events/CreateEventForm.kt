@@ -77,7 +77,6 @@ fun CreateEventForm(
     )
 
     Column (
-        modifier = Modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
@@ -100,6 +99,7 @@ fun CreateEventForm(
             // Sports Field
             DropdownMenuGeneric(
                 label = "Sport",
+                labelColor = Color.Black,
                 items = sports,
                 selectedItem = event.sport,
                 onItemSelected = { onSportChanged(it) },
@@ -135,8 +135,6 @@ fun CreateEventForm(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.weight(1f)
             )
-
-
         }
 
         DateTimePicker(onDateChanged)
@@ -147,6 +145,7 @@ fun CreateEventForm(
             // Gender Field
             DropdownMenuGeneric(
                 label = "Gender",
+                labelColor = Color.Black,
                 items = genders,
                 selectedItem = event.gender,
                 onItemSelected = { onGenderChanged(it) },

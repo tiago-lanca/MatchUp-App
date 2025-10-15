@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
                 //val eventList = EventSamples.createSampleListEvents()
                 //EventList(eventList)
                 CreateEventScreen()
+                //RegisterScreen()
             }
         }
     }

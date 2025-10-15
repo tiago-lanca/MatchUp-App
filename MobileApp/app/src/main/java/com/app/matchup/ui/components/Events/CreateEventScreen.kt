@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
+import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.REGISTER_BUTTON_COLOR
 import com.app.matchup.viewmodels.CreateEventViewModel
@@ -50,7 +51,6 @@ fun CreateEventScreen(
 ){
     val event by viewModel.event.collectAsState()
     val costInput by viewModel.costInput.collectAsState()
-
 
     Scaffold(
         containerColor = BACKGROUND_COLOR,
@@ -105,7 +105,7 @@ fun CreateEventScreen(
                     textAlign = TextAlign.Center,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 18.sp,
+                    fontSize = 22.sp,
                     modifier = Modifier.padding(bottom = 15.dp)
                 )
 
@@ -154,21 +154,7 @@ fun CreateEventScreen(
         }
 
         // Little light above the logo
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .size(width = 300.dp, height = 250.dp)
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFFB0B0B0).copy(alpha = 0.12f),
-                            Color.Transparent
-                        ),
-                        start = Offset(300f, 0f),
-                        end = Offset(0f, 600f)
-                    )
-                )
-        )
+        TopFocusLight()
     }
 }
 

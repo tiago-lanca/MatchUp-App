@@ -16,7 +16,7 @@ class CreateEventViewModel : ViewModel() {
     private val _event = MutableStateFlow(Event())
     val event: StateFlow<Event> = _event
 
-    private val _costInput = MutableStateFlow("")
+    private val _costInput = MutableStateFlow("0")
     val costInput: StateFlow<String> = _costInput
 
 
