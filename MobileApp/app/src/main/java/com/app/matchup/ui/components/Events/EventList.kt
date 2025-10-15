@@ -5,7 +5,9 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.models.Event
 import com.app.matchup.samples.EventSamples
+import com.app.matchup.ui.MapScreen
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -42,8 +45,13 @@ fun EventList(eventList: List<Event>) {
             .fillMaxSize()
             .background(Color(0xFFB0BEC5))
     ) {
-
-        // Google Maps on the background
+        Column (
+            modifier = Modifier
+                .fillMaxHeight(0.7f)
+                .fillMaxWidth()
+        ) {
+            MapScreen()
+        }
 
         // Near Events Section
         Box(

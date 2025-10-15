@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.matchup.samples.EventSamples
+import com.app.matchup.ui.MapScreen
 import com.app.matchup.ui.components.Events.CreateEventScreen
 import com.app.matchup.ui.components.Events.EventList
 import com.app.matchup.ui.components.Register.RegisterScreen
@@ -22,9 +23,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             MatchUpTheme {
                 //val eventList = EventSamples.createSampleListEvents()
-                //EventList(eventList)
-                CreateEventScreen()
+                EventList(EventSamples.createSampleListEvents())
+                //CreateEventScreen()
                 //RegisterScreen()
+
+                //MapScreen()
             }
         }
     }
