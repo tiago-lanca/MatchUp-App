@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.models.Event
 import com.app.matchup.samples.EventSamples
-import com.app.matchup.ui.MapScreen
+import com.app.matchup.ui.components.MapScreen
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
 
 @RequiresApi(Build.VERSION_CODES.O)

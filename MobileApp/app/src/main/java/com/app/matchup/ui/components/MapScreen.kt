@@ -1,4 +1,4 @@
-package com.app.matchup.ui
+package com.app.matchup.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,9 +15,14 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun MapScreen() {
+
+    val seixalCoords = LatLng(38.621759, -9.105657)
+    val defaultZoom = 15f
+
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            LatLng(38.621759, -9.105657), 15f
+            seixalCoords,
+            defaultZoom
         )
     }
 
@@ -26,7 +31,7 @@ fun MapScreen() {
         cameraPositionState = cameraPositionState
     ) {
         Marker(
-            state = MarkerState(position = LatLng(38.621759, -9.105657)),
+            state = MarkerState(position = seixalCoords),
             title = "Seixal",
             snippet = "Seixal"
         )
