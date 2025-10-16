@@ -58,6 +58,7 @@ dependencies {
 
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
+    implementation(libs.androidx.compose.animation.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

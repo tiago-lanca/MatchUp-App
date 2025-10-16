@@ -1,5 +1,9 @@
 package com.app.matchup.ui.components
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,33 +16,39 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.app.matchup.ui.theme.LOCATION_ICON_COLOR
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.*
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun SelectLocationScreen(
@@ -59,6 +69,33 @@ fun SelectLocationScreen(
     val selectedPosition by remember {
         derivedStateOf { cameraPositionState.position.target }
     }
+
+    val context = LocalContext.current
+    // For async task
+    val coroutineScope = rememberCoroutineScope()
+
+    var hasLocationPermission by remember { mutableStateOf(false) }
+
+    // The launcher to ask for permission of real location
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { granted -> hasLocationPermission = granted }
+    )
+
+    // Verify and asks for permission to access real location
+    LaunchedEffect(Unit) {
+        val fineLocationGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (fineLocationGranted) {
+            hasLocationPermission = true
+        } else {
+            launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
     Scaffold { innerPadding ->
 
         Box(modifier = Modifier.fillMaxSize())
@@ -68,18 +105,50 @@ fun SelectLocationScreen(
                 cameraPositionState = cameraPositionState,
                 onMapLoaded = { mapLoaded = true },
                 properties = MapProperties(
-                    isMyLocationEnabled = false,
                     minZoomPreference = 10f,
                     mapType = mapType
                 ),
                 uiSettings = MapUiSettings(
                     zoomControlsEnabled = false,
-                    myLocationButtonEnabled = false
+                    myLocationButtonEnabled = true
                 )
             )
 
+            // Black gradient
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(380.dp)
+                    .align(Alignment.TopCenter)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 1f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
 
-            // Botão para alternar tipo de mapa
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch {
+                        // Moves to my location defined by SeixalCoords
+                        cameraPositionState.animate(
+                            update = CameraUpdateFactory.newLatLngZoom(seixalCoords, defaultZoom)
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(innerPadding),
+                containerColor = Color(0xFF006400),
+                contentColor = Color.White
+            ) {
+                Icon(Icons.Default.MyLocation, contentDescription = "My location icon")
+            }
+
+            // Button to change the map type Hybrid or Normal
             Button(
                 onClick = {
                     mapType = when (mapType) {
