@@ -1,30 +1,44 @@
 package com.app.matchup.ui.components
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -42,7 +56,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import com.app.matchup.RegisterActivity
 import com.app.matchup.ui.theme.LOCATION_ICON_COLOR
+import com.app.matchup.ui.theme.MY_LOCATION_ICON_COLOR
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -65,6 +81,9 @@ fun SelectLocationScreen(
             seixalCoords, defaultZoom
         )
     }
+
+    var searchQuery by remember { mutableStateOf("") }
+    var filterLocation by remember { mutableStateOf("") }
 
     val selectedPosition by remember {
         derivedStateOf { cameraPositionState.position.target }
@@ -96,141 +115,183 @@ fun SelectLocationScreen(
         }
     }
 
-    Scaffold { innerPadding ->
+    Box(modifier = Modifier.fillMaxSize()) {
 
-        Box(modifier = Modifier.fillMaxSize())
-        {
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-                onMapLoaded = { mapLoaded = true },
-                properties = MapProperties(
-                    minZoomPreference = 10f,
-                    mapType = mapType
-                ),
-                uiSettings = MapUiSettings(
-                    zoomControlsEnabled = false,
-                    myLocationButtonEnabled = true
-                )
+        // Google Map
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            onMapLoaded = { mapLoaded = true },
+            properties = MapProperties(
+                minZoomPreference = 10f,
+                mapType = mapType
+            ),
+            uiSettings = MapUiSettings(
+                zoomControlsEnabled = false,
+                myLocationButtonEnabled = true
             )
+        )
+        // Map is loading
+        if (!mapLoaded) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary
+            )
+        } else {
 
-            // Black gradient
+            // Black Gradient Top Sector
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(380.dp)
                     .align(Alignment.TopCenter)
+                    .height(300.dp)
                     .background(
                         brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Black.copy(alpha = 1f),
+                            listOf(
+                                Color.Black.copy(alpha = 0.9f),
+                                Color.Black.copy(alpha = 0.8f),
+                                Color.Black.copy(alpha = 0.6f),
                                 Color.Transparent
                             )
                         )
                     )
-            )
-
-            FloatingActionButton(
-                onClick = {
-                    coroutineScope.launch {
-                        // Moves to my location defined by SeixalCoords
-                        cameraPositionState.animate(
-                            update = CameraUpdateFactory.newLatLngZoom(seixalCoords, defaultZoom)
-                        )
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(innerPadding),
-                containerColor = Color(0xFF006400),
-                contentColor = Color.White
+                    .statusBarsPadding()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                Icon(Icons.Default.MyLocation, contentDescription = "My location icon")
+
+                Column {
+                    // Title Section and Close button
+                    Box(Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Select a Location",
+                            color = Color.White,
+                            fontSize = 27.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+
+                        IconButton(
+                            onClick = {
+                                val intent = Intent(context, RegisterActivity::class.java)
+                                context.startActivity(intent)
+                                if(context is Activity) context.finish()
+                            },
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .background(Color.Red, RoundedCornerShape(50))
+                                .size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = Color.White
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Search Location Filter
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    if(hasLocationPermission){
+                                        coroutineScope.launch {
+                                            cameraPositionState.animate(
+                                                update = CameraUpdateFactory.newLatLngZoom(seixalCoords, defaultZoom),
+                                                durationMs = 1000
+                                            )
+                                        }
+                                    }
+                                },
+                                modifier = Modifier
+                                    .background(MY_LOCATION_ICON_COLOR, RoundedCornerShape(50))
+                                    .size(42.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MyLocation,
+                                    contentDescription = "My Location Icon",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+
+                            OutlinedTextField(
+                                value = searchQuery,
+                                onValueChange = { searchQuery = it },
+                                label = { Text("City") },
+                                singleLine = true,
+                                trailingIcon = {
+                                    IconButton(onClick = { }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Search,
+                                            contentDescription = "Search Icon",
+                                            tint = Color(0xFF006400)
+                                        )
+                                    }
+                                },
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = Color.White,
+                                    unfocusedContainerColor = Color.White,
+                                    focusedIndicatorColor = Color.Black,
+                                    unfocusedIndicatorColor = Color.Black,
+                                    cursorColor = Color(0xFF006400),
+                                    focusedLabelColor = Color.White,
+                                    unfocusedLabelColor = Color.Black,
+                                    focusedTrailingIconColor = Color(0xFF006400)
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier
+                                    .width(250.dp)
+                            )
+                        }
+                    }
+                }
             }
 
-            // Button to change the map type Hybrid or Normal
-            Button(
-                onClick = {
-                    mapType = when (mapType) {
-                        MapType.NORMAL -> MapType.HYBRID
-                        MapType.HYBRID -> MapType.NORMAL
-                        else -> MapType.NORMAL
-                    }
-                },
+            // Map Marker Location
+            Icon(
+                imageVector = Icons.Filled.LocationOn,
+                contentDescription = "Marker",
+                tint = LOCATION_ICON_COLOR,
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(innerPadding),
+                    .align(Alignment.Center)
+                    .size(40.dp)
+            )
+
+            // Confirm Button
+            Button(
+                onClick = { onLocationSelected(selectedPosition) },
+                shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF006400),
                     contentColor = Color.White
-                )
+                ),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(0.7f)
+                    .padding(bottom = 24.dp)
             ) {
-                Text("Mudar tipo")
-            }
-        }
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center
-        ) {
-            if (mapLoaded) {
-
-                // Selected Location Icon
-                Icon(
-                    imageVector = Icons.Filled.LocationOn,
-                    contentDescription = "Marker location to new event",
-                    tint = LOCATION_ICON_COLOR,
-                    modifier = Modifier
-                        .size(40.dp)
-                )
-
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    /* To show coordinates
                 Text(
-                    text = "Lat: ${"%.6f".format(selectedPosition.latitude)} | Lng: ${
-                        "%.6f".format(
-                            selectedPosition.longitude
-                        )
-                    }",
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))*/
-
-                    // Confirm Button
-                    Button(
-                        onClick = { onLocationSelected(selectedPosition) },
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF006400),
-                            contentColor = Color.White
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth(0.7f)
-                    ) {
-                        Text(
-                            text = "CONFIRM",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            letterSpacing = 2.sp
-                        )
-                    }
-                }
-            } else {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.primary
+                    text = "CONFIRM",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 2.sp
                 )
             }
+
+
         }
     }
+
 }
 

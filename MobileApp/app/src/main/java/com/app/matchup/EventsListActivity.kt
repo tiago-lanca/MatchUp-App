@@ -17,7 +17,7 @@ import com.app.matchup.samples.EventSamples
 import com.app.matchup.ui.components.Events.EventList
 import com.app.matchup.ui.theme.MatchUpTheme
 
-class RegisterActivity : ComponentActivity() {
+class EventsListActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +27,5 @@ class RegisterActivity : ComponentActivity() {
                 EventList(EventSamples.createSampleListEvents())
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MatchUpTheme {
-
     }
 }

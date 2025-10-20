@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MatchUp">
         <activity
+            android:name=".EventsListActivity"
+            android:exported="false"
+            android:label="@string/title_activity_events_list"
+            android:theme="@style/Theme.MatchUp" />
+        <activity
             android:name=".SelectLocationActivity"
             android:exported="false"
             android:label="@string/title_activity_select_location"
