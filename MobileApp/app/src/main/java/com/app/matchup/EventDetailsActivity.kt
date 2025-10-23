@@ -6,33 +6,31 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.app.matchup.models.Event
 import com.app.matchup.samples.EventSamples
-import com.app.matchup.ui.components.Events.MainScreen
+import com.app.matchup.ui.components.Events.EventDetails
 import com.app.matchup.ui.theme.MatchUpTheme
 
-class MainActivity : ComponentActivity() {
+class EventDetailsActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-                //val eventList = EventSamples.createSampleListEvents()
-                MainScreen(EventSamples.createSampleListEvents())
-                //CreateEventScreen()
-                //RegisterScreen()
+                var event = EventSamples.createSampleEvent()
+                event.name = intent.getStringExtra("event_name")!!
 
-                //MapScreen()
-
-                /*SelectLocationScreen(
-                    onLocationSelected = { positionSelected ->
-                        print("Location selected: ${positionSelected.latitude}, ${positionSelected.longitude}")
-                    }
-                )*/
-
-                //MainMenuScreen()
+                //EventDetails(event)
             }
         }
     }
@@ -42,8 +40,8 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun MainActivityPreview() {
+fun EventDetailsPreview() {
     MatchUpTheme {
-        MainScreen(EventSamples.createSampleListEvents())
+        //EventDetails(EventSamples.createSampleEvent())
     }
 }

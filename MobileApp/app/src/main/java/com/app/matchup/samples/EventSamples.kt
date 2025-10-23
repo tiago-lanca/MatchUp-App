@@ -63,7 +63,9 @@ object EventSamples {
                     id = UUID.randomUUID(),
                     street = "Rua dos Testes n10",
                     zipCode = "1886-502",
-                    city = "Seixal"
+                    city = "Seixal",
+                    latitude = 38.621759,
+                    longitude = -9.105657
                 ),
                 cost = 3.0,
                 duration = 60,
@@ -83,10 +85,12 @@ object EventSamples {
                     id = UUID.randomUUID(),
                     street = "Rua de Lisboa n150",
                     zipCode = "1115-101",
-                    city = "Lisboa"
+                    city = "Lisboa",
+                    latitude = 38.722252,
+                    longitude = -9.139337
                 ),
-                cost = 3.0,
-                duration = 60,
+                cost = 5.5,
+                duration = 90,
                 gender = "M",
                 sport = Sport(
                     id = UUID.randomUUID(),

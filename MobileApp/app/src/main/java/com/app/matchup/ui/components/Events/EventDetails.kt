@@ -42,6 +42,8 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
+import com.app.matchup.ui.components.MapScreen
+import com.google.maps.android.compose.rememberCameraPositionState
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -51,22 +53,27 @@ import java.util.UUID
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EventDetails(event: Event){
+fun EventDetails(
+    event: Event,
+    onClose: () -> Unit
+){
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    val cameraPositionState = rememberCameraPositionState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFB0BEC5))
+
     ) {
 
         // Google Maps on the background
+        //MapScreen(cameraPositionState)
 
         // Near Events Section
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(360.dp)
+                .height(420.dp)
                 .align(Alignment.BottomCenter)
                 .background(
                     color = Color(0xFF282828),
@@ -75,7 +82,6 @@ fun EventDetails(event: Event){
                 .padding(16.dp)
                 .navigationBarsPadding()
         ) {
-
             Column {
                 // Row of Event Name and Close Icon
                 Row(
@@ -83,7 +89,6 @@ fun EventDetails(event: Event){
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-
                     Text(
                         text = event.name,
                         color = Color.White,
@@ -91,6 +96,8 @@ fun EventDetails(event: Event){
                         fontWeight = FontWeight.Bold,
                     )
                     Icon(
+                        modifier = Modifier
+                            .clickable { onClose() },
                         imageVector = Icons.Filled.Close,
                         contentDescription = "Settings",
                         tint = Color.White
@@ -149,7 +156,7 @@ fun EventDetails(event: Event){
                         fontSize = 18.sp
                     )
                     Text(
-                        text = SimpleDateFormat("HH':'mm'h", Locale.getDefault()).format(event.date),
+                        text = SimpleDateFormat("HH':'mm'h'", Locale.getDefault()).format(event.date),
                         color = Color.White,
                         fontSize = 18.sp,
                         modifier = Modifier
@@ -305,5 +312,5 @@ fun EventDetailsPreview(){
         admin = user,
         notes = "This is a test event"
     )
-    EventDetails(event = event)
+    //EventDetails(event = event)
 }

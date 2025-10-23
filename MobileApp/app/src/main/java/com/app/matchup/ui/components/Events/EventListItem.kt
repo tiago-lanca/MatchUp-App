@@ -1,9 +1,12 @@
 package com.app.matchup.ui.components.Events
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -31,6 +35,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.matchup.EventDetailsActivity
 import com.app.matchup.R
 import com.app.matchup.models.Address
 import com.app.matchup.models.Event
@@ -47,8 +52,12 @@ import java.util.UUID
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EventListItem(event: Event){
+fun EventListItem(
+    event: Event,
+    onClick: () -> Unit
+){
 
+    val context = LocalContext.current
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
     Row(
@@ -57,6 +66,7 @@ fun EventListItem(event: Event){
             .fillMaxWidth()
             .background(EVENT_BACKGROUND_COLOR)
             .padding(horizontal = 10.dp, vertical = 10.dp)
+            .clickable { onClick() }
     ){
         Image(
             painter = painterResource(R.drawable.football_icon),
@@ -152,7 +162,17 @@ fun EventListItem(event: Event){
         }
 
         IconButton(
-            onClick = { },
+            onClick = {
+                onClick()
+
+                /*val intent = Intent(context, EventDetailsActivity::class.java).apply {
+                    putExtra("event_id", event.id.toString())
+                    putExtra("event_name", event.name)
+                }
+
+                context.startActivity(intent)
+                if(context is Activity) context.finish()*/
+            },
             modifier = Modifier.size(24.dp)
         ) {
             Icon(
@@ -170,5 +190,5 @@ fun EventListItem(event: Event){
 @Preview(showBackground = true)
 @Composable
 fun EventListItemPreview() {
-    EventListItem(event = EventSamples.createSampleEvent())
+    //EventListItem(event = EventSamples.createSampleEvent())
 }

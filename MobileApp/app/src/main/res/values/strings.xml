@@ -6,4 +6,5 @@
     <string name="title_activity_main_menu">MainMenuActivity</string>
     <string name="title_activity_select_location">SelectLocationActivity</string>
     <string name="title_activity_events_list">EventsListActivity</string>
+    <string name="title_activity_event_details">EventDetailsActivity</string>
 </resources>

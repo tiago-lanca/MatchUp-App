@@ -1,11 +1,7 @@
 package com.app.matchup.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import java.time.LocalDateTime
 import java.util.Date
 import java.util.UUID
-
 data class Event(
     val id: UUID = UUID.randomUUID(),
     var name: String = "",

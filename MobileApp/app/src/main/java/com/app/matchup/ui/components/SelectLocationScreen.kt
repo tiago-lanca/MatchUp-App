@@ -56,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import com.app.matchup.EventsListActivity
 import com.app.matchup.RegisterActivity
 import com.app.matchup.ui.theme.LOCATION_ICON_COLOR
 import com.app.matchup.ui.theme.MY_LOCATION_ICON_COLOR
@@ -170,9 +171,10 @@ fun SelectLocationScreen(
                             modifier = Modifier.align(Alignment.Center)
                         )
 
+                        // Close Button
                         IconButton(
                             onClick = {
-                                val intent = Intent(context, RegisterActivity::class.java)
+                                val intent = Intent(context, EventsListActivity::class.java)
                                 context.startActivity(intent)
                                 if(context is Activity) context.finish()
                             },
