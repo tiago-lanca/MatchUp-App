@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -44,6 +45,7 @@ import com.app.matchup.models.User
 import com.app.matchup.samples.EventSamples
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
+import com.app.matchup.utilities.Tools.getSportIconSize
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -65,15 +67,16 @@ fun EventListItem(
         modifier = Modifier
             .fillMaxWidth()
             .background(EVENT_BACKGROUND_COLOR)
-            .padding(horizontal = 10.dp, vertical = 10.dp)
+            .padding(horizontal = 0.dp, vertical = 10.dp)
             .clickable { onClick() }
     ){
         Image(
-            painter = painterResource(R.drawable.football_icon),
+            painter = painterResource(event.sport?.icon!!),
             contentDescription = "Football Icon",
             modifier = Modifier
                 .padding(end = 15.dp)
-                .height(height = 30.dp)
+                .size( event.sport?.icon!!.getSportIconSize()),
+            contentScale = ContentScale.Fit
         )
 
         Column(

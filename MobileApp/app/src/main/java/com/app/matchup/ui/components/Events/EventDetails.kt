@@ -43,6 +43,7 @@ import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
 import com.app.matchup.ui.components.MapScreen
+import com.app.matchup.utilities.Tools
 import com.google.maps.android.compose.rememberCameraPositionState
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -104,10 +105,11 @@ fun EventDetails(
                     )
                 }
 
-                Text(
+                // Event ID
+                /*Text(
                     text = "#${event.id}",
                     color = Color.Gray
-                )
+                )*/
 
                 // Row of Location Icon and Address
                 Row(
@@ -165,7 +167,7 @@ fun EventDetails(
 
 
                     // Only shows if there's notes in that event
-                    if(event.notes.isNullOrEmpty()) {
+                    if(!event.notes.isNullOrEmpty()) {
                         Image(
                             painter = painterResource(R.drawable.information_icon_blue),
                             contentDescription = "Information Icon",
@@ -188,7 +190,7 @@ fun EventDetails(
                     // Sport Column
                     ColumnWithLabel(
                         label = "Sport:",
-                        imageIcon = "football_icon",
+                        imageIcon = event.sport?.icon!!,
                         text = event.sport!!.name,
                     )
 
@@ -196,7 +198,7 @@ fun EventDetails(
                     ColumnWithLabel(
                         label = "Genre:",
                         text = event.gender,
-                        textColor = Color(0xFF1E90FF),
+                        textColor = Tools.getGenderColor(event.gender),
                         textFontWeight = FontWeight.Bold
                     )
 
@@ -233,7 +235,8 @@ fun EventDetails(
                                         color = Color.Green
                                     )
                                 ) {
-                                    append("10")
+                                    // Value of enrolled members
+                                    append("1")
                                 }
                                 withStyle(
                                     style = SpanStyle(
@@ -242,7 +245,7 @@ fun EventDetails(
                                         color = Color.Green
                                     )
                                 ) {
-                                    append(" / 12")
+                                    append(" / ${event.maxMembers}")
                                 }
                             }
                         )

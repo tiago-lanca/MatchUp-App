@@ -1,11 +1,15 @@
 package com.app.matchup.ui.components.Events
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,10 +18,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,6 +42,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.matchup.MainActivity
 import com.app.matchup.R
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
@@ -49,6 +62,7 @@ import com.app.matchup.viewmodels.CreateEventViewModel
 fun CreateEventScreen(
     viewModel: CreateEventViewModel = viewModel()
 ){
+    val context = LocalContext.current
     val event by viewModel.event.collectAsState()
     val costInput by viewModel.costInput.collectAsState()
 
@@ -72,30 +86,55 @@ fun CreateEventScreen(
         }
     ) { innerPadding ->
 
+
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 22.dp),
             contentAlignment = Alignment.TopCenter
         ) {
+
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.Start,
             ) {
-                // Logo and Title
+
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Logo
-                Image(
-                    painter = painterResource(R.drawable.matchup_white),
-                    contentDescription = "MatchUp Logo",
-                    contentScale = ContentScale.Fit,
+                Box(
+                    contentAlignment = Alignment.TopStart,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .height(80.dp)
-                )
+                        .fillMaxWidth()
+                ) {
+                    FloatingActionButton(
+                        onClick = {
+                            val intent = Intent(context, MainActivity::class.java)
+                            context.startActivity(intent)
+                            if(context is Activity) context.finish()
+                        },
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White,
+                        shape = CircleShape,
+
+                        ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Go back button"
+                        )
+                    }
+                    // Logo
+                    Image(
+                        painter = painterResource(R.drawable.matchup_white),
+                        contentDescription = "MatchUp Logo",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .height(80.dp)
+                            .align(Alignment.TopCenter)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(40.dp))
 
@@ -155,6 +194,7 @@ fun CreateEventScreen(
 
         // Little light above the logo
         TopFocusLight()
+
     }
 }
 

@@ -9,13 +9,17 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.matchup.samples.EventSamples
+import com.app.matchup.ui.components.Events.CreateEventScreen
 import com.app.matchup.ui.components.Events.MainScreen
+import com.app.matchup.ui.components.Login.LoginScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
@@ -23,7 +27,7 @@ class MainActivity : ComponentActivity() {
                 MainScreen(EventSamples.createSampleListEvents())
                 //CreateEventScreen()
                 //RegisterScreen()
-
+                //LoginScreen()
                 //MapScreen()
 
                 /*SelectLocationScreen(

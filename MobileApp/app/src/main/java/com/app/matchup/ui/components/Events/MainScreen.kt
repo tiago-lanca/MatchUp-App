@@ -51,6 +51,7 @@ import com.app.matchup.samples.EventSamples
 import com.app.matchup.ui.components.FloatingButtonsMainScreen
 import com.app.matchup.ui.components.MapScreen
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
+import com.app.matchup.utilities.AppConstants
 import com.app.matchup.utilities.Tools
 import com.app.matchup.utilities.Tools.navigateTo
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -83,7 +84,21 @@ fun MainScreen(
                 .fillMaxHeight(0.7f)
                 .fillMaxWidth()
         ) {
-            MapScreen(cameraPositionState)
+            MapScreen(
+                eventList,
+                cameraPositionState,
+                onMarkerClick = { event ->
+                    selectedEvent = event
+                    Tools.moveCameraTo(
+                        LatLng(
+                        event.address?.latitude!!,
+                        event.address?.longitude!!
+                        ),
+                        AppConstants.defaultZoom,
+                        coroutineScope,
+                        cameraPositionState
+                    )
+                })
         }
 
         if (selectedEvent == null) {
@@ -107,7 +122,7 @@ fun MainScreen(
 
             FloatingButtonsMainScreen(
                 onMyLocationButtonClick = {
-                    Tools.moveCameraTo(Tools.SeixalCoords, Tools.defaultZoom, coroutineScope, cameraPositionState )
+                    Tools.moveCameraTo(AppConstants.SeixalCoords, AppConstants.defaultZoom, coroutineScope, cameraPositionState )
                 },
                 onCreateNewEventButtonClick = {
                     //Log.i("TEST", "Button create event clicked.")
@@ -130,7 +145,7 @@ fun MainScreen(
             // Floating Buttons
             FloatingButtonsMainScreen(
                 onMyLocationButtonClick = {
-                    Tools.moveCameraTo(Tools.SeixalCoords, Tools.defaultZoom, coroutineScope, cameraPositionState )
+                    Tools.moveCameraTo(AppConstants.SeixalCoords, AppConstants.defaultZoom, coroutineScope, cameraPositionState )
                 },
                 onCreateNewEventButtonClick = {
                     //Log.i("TEST", "Button create event clicked.")

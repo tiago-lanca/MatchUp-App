@@ -14,35 +14,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.matchup.R
+import com.app.matchup.utilities.Tools.getSportIconSize
 
 @Composable
-fun ColumnWithLabel(label: String,
-                    imageIcon: String = "",
-                    text: String,
-                    textColor: Color = Color.White,
-                    textFontSize: Int = 18,
-                    textFontWeight: FontWeight = FontWeight.Normal
+fun ColumnWithLabel(
+    label: String,
+    imageIcon: Int = 0,
+    text: String,
+    textColor: Color = Color.White,
+    textFontSize: Int = 18,
+    textFontWeight: FontWeight = FontWeight.Normal
 ) {
-    Column (
+    Column(
         horizontalAlignment = Alignment.Start
     ) {
         Text(
             text = label,
             color = Color.Gray
         )
-        Row (
+        Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if(imageIcon != "") {
+
+            if (imageIcon != 0) {
                 Image(
-                    painter = painterResource(R.drawable.football_icon),
+                    painter = painterResource(imageIcon),
                     contentDescription = "Football Icon",
                     modifier = Modifier
-                        .size(25.dp)
+                        .size(imageIcon.getSportIconSize())
                         .padding(top = 5.dp)
                 )
             }
+
             Text(
                 text = text,
                 color = textColor,

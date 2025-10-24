@@ -99,7 +99,7 @@ fun EventList(
 
                     if (index < eventList.lastIndex) {
                         HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 16.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp),
                             thickness = 1.dp,
                             color = Color.Gray.copy(alpha = 0.3f)
                         )
