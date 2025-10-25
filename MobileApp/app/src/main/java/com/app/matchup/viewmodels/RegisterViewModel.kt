@@ -39,8 +39,7 @@ class RegisterViewModel : ViewModel(){
 
     fun onCountryChanged(newCountry: Country) {
         _user.value = _user.value.copy(
-            country = newCountry,
-            mobileCountryCode = newCountry.phoneCode
+            country = newCountry
         )
     }
 
@@ -52,7 +51,7 @@ class RegisterViewModel : ViewModel(){
         viewModelScope.launch {
             val current = _user.value
             println("Salvando usuário: ${current.name} (${current.email})")
-            // TODO: chamar seu repositório / API
+            // TODO: Call API to create user
         }
     }
 }

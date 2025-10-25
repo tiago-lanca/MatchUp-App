@@ -8,7 +8,6 @@ data class User(
     var email: String = "",
     var country: Country? = null,
     var city: String = "",
-    var mobileCountryCode: String = "",
     var mobilePhone: String = "",
     var passwordHash: String = "",
     var gender: String = "",
