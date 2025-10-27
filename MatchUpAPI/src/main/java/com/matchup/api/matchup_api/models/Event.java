@@ -1,8 +1,10 @@
 package com.matchup.api.matchup_api.models;
 
+import com.matchup.api.matchup_api.enums.Status;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,6 +27,10 @@ public class Event {
     private int MaxMembers;
     @Column(name = "eve_notes")
     private String Notes;
+    @Column(name = "eve_created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "eve_status")
+    private Status status = Status.OPEN;
 
     @ManyToOne
     @JoinColumn(name = "eve_address_id", referencedColumnName = "adr_id")
@@ -37,4 +43,7 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "eve_admin", referencedColumnName = "user_id")
     private User Admin;
+
+    @OneToMany(mappedBy = "event")
+    private List<Enrollment> enrollments;
 }

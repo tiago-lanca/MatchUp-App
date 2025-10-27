@@ -3,6 +3,7 @@ package com.matchup.api.matchup_api.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,8 @@ public class User {
     private String gender;
     @Column(name = "user_profilePicture")
     private byte[] profilePicture;
+    @Column(name = "user_created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_country_id", referencedColumnName = "cou_id")
@@ -38,5 +41,9 @@ public class User {
     private Sport favoriteSport;
 
     @OneToMany(mappedBy = "user")
+    private List<Enrollment> enrollments;
+
+    @OneToMany(mappedBy = "user")
     private List<Report> reports;
+
 }
