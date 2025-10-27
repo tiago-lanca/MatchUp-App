@@ -1,18 +1,21 @@
 package com.matchup.api.matchup_api.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.matchup.api.matchup_api.enums.Status;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(name = "Events")
 public class Event {
     @Id
     @Column(name = "eve_id")
-    private UUID Id = UUID.randomUUID();
+    private UUID Id;
     @Column(name = "eve_name")
     private String Name;
     @Column(name = "eve_date")

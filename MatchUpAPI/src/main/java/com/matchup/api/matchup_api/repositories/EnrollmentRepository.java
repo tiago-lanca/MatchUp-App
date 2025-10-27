@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.UUID;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, UUID> {
-    @Query("SELECT COUNT(e) FROM Enrollment e WHERE e.event_id = :eventId")
+    @Query("SELECT COUNT(e) FROM Enrollment e WHERE e.event.id = :eventId")
     int countMembersByEventId(UUID eventId);
 }

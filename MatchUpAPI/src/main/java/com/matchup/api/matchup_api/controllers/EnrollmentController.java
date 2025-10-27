@@ -1,7 +1,9 @@
 package com.matchup.api.matchup_api.controllers;
 
+import com.matchup.api.matchup_api.dtos.EnrollmentDTO;
 import com.matchup.api.matchup_api.models.Enrollment;
 import com.matchup.api.matchup_api.repositories.EnrollmentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -26,15 +28,22 @@ public class EnrollmentController {
     }
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Enrollment> getEnrollments() {
+    public List<EnrollmentDTO> getEnrollments() {
         logger.info("Getting all enrollments");
-        return _enrollmentRepository.findAll();
+
+        return _enrollmentRepository.findAll()
+                .stream()
+                .map(EnrollmentDTO::fromEntity)
+                .toList();
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Enrollment getEnrollmentById(@PathVariable("id")UUID id) {
+    public EnrollmentDTO getEnrollmentById(@PathVariable("id")UUID id) {
         logger.info("Getting enrollment by id");
-        return _enrollmentRepository.findById(id).orElse(null);
+        Enrollment enrollment = _enrollmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Enrollment not found with id: " + id));
+
+        return EnrollmentDTO.fromEntity(enrollment);
     }
 
     @GetMapping(path = "/event/{id}/count-members")

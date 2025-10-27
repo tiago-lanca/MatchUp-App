@@ -1,7 +1,9 @@
 package com.matchup.api.matchup_api.controllers;
 
+import com.matchup.api.matchup_api.dtos.EventDTO;
 import com.matchup.api.matchup_api.models.Event;
 import com.matchup.api.matchup_api.repositories.EventRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -26,15 +28,20 @@ public class EventController {
     }
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Event> getEvents() {
+    public List<EventDTO> getEvents() {
         logger.info("Getting all events");
-        return _eventRepository.findAll();
+        return _eventRepository.findAll()
+                .stream()
+                .map(EventDTO::fromEntity)
+                .toList();
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Event getEventById(@PathVariable("id") UUID id) {
+    public EventDTO getEventById(@PathVariable("id") UUID id) {
         logger.info("Getting event with id: " + id);
-        return _eventRepository.findById(id).orElse(null);
+        return _eventRepository.findById(id)
+                .map(EventDTO::fromEntity)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

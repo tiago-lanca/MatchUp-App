@@ -1,7 +1,9 @@
 package com.matchup.api.matchup_api.controllers;
 
+import com.matchup.api.matchup_api.dtos.UserDTO;
 import com.matchup.api.matchup_api.models.User;
 import com.matchup.api.matchup_api.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +29,20 @@ public class UserController {
     }
 
     @GetMapping(path = "", produces= MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getUsers() {
+    public List<UserDTO> getUsers() {
         logger.info("Getting all users");
-        return _userRepository.findAll();
+        return _userRepository.findAll()
+                .stream()
+                .map(UserDTO::fromEntity)
+                .toList();
     }
 
     @GetMapping(path = "/{id}", produces= MediaType.APPLICATION_JSON_VALUE)
-    public User getUserById(@PathVariable("id") UUID id) {
+    public UserDTO getUserById(@PathVariable("id") UUID id) {
         logger.info("Getting user with id: " + id);
-        return _userRepository.findById(id).orElse(null);
+        return _userRepository.findById(id)
+                .map(UserDTO::fromEntity)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
 
 
