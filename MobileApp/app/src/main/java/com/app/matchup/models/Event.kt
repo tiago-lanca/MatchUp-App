@@ -1,5 +1,6 @@
 package com.app.matchup.models
 
+import com.app.matchup.Status
 import java.util.Date
 import java.util.UUID
 data class Event(
@@ -13,6 +14,8 @@ data class Event(
     var sport: Sport? = null,
     var maxMembers: Int = 0,
     var admin: User? = null,
-    var notes: String? = null
+    var notes: String? = null,
+    var status: Status = Status.OPEN,
+    var enrollments: List<Enrollment> = emptyList<Enrollment>()
 )
 

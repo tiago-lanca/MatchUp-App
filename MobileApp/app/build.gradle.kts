@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -55,6 +56,11 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.foundation.layout)
+
+    implementation(libs.fuel.gson)
+    implementation(libs.fuel)
+    implementation(libs.gson)
+    implementation(libs.fuel.android)
 
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
