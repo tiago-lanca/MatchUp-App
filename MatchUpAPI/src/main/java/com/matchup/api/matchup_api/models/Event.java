@@ -33,6 +33,7 @@ public class Event {
     @Column(name = "eve_created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "eve_status")
+    @Enumerated(EnumType.STRING)
     private Status status = Status.OPEN;
 
     @ManyToOne

@@ -18,10 +18,12 @@ public class UserDTO {
     private UUID id;
     private String name;
     private String email;
+    private String passwordHash;
     private String city;
     private String mobilePhone;
     private String gender;
     private Country country;
+    private byte[] profilePicture;
     private Sport favoriteSport;
     private List<EnrollmentDTO> enrollments;
 
@@ -30,10 +32,12 @@ public class UserDTO {
                 u.getId(),
                 u.getName(),
                 u.getEmail(),
+                u.getPasswordHash(),
                 u.getCity(),
                 u.getMobilePhone(),
                 u.getGender(),
                 u.getCountry() != null ? u.getCountry() : null,
+                u.getProfilePicture(),
                 u.getFavoriteSport() != null ? u.getFavoriteSport() : null,
                 u.getEnrollments() != null
                         ? u.getEnrollments().stream()
