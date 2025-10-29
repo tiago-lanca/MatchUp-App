@@ -1,31 +1,66 @@
 package com.app.matchup.services
 
+import com.app.matchup.Status
 import com.app.matchup.dtos.EventDTO
 import com.app.matchup.models.Event
 import com.app.matchup.utilities.AppConstants.SERVER_ROOT
+import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpGet
 import com.google.gson.GsonBuilder
+import java.util.UUID
 
 class EventService {
-    private val serverRoot = "http://10.0.2.2:8081"
+    suspend fun getEvents(): List<Event> {
+        val (_,_, result) = "${SERVER_ROOT}/api/events"
+            .httpGet()
+            .awaitStringResponseResult()
 
-    fun GetEvents(
-        callback: (eventList: List<Event>) -> Unit
-    ) {
+        return result.fold(
+            success = { responseBody ->
+                val gson = GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    .create()
 
-        var eventList = mutableListOf<Event>()
-        "${SERVER_ROOT}/api/events".httpGet().response {
-              request, response, result ->
+                val eventDtoList = gson.fromJson(responseBody, Array<EventDTO>::class.java).toList()
 
-            val responseBody = String(response.data)
-            val gson = GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                .create()
-            val json = gson.fromJson(responseBody, Array<EventDTO>::class.java)
+                eventDtoList.map { dto ->
+                    Event(
+                        id = dto.id,
+                        name = dto.name,
+                        date = dto.date,
+                        address = dto.address,
+                        cost = dto.cost,
+                        duration = dto.duration,
+                        gender = dto.gender,
+                        sport = dto.sport,
+                        maxMembers = dto.maxMembers,
+                        admin = UserService().GetUserById(dto.adminId),
+                        notes = dto.notes,
+                        status = dto.status ?: Status.CLOSED,
+                        enrollments = EnrollmentService().GetEnrollmentsByEventId(dto.id) ?: emptyList()
+                    )
+                }
+            },
+            failure = {
+                emptyList<Event>()
+            }
+        )
+    }
 
-            val eventDtoList = json.toList()
-            for(eventDto in eventDtoList){
-                val event = Event(
+    suspend fun getEventById(id: UUID): Event?{
+        val (_,_, result) = "${SERVER_ROOT}/api/events/$id"
+            .httpGet()
+            .awaitStringResponseResult()
+
+        return result.fold(
+            success = { responseBody ->
+                val gson = GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    .create()
+
+                val eventDto = gson.fromJson(responseBody, EventDTO::class.java)
+
+                Event(
                     id = eventDto.id,
                     name = eventDto.name,
                     date = eventDto.date,
@@ -35,24 +70,15 @@ class EventService {
                     gender = eventDto.gender,
                     sport = eventDto.sport,
                     maxMembers = eventDto.maxMembers,
-                    admin = UserService().get
+                    admin = UserService().GetUserById(eventDto.adminId),
+                    notes = eventDto.notes,
+                    status = eventDto.status ?: Status.CLOSED,
+                    enrollments = EnrollmentService().GetEnrollmentsByEventId(eventDto.id) ?: emptyList()
                 )
+            },
+            failure = {
+                null
             }
-            public final val id: UUID = UUID.randomUUID(),
-            public final var name: String = "",
-            public final var date: Date = Date(),
-            public final var address: Address? = null,
-            public final var cost: Double = 0.0,
-            public final var duration: Int = 0,
-            public final var gender: String = "M",
-            public final var sport: Sport? = null,
-            public final var maxMembers: Int = 0,
-            public final var admin: User? = null,
-            public final var notes: String? = null,
-            public final var status: Status = Status.OPEN,
-            public final var enrollments: List<Enrollment> = emptyList<Enrollment>()
-
-            callback(json.toList())
-        }
+        )
     }
 }
