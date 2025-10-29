@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.EventDetailsActivity
 import com.app.matchup.R
+import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.models.Address
 import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
@@ -71,11 +72,11 @@ fun EventListItem(
             .clickable { onClick() }
     ){
         Image(
-            painter = painterResource(event.sport?.icon!!),
+            painter = painterResource(event.sport?.getSportIcon()!!),
             contentDescription = "Football Icon",
             modifier = Modifier
                 .padding(end = 15.dp)
-                .size( event.sport?.icon!!.getSportIconSize()),
+                .size( event.sport?.getSportIcon()!!.getSportIconSize()),
             contentScale = ContentScale.Fit
         )
 

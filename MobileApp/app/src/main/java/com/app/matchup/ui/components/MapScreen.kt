@@ -21,6 +21,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.app.matchup.R
+import com.app.matchup.extensions.getSportIcon
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -67,7 +68,7 @@ fun MapScreen(
                     //icon = BitmapDescriptorFactory.fromBitmap(customIcon)
                 ){
                     Icon(
-                        painterResource(event.sport?.icon!!),
+                        painterResource(event.sport?.getSportIcon()!!),
                         modifier = Modifier.size(35.dp),
                         contentDescription = "Football Icon",
                         tint = Color.Unspecified

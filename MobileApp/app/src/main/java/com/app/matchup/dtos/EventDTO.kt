@@ -21,5 +21,5 @@ data class EventDTO (
     val maxMembers: Int,
     val notes: String,
     val status: Status,
-    val enrollments: List<Enrollment>
+    val enrollments: List<EnrollmentDTO>
 )

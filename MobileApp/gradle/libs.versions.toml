@@ -1,5 +1,6 @@
 [versions]
 agp = "8.13.0"
+fuelCoroutines = "2.3.1"
 fuelGson = "2.3.1"
 gson = "2.13.2"
 kotlin = "2.2.20"
@@ -17,9 +18,13 @@ playServicesMaps = "19.2.0"
 animationCore = "1.9.3"
 
 [libraries]
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuelGson" }
 fuel-android = { module = "com.github.kittinunf.fuel:fuel-android", version.ref = "fuelGson" }
+fuel-coroutines = { module = "com.github.kittinunf.fuel:fuel-coroutines", version.ref = "fuelCoroutines" }
 fuel-gson = { module = "com.github.kittinunf.fuel:fuel-gson", version.ref = "fuelGson" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

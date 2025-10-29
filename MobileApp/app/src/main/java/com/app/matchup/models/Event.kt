@@ -17,5 +17,9 @@ data class Event(
     var notes: String? = null,
     var status: Status = Status.OPEN,
     var enrollments: List<Enrollment> = emptyList<Enrollment>()
-)
+) {
+    companion object{
+        fun empty() = Event()
+    }
+}
 

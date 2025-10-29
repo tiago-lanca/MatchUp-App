@@ -13,4 +13,8 @@ data class User(
     var gender: String = "",
     var profilePicture: String? = null,
     var favoriteSport: Sport? = null
-)
+){
+    companion object {
+        fun empty() = User()
+    }
+}

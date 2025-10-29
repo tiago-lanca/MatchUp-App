@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.R
+import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.models.Address
 import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
@@ -190,7 +191,7 @@ fun EventDetails(
                     // Sport Column
                     ColumnWithLabel(
                         label = "Sport:",
-                        imageIcon = event.sport?.icon!!,
+                        imageIcon = event.sport?.getSportIcon()!!,
                         text = event.sport!!.name,
                     )
 

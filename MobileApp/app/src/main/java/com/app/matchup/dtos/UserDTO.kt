@@ -13,6 +13,7 @@ data class UserDTO (
     val mobilePhone: String,
     val gender: String,
     val country: Country,
+    val profilePicture: String,
     val favoriteSport: Sport,
     val enrollments: List<EnrollmentDTO>
 )
