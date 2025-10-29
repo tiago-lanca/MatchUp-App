@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -38,6 +39,7 @@ fun EventList(
     onClickEventItem: (Event) -> Unit,
     modifier: Modifier = Modifier
 ){
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -46,63 +48,67 @@ fun EventList(
                 color = EVENT_BACKGROUND_COLOR,
                 shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
             )
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .navigationBarsPadding()
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+
         ) {
-
-            item {
-
-                Row(
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 30.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Title "Near Events"
+                Text(
+                    text = "Near Events",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 30.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Title "Near Events"
-                    Text(
-                        text = "Near Events",
-                        color = Color.White,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .background(
-                                color = EVENT_BACKGROUND_COLOR
-                            )
-                    )
-                    Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Settings",
-                        tint = Color.Gray
-                    )
-                }
-            }
-            if (eventList.isEmpty()) {
-                item {
-                    Text(
-                        text = "No events to be shown",
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(bottom = 10.dp)
-                    )
-                }
-            } else {
-                itemsIndexed(eventList, key = { _, event -> event.id }) { index, event ->
-                    EventListItem(
-                        event,
-                        onClick = { onClickEventItem(event) }
-                    )
-
-                    if (index < eventList.lastIndex) {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            thickness = 1.dp,
-                            color = Color.Gray.copy(alpha = 0.3f)
+                        .background(
+                            color = EVENT_BACKGROUND_COLOR
                         )
+                )
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.Gray
+                )
+            }
+
+
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (eventList.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No events to be shown",
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
+                        )
+                    }
+                } else {
+                    itemsIndexed(eventList, key = { _, event -> event.id }) { index, event ->
+                        EventListItem(
+                            event,
+                            onClick = { onClickEventItem(event) }
+                        )
+
+                        if (index < eventList.lastIndex) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                thickness = 1.dp,
+                                color = Color.Gray.copy(alpha = 0.3f)
+                            )
+                        }
                     }
                 }
             }

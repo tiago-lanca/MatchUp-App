@@ -9,6 +9,7 @@ import com.app.matchup.R
 import com.app.matchup.ui.theme.GENDER_FEMALE_COLOR
 import com.app.matchup.ui.theme.GENDER_MALE_COLOR
 import com.app.matchup.ui.theme.GENDER_MIX_COLOR
+import com.app.matchup.utilities.AppConstants.MAP_DISPLAY_OFFSET
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -28,7 +29,7 @@ object Tools{
                     latLng,
                     15f
                 ),
-                durationMs = 1000
+                durationMs = 2000
             )
         }
     }
@@ -48,14 +49,4 @@ object Tools{
         }
     }
 
-    fun Int.getSportIconSize(): Dp {
-        return when(this) {
-            R.drawable.football_icon -> 25.dp
-            R.drawable.padel_icon -> 35.dp
-            R.drawable.running_icon -> 35.dp
-            R.drawable.futsalball_icon -> 25.dp
-            R.drawable.basketball_icon -> 25.dp
-            else -> 25.dp
-        }
-    }
 }

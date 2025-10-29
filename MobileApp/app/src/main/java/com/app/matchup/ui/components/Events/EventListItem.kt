@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.app.matchup.EventDetailsActivity
 import com.app.matchup.R
 import com.app.matchup.extensions.getSportIcon
+import com.app.matchup.extensions.getSportIconSize
 import com.app.matchup.models.Address
 import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
@@ -46,7 +47,6 @@ import com.app.matchup.models.User
 import com.app.matchup.samples.EventSamples
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
-import com.app.matchup.utilities.Tools.getSportIconSize
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

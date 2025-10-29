@@ -23,6 +23,7 @@ import com.google.maps.android.compose.MarkerState
 import com.app.matchup.R
 import com.app.matchup.extensions.getSportIcon
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
 
@@ -37,18 +38,20 @@ fun MapScreen(
     val seixalCoords = LatLng(38.621759, -9.105657)
     val defaultZoom = 15f
 
-
     // Runs only once is rendered
     LaunchedEffect(Unit) {
         val mapCenterWithOffset = CameraPosition.fromLatLngZoom(
-            LatLng(seixalCoords.latitude - 0.003, seixalCoords.longitude),
+            LatLng(seixalCoords.latitude - 0.004, seixalCoords.longitude),
             defaultZoom)
         cameraPositionState.position = mapCenterWithOffset
     }
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState
+        cameraPositionState = cameraPositionState,
+        uiSettings = MapUiSettings(
+            zoomControlsEnabled = false
+        )
     ) {
         if(eventList.isNotEmpty()) {
             eventList.forEach { event ->
