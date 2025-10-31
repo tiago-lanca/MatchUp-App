@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -28,7 +30,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.app.matchup.R
+import com.app.matchup.models.Address
 import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.ui.components.AddressSection
@@ -42,14 +46,17 @@ import java.util.Date
 @Composable
 fun CreateEventForm(
     event: Event,
+    address: Address,
     costInput: String,
+    durationInput: String,
+    maxMembersInput: String,
     onNameChanged: (String) -> Unit,
     onDateChanged: (Date) -> Unit,
     onCostChanged: (String) -> Unit,
-    onDurationChanged: (Int) -> Unit,
+    onDurationChanged: (String) -> Unit,
     onGenderChanged: (String) -> Unit,
     onSportChanged: (Sport) -> Unit,
-    onMaxMembersChanged: (Int) -> Unit,
+    onMaxMembersChanged: (String) -> Unit,
     onNotesChanged: (String) -> Unit,
     onCreateEvent: () -> Unit,
     modifier: Modifier = Modifier
@@ -89,7 +96,7 @@ fun CreateEventForm(
         )
 
         // Address (Street, City, Zip Code) Field
-        AddressSection()
+        AddressSection(address)
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -125,8 +132,8 @@ fun CreateEventForm(
 
             // Max Members
             TextField(
-                value = event.maxMembers.toString(),
-                onValueChange = { onMaxMembersChanged(it.toInt()) },
+                value = maxMembersInput,
+                onValueChange = { onMaxMembersChanged(it) },
                 label = {
                     Text(
                         text = "Members"
@@ -171,13 +178,17 @@ fun CreateEventForm(
 
             // Duration Field
             TextField(
-                value = event.duration.toString(),
-                onValueChange = {
-                    onDurationChanged(it.toInt())
+                value = durationInput,
+                onValueChange = { onDurationChanged(it) },
+                label = { Text(
+                    text = "Duration (min)",
+                    fontSize = 14.sp
+                    )
                 },
-                label = { Text(text = "Duration (min)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.weight(0.7f)
+                singleLine = true,
+                modifier = Modifier
+                    .weight(0.95f)
             )
 
             // Cost Field
@@ -186,7 +197,9 @@ fun CreateEventForm(
                 onValueChange = { onCostChanged(it) },
                 label = { Text(text = "€/p") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.weight(0.4f)
+                singleLine = true,
+                modifier = Modifier
+                    .weight(0.45f)
             )
         }
 
@@ -218,7 +231,10 @@ fun CreateEventFormPreview() {
     )
     CreateEventForm(
         event = event,
+        address = Address.empty(),
         costInput = event.cost.toString(),
+        durationInput = event.duration.toString(),
+        maxMembersInput = event.maxMembers.toString(),
         onNameChanged = {},
         onDateChanged = {},
         onCostChanged = {},

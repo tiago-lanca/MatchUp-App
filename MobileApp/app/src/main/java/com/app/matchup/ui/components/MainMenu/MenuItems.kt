@@ -24,7 +24,13 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun MenuItems(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onHomeClick: () -> Unit,
+    onMyEventsClick: () -> Unit,
+    onSearchEventsClick: () -> Unit,
+    onCreateNewEventClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    onSignOutClick: () -> Unit
 ){
     Column (
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -33,42 +39,48 @@ fun MenuItems(
         MenuItem(
             icon = Icons.Default.Home,
             iconDescription = "Home Icon",
-            text = "Home"
+            text = "Home",
+            onMenuItemClick = { onHomeClick() }
         )
 
         // My Events Item
         MenuItem(
             icon = Icons.Default.Event,
             iconDescription = "My Events Icon",
-            text = "My Events"
+            text = "My Events",
+            onMenuItemClick = { onMyEventsClick() }
         )
 
         // Search Events Item
         MenuItem(
             icon = Icons.Default.Search,
             iconDescription = "Search Events Icon",
-            text = "Search Events"
+            text = "Search Events",
+            onMenuItemClick = { onSearchEventsClick() }
         )
 
         // Create New Event Item
         MenuItem(
             icon = Icons.Default.AddCircleOutline,
             iconDescription = "Create New Event Icon",
-            text = "Create New Event"
+            text = "Create New Event",
+            onMenuItemClick = { onCreateNewEventClick() }
         )
 
         // Profile Item
         MenuItem(
             icon = Icons.Default.Person,
             iconDescription = "Profile Icon",
-            text = "Profile"
+            text = "Profile",
+            onMenuItemClick = { onProfileClick() }
         )
 
         // Sign Out Item
         MenuItem(
             icon = Icons.AutoMirrored.Filled.Logout,
             iconDescription = "Sign out Icon",
-            text = "Sign Out"
+            text = "Sign Out",
+            onMenuItemClick = { onSignOutClick() }
         )
     }
 
@@ -77,5 +89,12 @@ fun MenuItems(
 @Preview
 @Composable
 fun MenuItemsPreview(){
-    MenuItems()
+    MenuItems(
+        onHomeClick = {},
+        onMyEventsClick = {},
+        onSearchEventsClick = {},
+        onCreateNewEventClick = {},
+        onProfileClick = {},
+        onSignOutClick = {}
+    )
 }

@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,18 +19,21 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.NearMe
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -48,6 +52,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -57,10 +62,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.app.matchup.CreateEventActivity
+import com.app.matchup.SelectLocationActivity
 import com.app.matchup.extensions.toMapDisplay
 import com.app.matchup.models.Event
 import com.app.matchup.samples.EventSamples
 import com.app.matchup.ui.components.FloatingButtonsMainScreen
+import com.app.matchup.ui.components.MainMenu.MainMenuActivity
 import com.app.matchup.ui.components.MapScreen
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
 import com.app.matchup.utilities.AppConstants
@@ -96,8 +103,9 @@ fun MainScreen(
 
     val fabPadding by animateDpAsState(
         when (sheetState.currentValue){
-            SheetValue.Expanded -> 240.dp
-            SheetValue.PartiallyExpanded -> 40.dp
+            SheetValue.Expanded ->
+                if(selectedEvent.isNull()) 240.dp else 290.dp
+            SheetValue.PartiallyExpanded -> 10.dp
             else -> 180.dp
         }
     )
@@ -131,7 +139,7 @@ fun MainScreen(
                             )
                     ) {
 
-                        if (selectedEvent == null) {
+                        if (selectedEvent.isNull()) {
                             EventList(
                                 eventList = eventList,
                                 onClickEventItem = { event ->
@@ -179,6 +187,31 @@ fun MainScreen(
                             )
                         }
                     )
+                        FloatingActionButton(
+                            onClick = {
+                                val intent = Intent(context, MainMenuActivity::class.java)
+                                context.startActivity(intent)
+                                if(context is Activity) context.finish()
+                            },
+                            containerColor = Color.Black.copy(alpha = 0.9f),
+                            contentColor = Color.White,
+                            shape = CircleShape,
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .statusBarsPadding()
+                                .padding(start = 10.dp)
+                                .size(46.dp)
+                                .zIndex(2f)
+                                .border(1.dp, Color.White, CircleShape),
+                            elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 6.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Open menu icon"
+                            )
+                        }
+
+
                     FloatingButtonsMainScreen(
                         onMyLocationButtonClick = {
                             Tools.moveCameraTo(
@@ -190,7 +223,7 @@ fun MainScreen(
                         },
                         onCreateNewEventButtonClick = {
                             //Log.i("TEST", "Button create event clicked.")
-                            (context as Activity).navigateTo(CreateEventActivity::class.java)
+                            (context as Activity).navigateTo(SelectLocationActivity::class.java)
                         },
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
@@ -198,59 +231,10 @@ fun MainScreen(
                     )
                 }
             }
-
-            // Floating Buttons on Event List (no event selected)
-
-            /*FloatingButtonsMainScreen(
-                onMyLocationButtonClick = {
-                    Tools.moveCameraTo(
-                        SeixalCoords.toMapDisplay(),
-                        AppConstants.defaultZoom,
-                        coroutineScope,
-                        cameraPositionState
-                    )
-                },
-                onCreateNewEventButtonClick = {
-                    //Log.i("TEST", "Button create event clicked.")
-                    (context as Activity).navigateTo(CreateEventActivity::class.java)
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 10.dp, bottom = screenHeight * 0.40f)
-            )
-        }
-
-        // Has event selected
-        selectedEvent?.let { event ->
-
-            EventDetails(
-                event,
-                onClose = { selectedEvent = null }
-            )
-
-            // Floating Buttons
-            FloatingButtonsMainScreen(
-                onMyLocationButtonClick = {
-                    Tools.moveCameraTo(
-                        SeixalCoords.toMapDisplay(),
-                        AppConstants.defaultZoom,
-                        coroutineScope,
-                        cameraPositionState
-                    )
-                    selectedEvent = null
-                },
-                onCreateNewEventButtonClick = {
-                    //Log.i("TEST", "Button create event clicked.")
-                    (context as Activity).navigateTo(CreateEventActivity::class.java)
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 10.dp, bottom = screenHeight * 0.46f)
-            )
-        }*/
         }
     }
 
+fun Event?.isNull() = this == null
 
 
 @RequiresApi(Build.VERSION_CODES.O)

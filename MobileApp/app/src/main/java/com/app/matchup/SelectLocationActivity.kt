@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.app.matchup.ui.components.SelectLocationScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 
 class SelectLocationActivity : ComponentActivity() {
@@ -19,8 +20,14 @@ class SelectLocationActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-
+                SelectLocationScreen()
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun SelectLocationActivityPreview(){
+
 }

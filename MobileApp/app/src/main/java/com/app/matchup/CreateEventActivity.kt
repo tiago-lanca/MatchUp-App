@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.app.matchup.models.Address
 import com.app.matchup.ui.components.Events.CreateEventScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 
@@ -23,9 +24,26 @@ class CreateEventActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-                CreateEventScreen()
+                val address = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra("address", Address::class.java)
+                }
+                else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<Address>("address")
+                }
+
+                CreateEventScreen(address!!)
             }
         }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+fun CreateEventScreenPreview() {
+    MatchUpTheme {
+        CreateEventScreen(Address.empty())
     }
 }
 

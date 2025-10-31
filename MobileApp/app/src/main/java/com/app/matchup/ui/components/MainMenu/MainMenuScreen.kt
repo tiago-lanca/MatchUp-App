@@ -1,5 +1,6 @@
 package com.app.matchup.ui.components.MainMenu
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,17 +23,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.matchup.MainActivity
 import com.app.matchup.R
+import com.app.matchup.SelectLocationActivity
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
+import com.app.matchup.utilities.Tools.navigateTo
 
 @Composable
 fun MainMenuScreen() {
+
+    val context = LocalContext.current
+
     Scaffold(
         containerColor = BACKGROUND_COLOR,
 
@@ -109,7 +117,13 @@ fun MainMenuScreen() {
 
                 // Menu items
                 MenuItems(
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(innerPadding),
+                    onHomeClick = { (context as Activity).navigateTo(MainActivity::class.java) },
+                    onMyEventsClick = { /*TODO*/ },
+                    onSearchEventsClick = { (context as Activity).navigateTo(MainActivity::class.java) },
+                    onCreateNewEventClick = { (context as Activity).navigateTo(SelectLocationActivity::class.java) },
+                    onProfileClick = { /*TODO*/ },
+                    onSignOutClick = { /*TODO*/ }
                 )
             }
         }

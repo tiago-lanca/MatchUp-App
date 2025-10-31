@@ -56,10 +56,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import com.app.matchup.CreateEventActivity
 import com.app.matchup.EventsListActivity
+import com.app.matchup.MainActivity
 import com.app.matchup.RegisterActivity
+import com.app.matchup.services.LocationService
 import com.app.matchup.ui.theme.LOCATION_ICON_COLOR
 import com.app.matchup.ui.theme.MY_LOCATION_ICON_COLOR
+import com.app.matchup.utilities.Tools.navigateTo
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -68,9 +72,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun SelectLocationScreen(
-    onLocationSelected: (LatLng) -> Unit
-) {
+fun SelectLocationScreen() {
     val seixalCoords = LatLng(38.621759, -9.105657)
     val defaultZoom = 15f
 
@@ -174,9 +176,7 @@ fun SelectLocationScreen(
                         // Close Button
                         IconButton(
                             onClick = {
-                                val intent = Intent(context, EventsListActivity::class.java)
-                                context.startActivity(intent)
-                                if(context is Activity) context.finish()
+                                (context as Activity).navigateTo(MainActivity::class.java)
                             },
                             modifier = Modifier
                                 .align(Alignment.CenterEnd)
@@ -272,7 +272,15 @@ fun SelectLocationScreen(
 
             // Confirm Button
             Button(
-                onClick = { onLocationSelected(selectedPosition) },
+                onClick = {
+                    coroutineScope.launch {
+                        val result = LocationService.getLocationData(selectedPosition)
+                        val intent = Intent(context, CreateEventActivity::class.java)
+                        intent.putExtra("address", result)
+                        context.startActivity(intent)
+                    }
+
+                },
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF006400),

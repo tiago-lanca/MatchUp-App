@@ -15,9 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun MenuItem(icon: ImageVector, iconDescription: String, text: String){
+fun MenuItem(
+    icon: ImageVector,
+    iconDescription: String,
+    text: String,
+    onMenuItemClick: () -> Unit
+){
     TextButton(
-        onClick = { }
+        onClick = { onMenuItemClick() }
     ) {
         Icon(
             imageVector = icon,
@@ -40,6 +45,7 @@ fun MenuItemPreview(){
     MenuItem(
         icon = Icons.Default.Home,
         iconDescription = "Home Icon",
-        text = "Home"
+        text = "Home",
+        onMenuItemClick = {}
     )
 }

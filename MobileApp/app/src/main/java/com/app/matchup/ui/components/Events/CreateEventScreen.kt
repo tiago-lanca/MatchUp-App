@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.MainActivity
 import com.app.matchup.R
+import com.app.matchup.models.Address
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.REGISTER_BUTTON_COLOR
@@ -60,11 +61,15 @@ import com.app.matchup.viewmodels.CreateEventViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CreateEventScreen(
+    address: Address,
     viewModel: CreateEventViewModel = viewModel()
 ){
     val context = LocalContext.current
     val event by viewModel.event.collectAsState()
     val costInput by viewModel.costInput.collectAsState()
+    val maxMembersInput by viewModel.membersInput.collectAsState()
+    val durationInput by viewModel.durationInput.collectAsState()
+
 
     Scaffold(
         containerColor = BACKGROUND_COLOR,
@@ -154,7 +159,10 @@ fun CreateEventScreen(
                 ) {
                     CreateEventForm(
                         event = event,
+                        address = address,
                         costInput = costInput,
+                        durationInput = durationInput,
+                        maxMembersInput = maxMembersInput,
                         onNameChanged = viewModel::onNameChanged,
                         onDateChanged = viewModel::onDateChanged,
                         onCostChanged = viewModel::onCostChanged,
@@ -202,5 +210,7 @@ fun CreateEventScreen(
 @Preview(showBackground = true, device = "id:pixel_6")
 @Composable
 fun CreateEventScreenPreview(){
-    CreateEventScreen()
+    CreateEventScreen(
+        address = Address.empty()
+    )
 }

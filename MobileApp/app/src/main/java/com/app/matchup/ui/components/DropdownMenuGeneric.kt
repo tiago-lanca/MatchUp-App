@@ -68,7 +68,7 @@ fun <T>  DropdownMenuGeneric(
                 Text(
                     text = label,
                     maxLines = 1,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     color = labelColor,
                     overflow = TextOverflow.Ellipsis,
                     softWrap = false,
@@ -89,8 +89,8 @@ fun <T>  DropdownMenuGeneric(
             modifier = Modifier
                 .fillMaxSize(),
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color.Transparent, // 🔥 borda fora de foco invisível
-                focusedBorderColor = Color.Transparent,   // 🔥 borda focada invisível
+                unfocusedBorderColor = Color.Transparent,
+                focusedBorderColor = Color.Transparent,
                 disabledBorderColor = Color.Transparent
             )
         )

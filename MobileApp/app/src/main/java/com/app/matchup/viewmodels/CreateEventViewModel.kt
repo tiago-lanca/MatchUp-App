@@ -16,8 +16,14 @@ class CreateEventViewModel : ViewModel() {
     private val _event = MutableStateFlow(Event())
     val event: StateFlow<Event> = _event
 
+    private val _maxMembersInput = MutableStateFlow("")
+    val membersInput: StateFlow<String> = _maxMembersInput
+
     private val _costInput = MutableStateFlow("0")
     val costInput: StateFlow<String> = _costInput
+
+    private val _durationInput = MutableStateFlow("")
+    val durationInput: StateFlow<String> = _durationInput
 
 
     fun onNameChanged(newName: String) {
@@ -28,7 +34,7 @@ class CreateEventViewModel : ViewModel() {
         _event.value = _event.value.copy(date = newDate)
     }
 
-    fun onAddressChanged(newAddress: Address){
+    fun onAddressChanged(newAddress: Address) {
         _event.value = _event.value.copy(address = newAddress)
     }
 
@@ -43,8 +49,10 @@ class CreateEventViewModel : ViewModel() {
         }
     }
 
-    fun onDurationChanged(newDuration: Int) {
-        _event.value = _event.value.copy(duration = newDuration)
+    fun onDurationChanged(newDuration: String) {
+        if (newDuration.all { it.isDigit() } || newDuration.isEmpty()) {
+            _durationInput.value = newDuration
+        }
     }
 
     fun onGenderChanged(newGender: String) {
@@ -55,8 +63,10 @@ class CreateEventViewModel : ViewModel() {
         _event.value = _event.value.copy(sport = newSport)
     }
 
-    fun onMaxMembersChanged(newMaxMembers: Int){
-        _event.value = _event.value.copy(maxMembers = newMaxMembers)
+    fun onMaxMembersChanged(newMaxMembers: String) {
+        if (newMaxMembers.all { it.isDigit() } || newMaxMembers.isEmpty()) {
+            _maxMembersInput.value = newMaxMembers
+        }
     }
 
     fun onNotesChanged(newNotes: String) {
@@ -65,8 +75,14 @@ class CreateEventViewModel : ViewModel() {
 
     fun onCreateEvent() {
         viewModelScope.launch {
-            val current = _event.value
-            println("Saving event: ${current.name} (${current.address?.city})")
+
+            val newEvent = _event.value.copy(
+                maxMembers = _maxMembersInput.value.toIntOrNull() ?: 0,
+                cost = costInput.value.toDoubleOrNull() ?: 0.0,
+                duration = durationInput.value.toIntOrNull() ?: 0
+            )
+
+            println("Saving event: ${newEvent.name} (${newEvent.address?.city}) with max. members: ${newEvent.maxMembers}")
             // TODO: call my API
         }
     }

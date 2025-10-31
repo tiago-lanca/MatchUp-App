@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.app.matchup.ui.components.Events.MainScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 
 class MainMenuActivity : ComponentActivity() {
@@ -19,7 +20,7 @@ class MainMenuActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-
+                MainMenuScreen()
             }
         }
     }

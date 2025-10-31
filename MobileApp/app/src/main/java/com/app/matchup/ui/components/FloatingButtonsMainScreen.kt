@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.app.matchup.utilities.Tools
@@ -40,6 +41,8 @@ fun FloatingButtonsMainScreen(
             shape = CircleShape,
             modifier = Modifier
                 .size(46.dp)
+                .shadow(6.dp, CircleShape)
+
         ) {
             Icon(
                 imageVector = Icons.Default.NearMe,
@@ -54,7 +57,9 @@ fun FloatingButtonsMainScreen(
             containerColor = Color(0xFF04A138),
             contentColor = Color.White,
             shape = CircleShape,
-            modifier = Modifier.size(46.dp)
+            modifier = Modifier
+                .size(46.dp)
+                .shadow(6.dp, CircleShape)
         ) {
             Icon(
                 imageVector = Icons.Default.Add,

@@ -47,7 +47,7 @@ fun AddressSection(
 
         // Street
         TextField(
-            value = "R. Adão Manuel Ramos Barata 3",
+            value = address?.street!!,
             onValueChange = {},
             label = { Text("Street") },
             readOnly = true,
@@ -58,7 +58,7 @@ fun AddressSection(
         // City and Zip side by side
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             TextField(
-                value = "Moscavide",
+                value = address.city,
                 onValueChange = {},
                 label = { Text("City") },
                 readOnly = true,
@@ -67,7 +67,7 @@ fun AddressSection(
             )
 
             TextField(
-                value = "1850-150",
+                value = address.zipCode,
                 onValueChange = {},
                 label = { Text("Zip Code") },
                 readOnly = true,
