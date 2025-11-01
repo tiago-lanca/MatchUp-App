@@ -14,15 +14,15 @@ import java.util.UUID;
 public class Address {
     @Id
     @Column(name = "adr_id")
-    private UUID Id = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
     @Column(name = "adr_street")
-    private String Street;
+    private String street;
     @Column(name = "adr_city")
-    private String City;
+    private String city;
     @Column(name = "adr_zipCode")
-    private String ZipCode;
+    private String zipCode;
     @Column(name = "adr_latitude")
-    private double Latitude;
+    private double latitude;
     @Column(name = "adr_longitude")
-    private double Longitude;
+    private double longitude;
 }

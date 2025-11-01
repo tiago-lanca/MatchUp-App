@@ -53,4 +53,5 @@ public class EventController {
         Event newEvent = _eventRepository.save(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEvent);
     }
+
 }
