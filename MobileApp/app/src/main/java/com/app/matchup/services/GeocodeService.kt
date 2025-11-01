@@ -9,12 +9,12 @@ import com.github.kittinunf.fuel.httpGet
 import com.google.gson.GsonBuilder
 import java.util.UUID
 
-object LocationService {
+object GeocodeService {
 
-    suspend fun getLocationData(latLng: LatLng): Address?{
+    suspend fun getLocationData(latLng: LatLng): Address? {
         val preferredAddressTypes = listOf("street_address", "route", "premise")
 
-        val (_,_, result) = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.latitude},${latLng.longitude}&key=${MAPS_API_KEY}"
+        val (_, _, result) = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.latitude},${latLng.longitude}&key=${MAPS_API_KEY}"
             .httpGet()
             .awaitStringResponseResult()
 

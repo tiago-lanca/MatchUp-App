@@ -20,24 +20,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,10 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.app.matchup.CreateEventActivity
-import com.app.matchup.EventsListActivity
 import com.app.matchup.MainActivity
-import com.app.matchup.RegisterActivity
-import com.app.matchup.services.LocationService
+import com.app.matchup.services.GeocodeService
 import com.app.matchup.ui.theme.LOCATION_ICON_COLOR
 import com.app.matchup.ui.theme.MY_LOCATION_ICON_COLOR
 import com.app.matchup.utilities.Tools.navigateTo
@@ -274,7 +267,7 @@ fun SelectLocationScreen() {
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        val result = LocationService.getLocationData(selectedPosition)
+                        val result = GeocodeService.getLocationData(selectedPosition)
                         val intent = Intent(context, CreateEventActivity::class.java)
                         intent.putExtra("address", result)
                         context.startActivity(intent)

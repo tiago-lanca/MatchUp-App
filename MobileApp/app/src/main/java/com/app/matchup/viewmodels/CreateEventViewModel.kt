@@ -87,7 +87,7 @@ class CreateEventViewModel : ViewModel() {
         _event.value = _event.value.copy(notes = newNotes)
     }
 
-    fun onCreateEvent() {
+    fun onCreateEvent(result: (Boolean) -> Unit) {
         // Verifies if there's any error on the form
         val errors = GetValidationErrors()
         if(errors != null){
@@ -107,23 +107,28 @@ class CreateEventViewModel : ViewModel() {
                 println("Date: ${newEvent.date}")
                 println("Event ID: ${newEvent.id}")
                 println("Address ID: ${newEvent.address?.id}")
-                newEvent.sport?.icon = null
 
                 val createdAddress = AddressService.createAddress(newEvent.address!!)
                 if (createdAddress == null) {
                     println("Error creating new address.")
+                    result(false)
                     return@launch
                 }
 
-                val eventToCreate = newEvent.copy(address = createdAddress)
                 println("Address created successfully! ID: ${createdAddress.id}")
 
-                val createdEvent = EventService.createNewEvent(eventToCreate)
-                if (createdEvent != null)
-                    println("Event created successfully! ID: ${createdEvent.id}")
-                else
-                    println("Error creating new event.")
+                val eventToCreate = newEvent.copy(address = createdAddress)
+                newEvent.sport?.icon = null
 
+                val createdEvent = EventService.createNewEvent(eventToCreate)
+                if (createdEvent != null) {
+                    println("Event created successfully! ID: ${createdEvent.id}")
+                    result(true)
+                }
+                else {
+                    println("Error creating new event.")
+                    result(false)
+                }
             }
             catch (e: Exception) {
                 println("Error during event creation: ${e.message}")

@@ -23,7 +23,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -32,10 +34,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -70,6 +76,7 @@ fun CreateEventScreen(
     val maxMembersInput by viewModel.membersInput.collectAsState()
     val durationInput by viewModel.durationInput.collectAsState()
     val validationState by viewModel.validationState.collectAsState()
+    var showDialogEventCreated by remember { mutableStateOf(false) }
 
     event.address = address
 
@@ -174,7 +181,11 @@ fun CreateEventScreen(
                         onSportChanged = viewModel::onSportChanged,
                         onMaxMembersChanged = viewModel::onMaxMembersChanged,
                         onNotesChanged = viewModel::onNotesChanged,
-                        onCreateEvent = viewModel::onCreateEvent,
+                        onCreateEvent = {
+                            viewModel.onCreateEvent { isEventCreated ->
+                                if(isEventCreated) showDialogEventCreated = true
+                            }
+                        },
                         modifier = Modifier
                             .padding(innerPadding)
                     )
@@ -190,7 +201,9 @@ fun CreateEventScreen(
                         disabledContainerColor = Color.White
                     ),
                     onClick = {
-                        viewModel.onCreateEvent()
+                        viewModel.onCreateEvent { isEventCreated ->
+                            if(isEventCreated) showDialogEventCreated = true
+                        }
                     },
                     modifier = Modifier
                         .width(250.dp)
@@ -203,6 +216,33 @@ fun CreateEventScreen(
                     )
                 }
             }
+        }
+
+        if(showDialogEventCreated){
+            AlertDialog(
+                onDismissRequest = { showDialogEventCreated = false },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = "Check icon",
+                        tint = Color(0xFF4CAF50),
+                        modifier = Modifier.size(40.dp)
+                    )
+                },
+                title = { Text("Success") },
+                text = { Text("Event was created successfully.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            val intent = Intent(context, MainActivity::class.java)
+                            context.startActivity(intent)
+                            if(context is Activity) context.finish()
+                        }
+                    ) {
+                        Text("OK", color = Color(0xFF4CAF50))
+                    }
+                }
+            )
         }
 
         // Little light above the logo
