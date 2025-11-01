@@ -1,15 +1,16 @@
 package com.app.matchup.services
 
-import com.app.matchup.Status
+import com.app.matchup.enums.Status
 import com.app.matchup.dtos.EventDTO
 import com.app.matchup.models.Event
 import com.app.matchup.utilities.AppConstants.SERVER_ROOT
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPost
 import com.google.gson.GsonBuilder
 import java.util.UUID
 
-class EventService {
+object EventService {
     suspend fun getEvents(): List<Event> {
         val (_,_, result) = "${SERVER_ROOT}/api/events"
             .httpGet()
@@ -77,6 +78,31 @@ class EventService {
                 )
             },
             failure = {
+                null
+            }
+        )
+    }
+
+    suspend fun createNewEvent(event: Event): Event?{
+        val gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            .create()
+
+        val bodyJson = gson.toJson(event)
+
+        val (_,_, result) = "${SERVER_ROOT}/api/events"
+            .httpPost()
+            .header("Content-Type" to "application/json")
+            .body(bodyJson)
+            .awaitStringResponseResult()
+
+        return result.fold(
+            success = { responseBody ->
+                println("Event created successfuly!")
+                gson.fromJson(responseBody, Event::class.java)
+            },
+            failure = {
+                println("Error creating new event")
                 null
             }
         )

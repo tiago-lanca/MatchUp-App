@@ -12,7 +12,6 @@ import java.util.UUID
 
 class EnrollmentService {
     val _userService = UserService()
-    val _eventService = EventService()
 
     suspend fun GetEnrollments(): List<Enrollment>{
         val (_,_, result) = "${SERVER_ROOT}/api/enrollments"
@@ -30,7 +29,7 @@ class EnrollmentService {
                     Enrollment(
                         id = dto.id,
                         user = _userService.GetUserById(dto.userId) ?: User.empty(),
-                        event = _eventService.getEventById(dto.eventId) ?: Event.empty(),
+                        event = EventService.getEventById(dto.eventId) ?: Event.empty(),
                         createdAt = dto.createdAt
                     )
                 }
@@ -58,7 +57,7 @@ class EnrollmentService {
                         Enrollment(
                             id = dto.id,
                             user = _userService.GetUserById(dto.userId) ?: User.empty(),
-                            event = _eventService.getEventById(dto.eventId) ?: Event.empty(),
+                            event = EventService.getEventById(dto.eventId) ?: Event.empty(),
                             createdAt = dto.createdAt
                         )
                     }
