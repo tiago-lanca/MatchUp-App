@@ -1,12 +1,12 @@
 package com.app.matchup.models
 
-import com.app.matchup.Status
+import com.app.matchup.enums.Status
 import java.util.Date
 import java.util.UUID
 data class Event(
     val id: UUID = UUID.randomUUID(),
     var name: String = "",
-    var date: Date = Date(),
+    var date: Date? = null,
     var address: Address? = null,
     var cost: Double = 0.0,
     var duration: Int = 0,

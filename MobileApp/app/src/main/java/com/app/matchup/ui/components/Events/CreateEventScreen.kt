@@ -69,7 +69,9 @@ fun CreateEventScreen(
     val costInput by viewModel.costInput.collectAsState()
     val maxMembersInput by viewModel.membersInput.collectAsState()
     val durationInput by viewModel.durationInput.collectAsState()
+    val validationState by viewModel.validationState.collectAsState()
 
+    event.address = address
 
     Scaffold(
         containerColor = BACKGROUND_COLOR,
@@ -157,12 +159,13 @@ fun CreateEventScreen(
                 Box (
                     contentAlignment = Alignment.TopStart,
                 ) {
+
                     CreateEventForm(
                         event = event,
-                        address = address,
                         costInput = costInput,
                         durationInput = durationInput,
                         maxMembersInput = maxMembersInput,
+                        validationState = validationState,
                         onNameChanged = viewModel::onNameChanged,
                         onDateChanged = viewModel::onDateChanged,
                         onCostChanged = viewModel::onCostChanged,
@@ -186,7 +189,9 @@ fun CreateEventScreen(
                         disabledContentColor = REGISTER_BUTTON_COLOR,
                         disabledContainerColor = Color.White
                     ),
-                    onClick = { TODO() },
+                    onClick = {
+                        viewModel.onCreateEvent()
+                    },
                     modifier = Modifier
                         .width(250.dp)
                         .align(Alignment.CenterHorizontally),

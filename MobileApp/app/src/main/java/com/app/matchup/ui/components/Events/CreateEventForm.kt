@@ -7,22 +7,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,9 +33,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.R
-import com.app.matchup.models.Address
+import com.app.matchup.models.CreateEventValidation
 import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
+import com.app.matchup.services.SportService
 import com.app.matchup.ui.components.AddressSection
 import com.app.matchup.ui.components.DateTimePicker
 import com.app.matchup.ui.components.DropdownMenuGeneric
@@ -46,10 +48,10 @@ import java.util.Date
 @Composable
 fun CreateEventForm(
     event: Event,
-    address: Address,
     costInput: String,
     durationInput: String,
     maxMembersInput: String,
+    validationState: CreateEventValidation,
     onNameChanged: (String) -> Unit,
     onDateChanged: (Date) -> Unit,
     onCostChanged: (String) -> Unit,
@@ -61,21 +63,12 @@ fun CreateEventForm(
     onCreateEvent: () -> Unit,
     modifier: Modifier = Modifier
 ){
+    var sports by remember { mutableStateOf<List<Sport>>(emptyList()) }
 
-    val sports = listOf<Sport>(
-        Sport(
-            name = "Football",
-            icon = R.drawable.football_icon
-        ),
-        Sport(
-            name = "Futsal",
-            icon = R.drawable.football_icon
-        ),
-        Sport(
-            name = "Corrida",
-            icon = R.drawable.football_icon
-        )
-    )
+    LaunchedEffect(Unit) {
+        sports = SportService.getSports()
+        event.sport = sports.first()
+    }
 
     val genders = listOf<String>(
         "M",
@@ -92,11 +85,12 @@ fun CreateEventForm(
             value = event.name,
             onValueChange = onNameChanged,
             label = { Text(text = "Event Name") },
+            isError = validationState.nameError != null,
             modifier = Modifier.fillMaxWidth()
         )
 
         // Address (Street, City, Zip Code) Field
-        AddressSection(address)
+        AddressSection(event.address)
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -106,7 +100,6 @@ fun CreateEventForm(
             // Sports Field
             DropdownMenuGeneric(
                 label = "Sport",
-                labelColor = Color.Black,
                 items = sports,
                 selectedItem = event.sport,
                 onItemSelected = { onSportChanged(it) },
@@ -114,19 +107,21 @@ fun CreateEventForm(
                 leadingIcon = {
                     event.sport?.icon?.let { sportIcon ->
                         Box(
-                            modifier = Modifier.fillMaxHeight(),
+                            modifier = Modifier.padding(start = 4.dp, end = 0.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 painter = painterResource(sportIcon),
-                                contentDescription = "Flag",
+                                contentDescription = "Sport icon",
                                 modifier = Modifier.size(20.dp),
                                 tint = Color.Unspecified
                             )
                         }
                     }
                 },
+                isError = validationState.sportError != null,
                 getName = { it.name },
+                getIcon = { it.icon },
                 modifier = Modifier.weight(2f)
             )
 
@@ -139,12 +134,14 @@ fun CreateEventForm(
                         text = "Members"
                     )
                 },
+                isError = validationState.maxMembersError != null,
+                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.weight(1f)
             )
         }
 
-        DateTimePicker(onDateChanged)
+        DateTimePicker(onDateChanged, validationState.dateError)
 
         Row (
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -152,7 +149,6 @@ fun CreateEventForm(
             // Gender Field
             DropdownMenuGeneric(
                 label = "Gender",
-                labelColor = Color.Black,
                 items = genders,
                 selectedItem = event.gender,
                 onItemSelected = { onGenderChanged(it) },
@@ -173,6 +169,7 @@ fun CreateEventForm(
                         )
                 },
                 getName = { it },
+                isError = validationState.genderError != null,
                 modifier = Modifier.weight(1f)
             )
 
@@ -185,6 +182,7 @@ fun CreateEventForm(
                     fontSize = 14.sp
                     )
                 },
+                isError = validationState.durationError != null,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
                 modifier = Modifier
@@ -196,6 +194,7 @@ fun CreateEventForm(
                 value = costInput,
                 onValueChange = { onCostChanged(it) },
                 label = { Text(text = "€/p") },
+                isError = validationState.costError != null,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
                 modifier = Modifier
@@ -231,10 +230,10 @@ fun CreateEventFormPreview() {
     )
     CreateEventForm(
         event = event,
-        address = Address.empty(),
         costInput = event.cost.toString(),
         durationInput = event.duration.toString(),
         maxMembersInput = event.maxMembers.toString(),
+        validationState = CreateEventValidation(),
         onNameChanged = {},
         onDateChanged = {},
         onCostChanged = {},

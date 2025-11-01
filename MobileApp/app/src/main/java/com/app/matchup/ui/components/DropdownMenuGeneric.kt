@@ -1,6 +1,7 @@
 package com.app.matchup.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import com.app.matchup.models.Country
 import com.app.matchup.R
@@ -41,25 +43,29 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.exp
 
 @Composable
 fun <T>  DropdownMenuGeneric(
     label: String,
-    labelColor: Color = Color.Gray,
+    labelColor: Color = Color.DarkGray,
     items: List<T>,
     selectedItem: T?,
     backgroundColor: Color = Color.White,
     onItemSelected: (T) -> Unit,
     getName: (T) -> String,
+    getIcon: ((T) -> Int?)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    errorText: String? = null,
     modifier: Modifier = Modifier
 ){
     var expanded by remember { mutableStateOf(false) }
 
     Box (
         modifier = modifier
-            .height(56.dp)
-            .background(backgroundColor, shape = RoundedCornerShape(5.dp))
+            .clip(RoundedCornerShape(5.dp))
+            .background(backgroundColor)
     ) {
         OutlinedTextField(
             value = selectedItem?.let(getName) ?: "",
@@ -67,32 +73,35 @@ fun <T>  DropdownMenuGeneric(
             label = {
                 Text(
                     text = label,
-                    maxLines = 1,
                     fontSize = 14.sp,
-                    color = labelColor,
-                    overflow = TextOverflow.Ellipsis,
-                    softWrap = false,
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    color = if(isError) Color.Red else labelColor
                 )
             },
             readOnly = true,
+            singleLine = true,
             leadingIcon = leadingIcon,
             trailingIcon = {
                 IconButton(onClick = { expanded = !expanded }) {
-                    Icon(
-                        Icons.Default.ArrowDropDown,
-                        contentDescription = "Countries Dropdown Arrow"
-                    )
+                    Icon(Icons.Default.ArrowDropDown, contentDescription = "Dropdown Arrow")
                 }
             },
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .height(57.dp),
+            shape = RoundedCornerShape(5.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent,
+                focusedBorderColor = if(isError) Color.Red else Color(0xFF2C85FF),
+                unfocusedBorderColor = if(isError) Color.Red else Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
                 disabledBorderColor = Color.Transparent
-            )
+            ),
+            isError = isError,
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 15.sp,
+                lineHeight = 2.sp
+            ),
         )
 
         DropdownMenu(
@@ -107,8 +116,8 @@ fun <T>  DropdownMenuGeneric(
                         Row (verticalAlignment = Alignment.CenterVertically)
                         {
                             Icon(
-                                painter = painterResource(R.drawable.football_icon),
-                                contentDescription = "Country Flag",
+                                painter = painterResource(getIcon?.invoke(item)!!),
+                                contentDescription = "${getName(item)} icon",
                                 tint = Color.Unspecified,
                                 modifier = Modifier.size(15.dp)
                             )
@@ -127,6 +136,15 @@ fun <T>  DropdownMenuGeneric(
                     }
                 )
             }
+        }
+
+        if(isError && !errorText.isNullOrBlank()){
+            Text(
+                text = errorText,
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
         }
     }
 }
@@ -147,11 +165,17 @@ fun DropdownMenuGenericPreview(){
             onItemSelected = {},
             getName = { it.name },
             leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.football_icon),
-                    contentDescription = "Flag",
-                    tint = Color.Unspecified
-                )
+                Box(
+                    modifier = Modifier.padding(start = 4.dp, end = 0.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.football_icon),
+                        contentDescription = "Sport icon",
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Unspecified
+                    )
+                }
             },
             modifier = Modifier
         )

@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.Instant
@@ -42,7 +43,8 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateTimePicker(
-    onDateChanged: (Date) -> Unit
+    onDateChanged: (Date) -> Unit,
+    error: String? = null
 ) {
     val openDatePicker = remember { mutableStateOf(false) }
     val openTimePicker = remember { mutableStateOf(false) }
@@ -68,12 +70,14 @@ fun DateTimePicker(
                 label = { Text("Date") },
                 onValueChange = {},
                 readOnly = true,
+                isError = error != null,
                 modifier = Modifier.weight(1f)
             )
             TextField(
                 value = selectedTime?.format(timeFormat) ?: "",
                 label = { Text("Hour") },
                 onValueChange = {},
+                isError = error != null,
                 readOnly = true,
                 modifier = Modifier
                     .weight(1f)

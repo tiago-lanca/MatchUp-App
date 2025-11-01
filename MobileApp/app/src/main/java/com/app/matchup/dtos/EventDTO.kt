@@ -1,6 +1,6 @@
 package com.app.matchup.dtos
 
-import com.app.matchup.Status
+import com.app.matchup.enums.Status
 import com.app.matchup.models.Address
 import com.app.matchup.models.Enrollment
 import com.app.matchup.models.Sport

@@ -31,10 +31,9 @@ class MainActivity : ComponentActivity() {
 
                 val serverRoot = "http://10.0.2.2:8081"
                 var eventList by remember { mutableStateOf(emptyList<Event>()) }
-                val _eventService = remember { EventService() }
 
                 LaunchedEffect(Unit) {
-                    eventList = _eventService.getEvents()
+                    eventList = EventService.getEvents()
                 }
 
 
