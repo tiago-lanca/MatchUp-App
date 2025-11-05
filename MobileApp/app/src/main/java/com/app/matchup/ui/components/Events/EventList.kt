@@ -3,6 +3,7 @@ package com.app.matchup.ui.components.Events
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,6 +39,7 @@ import kotlinx.coroutines.launch
 fun EventList(
     eventList: List<Event>,
     onClickEventItem: (Event) -> Unit,
+    onRefreshEventList: () -> Unit,
     modifier: Modifier = Modifier
 ){
 
@@ -63,7 +66,7 @@ fun EventList(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Title "Near Events"
+                // Title "Near Events" , Refresh icon and Settings Icon
                 Text(
                     text = "Near Events",
                     color = Color.White,
@@ -74,11 +77,23 @@ fun EventList(
                             color = EVENT_BACKGROUND_COLOR
                         )
                 )
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Settings",
-                    tint = Color.Gray
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = "Refresh icon",
+                        tint = Color.Gray,
+                        modifier = Modifier
+                            .clickable(onClick = onRefreshEventList)
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Settings icon",
+                        tint = Color.Gray
+                    )
+                }
             }
 
 

@@ -19,7 +19,7 @@ class EventsListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-                MainScreen(EventSamples.createSampleListEvents())
+                MainScreen()
             }
         }
     }
@@ -29,5 +29,5 @@ class EventsListActivity : ComponentActivity() {
 @Preview
 @Composable
 fun EventListPreview(){
-    MainScreen(EventSamples.createSampleListEvents())
+    MainScreen()
 }

@@ -36,10 +36,13 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun LoginForm(){
+fun LoginForm(
+    email: String,
+    password: String,
+    onEmailChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+){
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
 
     Card(
         modifier = Modifier
@@ -55,7 +58,7 @@ fun LoginForm(){
             // Email Field
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = { onEmailChanged(it) },
                 label = { Text("Email") },
                 leadingIcon = {
                     Icon(
@@ -90,7 +93,7 @@ fun LoginForm(){
             // Password Field
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { onPasswordChanged(it) },
                 label = { Text("Password") },
                 leadingIcon = {
                     Icon(
@@ -121,5 +124,5 @@ fun LoginForm(){
 @Preview(showBackground = true)
 @Composable
 fun LoginFormPreview(){
-    LoginForm()
+    LoginForm(email = "", password = "", onEmailChanged = {}, onPasswordChanged = {})
 }

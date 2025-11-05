@@ -29,6 +29,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -58,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.MainActivity
 import com.app.matchup.R
+import com.app.matchup.SelectLocationActivity
 import com.app.matchup.models.Address
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
@@ -77,6 +79,8 @@ fun CreateEventScreen(
     val durationInput by viewModel.durationInput.collectAsState()
     val validationState by viewModel.validationState.collectAsState()
     var showDialogEventCreated by remember { mutableStateOf(false) }
+    var goToNewEventChecked by remember { mutableStateOf(false) }
+
 
     event.address = address
 
@@ -123,9 +127,10 @@ fun CreateEventScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
+                    // Icon to go back
                     FloatingActionButton(
                         onClick = {
-                            val intent = Intent(context, MainActivity::class.java)
+                            val intent = Intent(context, SelectLocationActivity::class.java)
                             context.startActivity(intent)
                             if(context is Activity) context.finish()
                         },
@@ -230,11 +235,27 @@ fun CreateEventScreen(
                     )
                 },
                 title = { Text("Success") },
-                text = { Text("Event was created successfully.") },
+                text = {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Text("Event was created successfully.")
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = goToNewEventChecked,
+                                onCheckedChange = { goToNewEventChecked = it }
+                            )
+                            Text("Go to new event")
+                        }
+                    }
+                   },
                 confirmButton = {
                     TextButton(
                         onClick = {
                             val intent = Intent(context, MainActivity::class.java)
+                            if(goToNewEventChecked) intent.putExtra("createdEvent", event)
                             context.startActivity(intent)
                             if(context is Activity) context.finish()
                         }

@@ -68,10 +68,6 @@ fun EventDetails(
 
     ) {
 
-        // Google Maps on the background
-        //MapScreen(cameraPositionState)
-
-        // Near Events Section
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,11 +102,6 @@ fun EventDetails(
                     )
                 }
 
-                // Event ID
-                /*Text(
-                    text = "#${event.id}",
-                    color = Color.Gray
-                )*/
 
                 // Row of Location Icon and Address
                 Row(
@@ -154,18 +145,17 @@ fun EventDetails(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = dateFormatter.format(event.date),
+                        text = "${dateFormatter.format(event.date)}h",
                         color = Color.White,
                         fontSize = 18.sp
                     )
-                    Text(
+                    /*Text(
                         text = SimpleDateFormat("HH':'mm'h'", Locale.getDefault()).format(event.date),
                         color = Color.White,
                         fontSize = 18.sp,
                         modifier = Modifier
                             .padding(start = 10.dp)
-                    )
-
+                    )*/
 
                     // Only shows if there's notes in that event
                     if(!event.notes.isNullOrEmpty()) {

@@ -1,8 +1,12 @@
 package com.app.matchup.models
 
+import android.os.Parcelable
 import com.app.matchup.enums.Status
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 import java.util.UUID
+
+@Parcelize
 data class Event(
     val id: UUID = UUID.randomUUID(),
     var name: String = "",
@@ -17,7 +21,7 @@ data class Event(
     var notes: String? = null,
     var status: Status = Status.OPEN,
     var enrollments: List<Enrollment> = emptyList<Enrollment>()
-) {
+): Parcelable {
     companion object{
         fun empty() = Event()
     }

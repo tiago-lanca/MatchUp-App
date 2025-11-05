@@ -61,11 +61,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.CreateEventActivity
 import com.app.matchup.SelectLocationActivity
 import com.app.matchup.extensions.toMapDisplay
 import com.app.matchup.models.Event
 import com.app.matchup.samples.EventSamples
+import com.app.matchup.services.EventService
 import com.app.matchup.ui.components.FloatingButtonsMainScreen
 import com.app.matchup.ui.components.MainMenu.MainMenuActivity
 import com.app.matchup.ui.components.MapScreen
@@ -75,26 +77,32 @@ import com.app.matchup.utilities.AppConstants.MAP_DISPLAY_OFFSET
 import com.app.matchup.utilities.AppConstants.SeixalCoords
 import com.app.matchup.utilities.Tools
 import com.app.matchup.utilities.Tools.navigateTo
+import com.app.matchup.viewmodels.EventsViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import kotlin.times
+import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
-    eventList: List<Event>
+    viewModel: EventsViewModel = viewModel(),
+    eventCreated: Event? = null
 ) {
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val numberEvents = eventList.size
-    var selectedEvent by remember { mutableStateOf<Event?>(null) }
+    val numberEvents = viewModel.events.collectAsState().value.size
+    val eventList by viewModel.events.collectAsState()
+    val selectedEvent by viewModel.selectedEvent.collectAsState()
+
     val cameraPositionState = rememberCameraPositionState()
 
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -102,137 +110,161 @@ fun MainScreen(
     val sheetState = scaffoldState.bottomSheetState
 
     val fabPadding by animateDpAsState(
-        when (sheetState.currentValue){
+        when (sheetState.currentValue) {
             SheetValue.Expanded ->
-                if(selectedEvent.isNull()) 240.dp else 290.dp
+                if (selectedEvent.isNull()) 240.dp else 290.dp
+
             SheetValue.PartiallyExpanded -> 10.dp
             else -> 180.dp
         }
     )
 
+
     LaunchedEffect(Unit) {
+        // On MainActivity starting, checks if there's any event created passed by CreateEventActivity
+        // If there's any, then select it and move the camera to the address
+        if (eventCreated != null) {
+            viewModel.selectEvent(eventCreated)
+
+            eventCreated.address?.let { address ->
+                Tools.moveCameraTo(
+                    latLng = LatLng(
+                        address.latitude!! - MAP_DISPLAY_OFFSET,
+                        address.longitude!!
+                    ),
+                    coroutineScope = coroutineScope,
+                    cameraPositionState = cameraPositionState
+                )
+            }
+        }
         coroutineScope.launch {
             scaffoldState.bottomSheetState.expand()
         }
     }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFB0BEC5))
-        ) {
 
-            // Near Events Section
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                sheetPeekHeight = 180.dp,
-                sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-                sheetContainerColor = EVENT_BACKGROUND_COLOR,
-                sheetDragHandle = { BottomSheetDefaults.DragHandle() },
-                sheetContent = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 180.dp, max = 410.dp)
-                            .background(
-                                color = EVENT_BACKGROUND_COLOR,
-                                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-                            )
-                    ) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFB0BEC5))
+    ) {
 
-                        if (selectedEvent.isNull()) {
-                            EventList(
-                                eventList = eventList,
-                                onClickEventItem = { event ->
-                                    event.address?.let { address ->
-                                        Tools.moveCameraTo(
-                                            latLng = LatLng(
-                                                address.latitude!! - MAP_DISPLAY_OFFSET,
-                                                address.longitude!!
-                                            ),
-                                            coroutineScope = coroutineScope,
-                                            cameraPositionState = cameraPositionState
-                                        )
-                                    }
-                                    selectedEvent = event
-                                }
-                            )
-                        } else {
-                            EventDetails(
-                                event = selectedEvent!!,
-                                onClose = { selectedEvent = null },
-                            )
-                        }
-                    }
-                }
-            ) { innerPadding ->
+        // Near Events Section
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetPeekHeight = 180.dp,
+            sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            sheetContainerColor = EVENT_BACKGROUND_COLOR,
+            sheetDragHandle = { BottomSheetDefaults.DragHandle() },
+            sheetContent = {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
+                        .fillMaxWidth()
+                        .heightIn(min = 180.dp, max = 410.dp)
+                        .background(
+                            color = EVENT_BACKGROUND_COLOR,
+                            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                        )
                 ) {
-                    MapScreen(
-                        eventList,
-                        cameraPositionState,
-                        onMarkerClick = { event ->
-                            selectedEvent = event
 
-                            Tools.moveCameraTo(
-                                LatLng(
-                                    event.address?.latitude!! - MAP_DISPLAY_OFFSET,
-                                    event.address?.longitude!!
-                                ),
-                                AppConstants.defaultZoom,
-                                coroutineScope,
-                                cameraPositionState
-                            )
-                        }
-                    )
-                        FloatingActionButton(
-                            onClick = {
-                                val intent = Intent(context, MainMenuActivity::class.java)
-                                context.startActivity(intent)
-                                if(context is Activity) context.finish()
+                    if (selectedEvent.isNull()) {
+                        EventList(
+                            eventList = eventList,
+                            onClickEventItem = { event ->
+                                event.address?.let { address ->
+                                    Tools.moveCameraTo(
+                                        latLng = LatLng(
+                                            address.latitude!! - MAP_DISPLAY_OFFSET,
+                                            address.longitude!!
+                                        ),
+                                        coroutineScope = coroutineScope,
+                                        cameraPositionState = cameraPositionState
+                                    )
+                                }
+                                viewModel.selectEvent(event)
                             },
-                            containerColor = Color.Black.copy(alpha = 0.9f),
-                            contentColor = Color.White,
-                            shape = CircleShape,
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .statusBarsPadding()
-                                .padding(start = 10.dp)
-                                .size(46.dp)
-                                .zIndex(2f)
-                                .border(1.dp, Color.White, CircleShape),
-                            elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 6.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Open menu icon"
-                            )
-                        }
+                            onRefreshEventList = {
+                                coroutineScope.launch {
+                                    viewModel.loadEvents()
+                                }
+                            }
+                        )
+                    } else {
+                        EventDetails(
+                            event = selectedEvent!!,
+                            onClose = { viewModel.selectEvent(null) },
+                        )
+                    }
+                }
+            }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                MapScreen(
+                    eventList,
+                    cameraPositionState,
+                    onMarkerClick = { event ->
+                        viewModel.selectEvent(event)
 
-
-                    FloatingButtonsMainScreen(
-                        onMyLocationButtonClick = {
-                            Tools.moveCameraTo(
-                                SeixalCoords.toMapDisplay(),
-                                AppConstants.defaultZoom,
-                                coroutineScope,
-                                cameraPositionState
-                            )
-                        },
-                        onCreateNewEventButtonClick = {
-                            //Log.i("TEST", "Button create event clicked.")
-                            (context as Activity).navigateTo(SelectLocationActivity::class.java)
-                        },
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(end = 10.dp, bottom = fabPadding)
+                        Tools.moveCameraTo(
+                            LatLng(
+                                event.address?.latitude!! - MAP_DISPLAY_OFFSET,
+                                event.address?.longitude!!
+                            ),
+                            AppConstants.defaultZoom,
+                            coroutineScope,
+                            cameraPositionState
+                        )
+                    }
+                )
+                FloatingActionButton(
+                    onClick = {
+                        val intent = Intent(context, MainMenuActivity::class.java)
+                        context.startActivity(intent)
+                        if (context is Activity) context.finish()
+                    },
+                    containerColor = Color.Black.copy(alpha = 0.9f),
+                    contentColor = Color.White,
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .statusBarsPadding()
+                        .padding(start = 10.dp)
+                        .size(46.dp)
+                        .zIndex(2f)
+                        .border(1.dp, Color.White, CircleShape),
+                    elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 6.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Open menu icon"
                     )
                 }
+
+
+                FloatingButtonsMainScreen(
+                    onMyLocationButtonClick = {
+                        Tools.moveCameraTo(
+                            SeixalCoords.toMapDisplay(),
+                            AppConstants.defaultZoom,
+                            coroutineScope,
+                            cameraPositionState
+                        )
+                    },
+                    onCreateNewEventButtonClick = {
+                        //Log.i("TEST", "Button create event clicked.")
+                        (context as Activity).navigateTo(SelectLocationActivity::class.java)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 10.dp, bottom = fabPadding)
+                )
             }
         }
     }
+}
 
 fun Event?.isNull() = this == null
 
@@ -241,5 +273,5 @@ fun Event?.isNull() = this == null
 @Preview(showBackground = true)
 @Composable
 fun EventListPreview() {
-    MainScreen(EventSamples.createSampleListEvents())
+    MainScreen()
 }

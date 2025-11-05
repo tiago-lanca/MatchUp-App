@@ -1,6 +1,7 @@
 package com.app.matchup.ui.components.MainMenu
 
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,12 +33,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.matchup.LoginActivity
 import com.app.matchup.MainActivity
 import com.app.matchup.R
 import com.app.matchup.SelectLocationActivity
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.utilities.Tools.navigateTo
+import com.app.matchup.utilities.UserSession
 
 @Composable
 fun MainMenuScreen() {
@@ -50,7 +56,7 @@ fun MainMenuScreen() {
                 contentColor = Color.Gray,
                 tonalElevation = 0.dp,
                 modifier = Modifier
-                    .height(80.dp)
+                    .height(100.dp)
                     .fillMaxWidth()
             ) {
                 Column (
@@ -110,20 +116,28 @@ fun MainMenuScreen() {
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                // Logged user profile pic. and name/email
-                UserProfileSection()
+                if(UserSession.isLoggedIn(context)) {
+                    // Logged user profile pic. and name/email
+                    UserProfileSection()
+                }
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 // Menu items
                 MenuItems(
                     modifier = Modifier.padding(innerPadding),
+                    onLoginClick = { (context as Activity).navigateTo(LoginActivity::class.java) },
                     onHomeClick = { (context as Activity).navigateTo(MainActivity::class.java) },
                     onMyEventsClick = { /*TODO*/ },
                     onSearchEventsClick = { (context as Activity).navigateTo(MainActivity::class.java) },
                     onCreateNewEventClick = { (context as Activity).navigateTo(SelectLocationActivity::class.java) },
                     onProfileClick = { /*TODO*/ },
-                    onSignOutClick = { /*TODO*/ }
+                    onSignOutClick = {
+                        UserSession.logoutUser(context)
+                        val intent = Intent(context, LoginActivity::class.java)
+                        context.startActivity(intent)
+                        if(context is Activity) context.finish()
+                    }
                 )
             }
         }

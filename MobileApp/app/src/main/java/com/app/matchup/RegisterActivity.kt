@@ -19,7 +19,7 @@ class RegisterActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-                MainScreen(EventSamples.createSampleListEvents())
+
             }
         }
     }

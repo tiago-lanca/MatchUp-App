@@ -4,9 +4,12 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,6 +65,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 @Composable
@@ -199,10 +203,13 @@ fun SelectLocationScreen() {
                         ) {
                             IconButton(
                                 onClick = {
-                                    if(hasLocationPermission){
+                                    if (hasLocationPermission) {
                                         coroutineScope.launch {
                                             cameraPositionState.animate(
-                                                update = CameraUpdateFactory.newLatLngZoom(seixalCoords, defaultZoom),
+                                                update = CameraUpdateFactory.newLatLngZoom(
+                                                    seixalCoords,
+                                                    defaultZoom
+                                                ),
                                                 durationMs = 1000
                                             )
                                         }
@@ -221,18 +228,87 @@ fun SelectLocationScreen() {
                             }
 
                             OutlinedTextField(
-                                value = searchQuery,
-                                onValueChange = { searchQuery = it },
+                                value = filterLocation,
+                                onValueChange = { filterLocation = it },
                                 label = { Text("City") },
                                 singleLine = true,
                                 trailingIcon = {
-                                    IconButton(onClick = { }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Search,
-                                            contentDescription = "Search Icon",
-                                            tint = Color(0xFF006400)
-                                        )
-                                    }
+                                    Row (
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(0.dp)
+                                    ) {
+                                        if (filterLocation.isNotEmpty()) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Close,
+                                                    contentDescription = "Clear text",
+                                                    tint = Color.Black,
+                                                    modifier = Modifier
+                                                        .size(20.dp)
+                                                        .padding(0.dp)
+                                                        .clickable { filterLocation = ""}
+                                                )
+                                        }
+
+                                            Icon(
+                                                imageVector = Icons.Default.Search,
+                                                contentDescription = "Search Icon",
+                                                tint = Color(0xFF006400),
+                                                modifier = Modifier
+                                                    .clickable{
+                                                        if (hasLocationPermission) {
+                                                            val geocoder =
+                                                                Geocoder(context, Locale.getDefault())
+
+                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                                geocoder.getFromLocationName(
+                                                                    filterLocation,
+                                                                    1
+                                                                ) { addresses ->
+                                                                    val address = addresses.firstOrNull()
+                                                                    if (address != null) {
+                                                                        val latLng = LatLng(
+                                                                            address.latitude,
+                                                                            address.longitude
+                                                                        )
+                                                                        coroutineScope.launch {
+                                                                            cameraPositionState.animate(
+                                                                                CameraUpdateFactory.newLatLngZoom(
+                                                                                    latLng,
+                                                                                    14f
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                coroutineScope.launch {
+                                                                    val addresses =
+                                                                        geocoder.getFromLocationName(
+                                                                            filterLocation,
+                                                                            1
+                                                                        )
+                                                                    val address = addresses?.firstOrNull()
+                                                                    if (address != null) {
+                                                                        val latLng = LatLng(
+                                                                            address.latitude,
+                                                                            address.longitude
+                                                                        )
+                                                                        cameraPositionState.animate(
+                                                                            CameraUpdateFactory.newLatLngZoom(
+                                                                                latLng,
+                                                                                14f
+                                                                            ),
+                                                                            durationMs = 2000
+                                                                        )
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                            )
+                                        }
+
                                 },
                                 colors = TextFieldDefaults.colors(
                                     focusedContainerColor = Color.White,
@@ -291,8 +367,6 @@ fun SelectLocationScreen() {
                     letterSpacing = 2.sp
                 )
             }
-
-
         }
     }
 

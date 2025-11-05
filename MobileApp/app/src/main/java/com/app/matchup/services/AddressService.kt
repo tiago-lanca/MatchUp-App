@@ -19,7 +19,6 @@ object AddressService {
             .body(bodyJson)
             .awaitStringResponseResult()
 
-        println(bodyJson)
         return result.fold(
             success = { responseBody ->
                 println("New address was created.")

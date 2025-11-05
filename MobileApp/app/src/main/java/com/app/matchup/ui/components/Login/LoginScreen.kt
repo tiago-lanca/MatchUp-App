@@ -1,5 +1,7 @@
 package com.app.matchup.ui.components.Login
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,10 +25,13 @@ import androidx.compose.material.icons.filled.Login
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,18 +40,36 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.SIGNIN_BUTTON_COLOR
+import com.app.matchup.viewmodels.LoginViewModel
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    context: Context,
+    viewModel: LoginViewModel = viewModel(),
+    onLoginSuccess: () -> Unit
+) {
+
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+    val loginSuccess by viewModel.loginSuccess.collectAsState()
+
+    if(loginSuccess){
+        onLoginSuccess()
+    }
+
     Scaffold(
         containerColor = BACKGROUND_COLOR,
 
@@ -108,8 +131,19 @@ fun LoginScreen() {
 
                 Spacer(modifier = Modifier.height(50.dp))
 
-                LoginForm()
-
+                LoginForm(
+                    email = email,
+                    password = password,
+                    onEmailChanged = { viewModel.onEmailChanged(it) },
+                    onPasswordChanged = { viewModel.onPasswordChanged(it) }
+                )
+                if(error != null){
+                    Text(
+                        text = error ?: "",
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.height(50.dp))
 
                 // Sign In Button
@@ -120,16 +154,24 @@ fun LoginScreen() {
                         disabledContentColor = SIGNIN_BUTTON_COLOR,
                         disabledContainerColor = Color.White
                     ),
-                    onClick = { TODO() },
+                    onClick = { viewModel.onLoginClicked(context) },
+                    enabled = !isLoading,
                     modifier = Modifier
                         .width(200.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Login,
-                        contentDescription = "Login Icon",
-                        modifier = Modifier
-                            .padding(end = 5.dp)
-                    )
+                    if(isLoading){
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp).padding(end = 5.dp)
+                        )
+                    }
+                    else {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Login,
+                            contentDescription = "Login Icon",
+                            modifier = Modifier
+                                .padding(end = 5.dp)
+                        )
+                    }
                     Text("Sign In")
                 }
 
@@ -172,8 +214,12 @@ fun LoginScreen() {
 }
 
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun LoginPanelPreview(){
-    LoginScreen()
+    LoginScreen(context = LocalContext.current,
+        onLoginSuccess = {},
+        viewModel = LoginViewModel()
+    )
 }

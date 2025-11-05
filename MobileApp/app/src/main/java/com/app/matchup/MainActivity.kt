@@ -24,21 +24,28 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
 
-                val serverRoot = "http://10.0.2.2:8081"
                 var eventList by remember { mutableStateOf(emptyList<Event>()) }
 
                 LaunchedEffect(Unit) {
                     eventList = EventService.getEvents()
                 }
 
+                // Checks if there's any new event created from the CreateEventActivity
+                val eventCreated = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra("createdEvent", Event::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<Event>("createdEvent")
+                }
+
+                MainScreen(eventCreated = eventCreated)
+
 
                 //val eventList = EventSamples.createSampleListEvents()
-                MainScreen(eventList = eventList)
                 //CreateEventScreen()
                 //RegisterScreen()
                 //LoginScreen()
@@ -62,6 +69,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainActivityPreview() {
     MatchUpTheme {
-        MainScreen(EventSamples.createSampleListEvents())
+        MainScreen()
     }
 }

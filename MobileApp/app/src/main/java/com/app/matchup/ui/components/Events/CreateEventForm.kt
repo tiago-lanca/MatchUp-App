@@ -42,6 +42,7 @@ import com.app.matchup.ui.components.DateTimePicker
 import com.app.matchup.ui.components.DropdownMenuGeneric
 import com.app.matchup.ui.theme.GENDER_FEMALE_COLOR
 import com.app.matchup.ui.theme.GENDER_MALE_COLOR
+import com.app.matchup.utilities.Tools
 import java.util.Date
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -121,7 +122,7 @@ fun CreateEventForm(
                 },
                 isError = validationState.sportError != null,
                 getName = { it.name },
-                getIcon = { it.icon },
+                intIcon = { it.icon!! },
                 modifier = Modifier.weight(2f)
             )
 
@@ -153,22 +154,9 @@ fun CreateEventForm(
                 selectedItem = event.gender,
                 onItemSelected = { onGenderChanged(it) },
                 backgroundColor = Color(0xFFE7E0EC),
-                leadingIcon = {
-                    if(event.gender == "M") {
-                        Icon(
-                            imageVector = Icons.Filled.Male,
-                            contentDescription = "Male Gender Icon",
-                            tint = GENDER_MALE_COLOR
-                        )
-                    }
-                    else
-                        Icon(
-                            imageVector = Icons.Filled.Female,
-                            contentDescription = "Female Gender Icon",
-                            tint = GENDER_FEMALE_COLOR
-                        )
-                },
+                leadingIcon = { Tools.GetGenderIcon(event.gender) },
                 getName = { it },
+                composableIcon = { Tools.GetGenderIcon(it) },
                 isError = validationState.genderError != null,
                 modifier = Modifier.weight(1f)
             )
