@@ -3,7 +3,9 @@ package com.app.matchup.utilities
 import android.content.Context
 import android.content.SharedPreferences
 import com.app.matchup.models.User
+import com.app.matchup.services.UserService
 import com.google.gson.Gson
+import java.util.UUID
 
 object UserSession {
 
@@ -25,10 +27,11 @@ object UserSession {
             .apply()
     }
 
-    fun getUser(context: Context): User? {
+    suspend fun getUser(context: Context): User? {
         val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        val userJson = prefs.getString(KEY_USER, null)
-        return if (userJson != null) Gson().fromJson(userJson, User::class.java) else null
+        val userJson = prefs.getString(KEY_USER_ID, null)
+        return if (userJson != null) UserService.GetUserById(UUID.fromString(userJson))
+            else null
     }
 
     fun isLoggedIn(context: Context): Boolean {

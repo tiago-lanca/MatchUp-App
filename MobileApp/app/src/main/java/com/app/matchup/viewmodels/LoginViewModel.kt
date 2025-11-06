@@ -1,8 +1,10 @@
 package com.app.matchup.viewmodels
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.matchup.LoginActivity
 import com.app.matchup.models.User
 import com.app.matchup.services.AuthService
 import com.app.matchup.utilities.PasswordEncryption
@@ -37,6 +39,7 @@ class LoginViewModel : ViewModel() {
     }
 
     fun onLoginClicked(context: Context) {
+
         viewModelScope.launch {
             _isLoading.value = true
             val passwordHash = PasswordEncryption.hashPassword(_password.value)

@@ -10,20 +10,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.Login.LoginScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 import com.app.matchup.utilities.UserSession
+import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val existingUser = UserSession.getUser(this)
-        if(existingUser != null){
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-            return
+
+        lifecycleScope.launch {
+
+            val existingUser = UserSession.getUser(this@LoginActivity)
+            if (existingUser != null) {
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                finish()
+            }
         }
 
         setContent {
