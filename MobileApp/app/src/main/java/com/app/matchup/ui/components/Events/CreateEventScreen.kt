@@ -186,11 +186,6 @@ fun CreateEventScreen(
                         onSportChanged = viewModel::onSportChanged,
                         onMaxMembersChanged = viewModel::onMaxMembersChanged,
                         onNotesChanged = viewModel::onNotesChanged,
-                        onCreateEvent = {
-                            viewModel.onCreateEvent { isEventCreated ->
-                                if(isEventCreated) showDialogEventCreated = true
-                            }
-                        },
                         modifier = Modifier
                             .padding(innerPadding)
                     )
@@ -206,7 +201,7 @@ fun CreateEventScreen(
                         disabledContainerColor = Color.White
                     ),
                     onClick = {
-                        viewModel.onCreateEvent { isEventCreated ->
+                        viewModel.onCreateEvent(context) { isEventCreated ->
                             if(isEventCreated) showDialogEventCreated = true
                         }
                     },

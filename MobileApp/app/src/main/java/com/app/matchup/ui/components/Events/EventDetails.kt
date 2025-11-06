@@ -1,5 +1,7 @@
 package com.app.matchup.ui.components.Events
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -20,11 +22,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +44,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.matchup.LoginActivity
 import com.app.matchup.R
 import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.models.Address
@@ -45,7 +56,10 @@ import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
 import com.app.matchup.ui.components.MapScreen
 import com.app.matchup.utilities.Tools
+import com.app.matchup.utilities.UserSession
+import com.app.matchup.viewmodels.EnrollmentsViewModel
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.coroutineScope
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -56,11 +70,19 @@ import java.util.UUID
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EventDetails(
+    context: Context,
     event: Event,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    viewModel: EnrollmentsViewModel = viewModel()
 ){
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-    val cameraPositionState = rememberCameraPositionState()
+    //val cameraPositionState = rememberCameraPositionState()
+    var currentUser by remember { mutableStateOf<User?>(null)}
+
+    LaunchedEffect(Unit) {
+        currentUser = UserSession.getUser(context)
+        viewModel.setSelectedEvent(event)
+    }
 
     Box(
         modifier = Modifier
@@ -196,7 +218,7 @@ fun EventDetails(
                     // Cost Column
                     ColumnWithLabel(
                         label = "Cost:",
-                        text = "${event.cost.toString()}€",
+                        text = "${event.cost}€",
                         textFontSize = 18
                     )
 
@@ -249,6 +271,7 @@ fun EventDetails(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
+                    // JOIN Button
                     Button(
                         colors = ButtonColors(
                             contentColor = Color.White,
@@ -256,7 +279,15 @@ fun EventDetails(
                             disabledContentColor = Color(0xFF31C848),
                             disabledContainerColor = Color.White
                         ),
-                        onClick = { }
+                        onClick = {
+                            if(!UserSession.isLoggedIn(context)) {
+                                val intent = Intent(context, LoginActivity::class.java)
+                                context.startActivity(intent)
+                            }
+                            else{
+                                viewModel.joinEvent(user = currentUser!!)
+                            }
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Check,
@@ -268,6 +299,34 @@ fun EventDetails(
                             text = "JOIN",
                             fontWeight = FontWeight.Bold
                         )
+                    }
+
+                    if(event.admin?.id != null && event.admin?.id == currentUser?.id){
+                        Button(
+                            colors = ButtonColors(
+                                contentColor = Color.White,
+                                containerColor = Color(0xFF880202),
+                                disabledContentColor = Color(0xFF880202),
+                                disabledContainerColor = Color.White
+                            ),
+                            onClick = {
+                                if(!UserSession.isLoggedIn(context)) {
+                                    val intent = Intent(context, LoginActivity::class.java)
+                                    context.startActivity(intent)
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.RestoreFromTrash,
+                                contentDescription = "Delete button",
+                                tint = Color.White,
+                                modifier = Modifier.padding(end = 5.dp)
+                            )
+                            Text(
+                                text = "DELETE",
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }

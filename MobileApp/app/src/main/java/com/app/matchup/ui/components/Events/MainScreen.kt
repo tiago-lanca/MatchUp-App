@@ -1,6 +1,7 @@
 package com.app.matchup.ui.components.Events
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
@@ -91,6 +92,7 @@ import androidx.compose.runtime.collectAsState
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
+    context: Context,
     viewModel: EventsViewModel = viewModel(),
     eventCreated: Event? = null
 ) {
@@ -190,6 +192,7 @@ fun MainScreen(
                         )
                     } else {
                         EventDetails(
+                            context,
                             event = selectedEvent!!,
                             onClose = { viewModel.selectEvent(null) },
                         )
@@ -273,5 +276,6 @@ fun Event?.isNull() = this == null
 @Preview(showBackground = true)
 @Composable
 fun EventListPreview() {
-    MainScreen()
+    MainScreen(LocalContext.current
+    )
 }

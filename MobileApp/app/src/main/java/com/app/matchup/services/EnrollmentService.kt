@@ -11,7 +11,6 @@ import com.google.gson.GsonBuilder
 import java.util.UUID
 
 class EnrollmentService {
-    val _userService = UserService()
 
     suspend fun GetEnrollments(): List<Enrollment>{
         val (_,_, result) = "${SERVER_ROOT}/api/enrollments"
@@ -28,7 +27,7 @@ class EnrollmentService {
                 enrollmentsDtoList.map { dto ->
                     Enrollment(
                         id = dto.id,
-                        user = _userService.GetUserById(dto.userId) ?: User.empty(),
+                        user = UserService.GetUserById(dto.userId) ?: User.empty(),
                         event = EventService.getEventById(dto.eventId) ?: Event.empty(),
                         createdAt = dto.createdAt
                     )
@@ -56,7 +55,7 @@ class EnrollmentService {
                     enrollmentsDtoList.map { dto ->
                         Enrollment(
                             id = dto.id,
-                            user = _userService.GetUserById(dto.userId) ?: User.empty(),
+                            user = UserService.GetUserById(dto.userId) ?: User.empty(),
                             event = EventService.getEventById(dto.eventId) ?: Event.empty(),
                             createdAt = dto.createdAt
                         )

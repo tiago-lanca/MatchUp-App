@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.matchup.samples.EventSamples
 import com.app.matchup.ui.components.Events.MainScreen
@@ -19,7 +20,7 @@ class EventsListActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-                MainScreen()
+                MainScreen(LocalContext.current)
             }
         }
     }
@@ -29,5 +30,5 @@ class EventsListActivity : ComponentActivity() {
 @Preview
 @Composable
 fun EventListPreview(){
-    MainScreen()
+    MainScreen(LocalContext.current)
 }

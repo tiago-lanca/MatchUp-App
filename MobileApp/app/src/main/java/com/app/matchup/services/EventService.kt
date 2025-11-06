@@ -35,7 +35,7 @@ object EventService {
                         gender = dto.gender,
                         sport = dto.sport,
                         maxMembers = dto.maxMembers,
-                        admin = UserService().GetUserById(dto.adminId),
+                        admin = UserService.GetUserById(dto.adminId),
                         notes = dto.notes,
                         status = dto.status ?: Status.CLOSED,
                         enrollments = EnrollmentService().GetEnrollmentsByEventId(dto.id) ?: emptyList()
@@ -71,7 +71,7 @@ object EventService {
                     gender = eventDto.gender,
                     sport = eventDto.sport,
                     maxMembers = eventDto.maxMembers,
-                    admin = UserService().GetUserById(eventDto.adminId),
+                    admin = UserService.GetUserById(eventDto.adminId),
                     notes = eventDto.notes,
                     status = eventDto.status ?: Status.CLOSED,
                     enrollments = EnrollmentService().GetEnrollmentsByEventId(eventDto.id) ?: emptyList()

@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 @Composable
@@ -70,7 +72,7 @@ fun LoginForm(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(57.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.White,
                     focusedContainerColor = Color.White,
@@ -79,6 +81,10 @@ fun LoginForm(
                     cursorColor = Color(0xFF1565C0),
                     focusedLabelColor = Color(0xFF1565C0),
                     unfocusedLabelColor = Color.Gray
+                ),
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 15.sp,
+                    lineHeight = 2.sp
                 )
             )
 
@@ -105,7 +111,7 @@ fun LoginForm(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(56.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.White,
                     focusedContainerColor = Color.White,
@@ -115,7 +121,11 @@ fun LoginForm(
                     focusedLabelColor = Color(0xFF1565C0),
                     unfocusedLabelColor = Color.Gray
                 ),
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation(),
+                textStyle = LocalTextStyle.current.copy(
+                    fontSize = 15.sp,
+                    lineHeight = 2.sp
+                )
             )
         }
     }

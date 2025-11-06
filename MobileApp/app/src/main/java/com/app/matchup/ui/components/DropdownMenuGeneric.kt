@@ -113,7 +113,8 @@ fun <T>  DropdownMenuGeneric(
                                     Icon(
                                         painterResource(intIcon(item)),
                                         contentDescription = "Sport icon",
-                                        modifier = Modifier.size(20.dp)
+                                        modifier = Modifier.size(20.dp),
+                                        tint = Color.Unspecified
                                     )
                                 }
                             }

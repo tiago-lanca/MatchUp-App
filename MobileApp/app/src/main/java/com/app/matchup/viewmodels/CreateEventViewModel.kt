@@ -1,5 +1,6 @@
 package com.app.matchup.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.matchup.models.Address
@@ -10,6 +11,7 @@ import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.services.AddressService
 import com.app.matchup.services.EventService
+import com.app.matchup.utilities.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -87,7 +89,7 @@ class CreateEventViewModel : ViewModel() {
         _event.value = _event.value.copy(notes = newNotes)
     }
 
-    fun onCreateEvent(result: (Boolean) -> Unit) {
+    fun onCreateEvent(context: Context, result: (Boolean) -> Unit) {
         // Verifies if there's any error on the form
         val errors = GetValidationErrors()
         if(errors != null){
@@ -103,11 +105,7 @@ class CreateEventViewModel : ViewModel() {
                     duration = durationInput.value.toIntOrNull() ?: 0
                 )
 
-                println("Saving event: ${newEvent.name} (${newEvent.address?.city}) with max. members: ${newEvent.maxMembers}")
-                println("Date: ${newEvent.date}")
-                println("Event ID: ${newEvent.id}")
-                println("Address ID: ${newEvent.address?.id}")
-
+                // Creating new Address
                 val createdAddress = AddressService.createAddress(newEvent.address!!)
                 if (createdAddress == null) {
                     println("Error creating new address.")
@@ -115,14 +113,15 @@ class CreateEventViewModel : ViewModel() {
                     return@launch
                 }
 
-                println("Address created successfully! ID: ${createdAddress.id}")
-
-                val eventToCreate = newEvent.copy(address = createdAddress)
+                val eventToCreate = newEvent.copy(address = createdAddress, admin = UserSession.getUser(context))
                 newEvent.sport?.icon = null
 
+                // Creating new Event
                 val createdEvent = EventService.createNewEvent(eventToCreate)
                 if (createdEvent != null) {
                     println("Event created successfully! ID: ${createdEvent.id}")
+
+
                     result(true)
                 }
                 else {

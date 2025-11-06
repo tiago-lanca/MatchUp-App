@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.matchup.models.Event
 import com.app.matchup.samples.EventSamples
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MatchUpTheme {
 
+                val context = LocalContext.current
                 var eventList by remember { mutableStateOf(emptyList<Event>()) }
 
                 LaunchedEffect(Unit) {
@@ -42,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     intent.getParcelableExtra<Event>("createdEvent")
                 }
 
-                MainScreen(eventCreated = eventCreated)
+                MainScreen(context, eventCreated = eventCreated)
 
 
                 //val eventList = EventSamples.createSampleListEvents()
@@ -69,6 +71,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainActivityPreview() {
     MatchUpTheme {
-        MainScreen()
+        MainScreen(LocalContext.current)
     }
 }

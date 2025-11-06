@@ -8,7 +8,7 @@ import com.github.kittinunf.fuel.httpGet
 import com.google.gson.GsonBuilder
 import java.util.UUID
 
-class UserService {
+object UserService {
 
     suspend fun GetUsers(): List<User>? {
 

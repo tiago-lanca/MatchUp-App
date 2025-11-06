@@ -61,7 +61,6 @@ fun CreateEventForm(
     onSportChanged: (Sport) -> Unit,
     onMaxMembersChanged: (String) -> Unit,
     onNotesChanged: (String) -> Unit,
-    onCreateEvent: () -> Unit,
     modifier: Modifier = Modifier
 ){
     var sports by remember { mutableStateOf<List<Sport>>(emptyList()) }
@@ -230,7 +229,6 @@ fun CreateEventFormPreview() {
         onSportChanged = {},
         onMaxMembersChanged = {},
         onNotesChanged = {},
-        onCreateEvent = {}
     )
 }
 
