@@ -7,16 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.matchup.models.Event
-import com.app.matchup.samples.EventSamples
-import com.app.matchup.services.EventService
 import com.app.matchup.ui.components.Events.MainScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 
@@ -30,11 +23,6 @@ class MainActivity : ComponentActivity() {
             MatchUpTheme {
 
                 val context = LocalContext.current
-                var eventList by remember { mutableStateOf(emptyList<Event>()) }
-
-                LaunchedEffect(Unit) {
-                    eventList = EventService.getEvents()
-                }
 
                 // Checks if there's any new event created from the CreateEventActivity
                 val eventCreated = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -44,7 +32,11 @@ class MainActivity : ComponentActivity() {
                     intent.getParcelableExtra<Event>("createdEvent")
                 }
 
-                MainScreen(context, eventCreated = eventCreated)
+                /*LaunchedEffect(eventCreated) {
+                    eventCreated?.copy(admin = EventService.getEventAdmin(eventCreated.id))
+                }*/
+
+                MainScreen(context, event = eventCreated)
 
 
                 //val eventList = EventSamples.createSampleListEvents()

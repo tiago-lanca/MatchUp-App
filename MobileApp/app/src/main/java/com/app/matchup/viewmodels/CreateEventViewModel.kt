@@ -10,7 +10,9 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.services.AddressService
+import com.app.matchup.services.EnrollmentService
 import com.app.matchup.services.EventService
+import com.app.matchup.ui.components.MainMenu.UserProfileSection
 import com.app.matchup.utilities.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -104,6 +106,7 @@ class CreateEventViewModel : ViewModel() {
                     cost = costInput.value.toDoubleOrNull() ?: 0.0,
                     duration = durationInput.value.toIntOrNull() ?: 0
                 )
+                println(UserSession.getUser(context)?.name)
 
                 // Creating new Address
                 val createdAddress = AddressService.createAddress(newEvent.address!!)
@@ -114,15 +117,20 @@ class CreateEventViewModel : ViewModel() {
                 }
 
                 val eventToCreate = newEvent.copy(address = createdAddress, admin = UserSession.getUser(context))
-                newEvent.sport?.icon = null
-
+                //newEvent.sport?.icon = null
+                eventToCreate.sport?.icon = null
                 // Creating new Event
                 val createdEvent = EventService.createNewEvent(eventToCreate)
                 if (createdEvent != null) {
-                    println("Event created successfully! ID: ${createdEvent.id}")
 
+                    // Creating enrollment for the admin to the event created
+                    val createdEnrollment = EnrollmentService.createEnrollment(createdEvent, UserSession.getUser(context)!!)
 
-                    result(true)
+                    if(createdEnrollment != null) {
+                        result(true)
+                    }
+                    else
+                        result(false)
                 }
                 else {
                     println("Error creating new event.")

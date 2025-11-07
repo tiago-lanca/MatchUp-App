@@ -20,9 +20,10 @@ object UserService {
             result.fold(
                 success = { responseBody ->
                     val gson = GsonBuilder().create()
-                    val userDtoList = gson.fromJson(responseBody, Array<UserDTO>::class.java).toList()
+                    gson.fromJson(responseBody, Array<User>::class.java).toList()
 
-                    userDtoList.map { dto ->
+
+                    /*userDtoList.map { dto ->
                         User(
                             id = dto.id,
                             name = dto.name,
@@ -35,7 +36,7 @@ object UserService {
                             profilePicture = dto.profilePicture,
                             favoriteSport = dto.favoriteSport
                         )
-                    }
+                    }*/
                 },
                 failure = { error ->
                     println("Error fetching users: ${error.message}")
@@ -58,9 +59,9 @@ object UserService {
             result.fold(
                 success = { responseBody ->
                     val gson = GsonBuilder().create()
-                    val userDto = gson.fromJson(responseBody, UserDTO::class.java)
+                    gson.fromJson(responseBody, User::class.java)
 
-                    User(
+                    /*User(
                         id = userDto.id,
                         name = userDto.name,
                         email = userDto.email,
@@ -71,7 +72,7 @@ object UserService {
                         gender = userDto.gender,
                         profilePicture = userDto.profilePicture,
                         favoriteSport = userDto.favoriteSport
-                    )
+                    )*/
                 },
                 failure = { error ->
                     println("Error fetching user: ${error.message}")

@@ -3,6 +3,7 @@ package com.app.matchup.services
 import com.app.matchup.enums.Status
 import com.app.matchup.dtos.EventDTO
 import com.app.matchup.models.Event
+import com.app.matchup.models.User
 import com.app.matchup.utilities.AppConstants.SERVER_ROOT
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpGet
@@ -22,9 +23,9 @@ object EventService {
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                     .create()
 
-                val eventDtoList = gson.fromJson(responseBody, Array<EventDTO>::class.java).toList()
+                gson.fromJson(responseBody, Array<Event>::class.java).toList()
 
-                eventDtoList.map { dto ->
+                /*eventDtoList.map { dto ->
                     Event(
                         id = dto.id,
                         name = dto.name,
@@ -38,9 +39,9 @@ object EventService {
                         admin = UserService.GetUserById(dto.adminId),
                         notes = dto.notes,
                         status = dto.status ?: Status.CLOSED,
-                        enrollments = EnrollmentService().GetEnrollmentsByEventId(dto.id) ?: emptyList()
+                        enrollments = EnrollmentService.getEnrollmentsByEventId(dto.id) ?: emptyList()
                     )
-                }
+                }*/
             },
             failure = {
                 emptyList<Event>()
@@ -59,9 +60,9 @@ object EventService {
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                     .create()
 
-                val eventDto = gson.fromJson(responseBody, EventDTO::class.java)
+                gson.fromJson(responseBody, Event::class.java)
 
-                Event(
+                /*Event(
                     id = eventDto.id,
                     name = eventDto.name,
                     date = eventDto.date,
@@ -74,8 +75,8 @@ object EventService {
                     admin = UserService.GetUserById(eventDto.adminId),
                     notes = eventDto.notes,
                     status = eventDto.status ?: Status.CLOSED,
-                    enrollments = EnrollmentService().GetEnrollmentsByEventId(eventDto.id) ?: emptyList()
-                )
+                    enrollments = EnrollmentService.getEnrollmentsByEventId(eventDto.id) ?: emptyList()
+                )*/
             },
             failure = {
                 null
@@ -83,6 +84,42 @@ object EventService {
         )
     }
 
+    suspend fun getEventAdmin(eventId: UUID): User?{
+        val (_,_, result) = "${SERVER_ROOT}/api/events/${eventId}/admin"
+            .httpGet()
+            .awaitStringResponseResult()
+
+        return result.fold(
+            success = { responseBody ->
+                val gson = GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    .create()
+
+                val admin = gson.fromJson(responseBody, User::class.java)
+                println(admin.name)
+                admin
+                /*Event(
+                    id = eventDto.id,
+                    name = eventDto.name,
+                    date = eventDto.date,
+                    address = eventDto.address,
+                    cost = eventDto.cost,
+                    duration = eventDto.duration,
+                    gender = eventDto.gender,
+                    sport = eventDto.sport,
+                    maxMembers = eventDto.maxMembers,
+                    admin = UserService.GetUserById(eventDto.adminId),
+                    notes = eventDto.notes,
+                    status = eventDto.status ?: Status.CLOSED,
+                    enrollments = EnrollmentService.getEnrollmentsByEventId(eventDto.id) ?: emptyList()
+                )*/
+            },
+            failure = { error ->
+                println("Error getting event admin: ${error.message}")
+                null
+            }
+        )
+    }
     suspend fun createNewEvent(event: Event): Event?{
         val gson = GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
@@ -100,9 +137,23 @@ object EventService {
             success = { responseBody ->
                 println("Event created successfuly!")
                 gson.fromJson(responseBody, Event::class.java)
-            },
-            failure = {
-                println("Error creating new event")
+
+                /*Event(
+                    id = eventDto.id,
+                    name = eventDto.name,
+                    date = eventDto.date,
+                    address = eventDto.address,
+                    cost = eventDto.cost,
+                    duration = eventDto.duration,
+                    gender = eventDto.gender,
+                    sport = eventDto.sport,
+                    maxMembers = eventDto.maxMembers,
+                    admin = UserService.GetUserById(eventDto.adminId),
+                    notes = eventDto.notes
+                )*/
+          },
+            failure = { error ->
+                println("Error creating new event: ${error.message}")
                 null
             }
         )

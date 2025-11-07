@@ -44,7 +44,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.LoginActivity
 import com.app.matchup.R
@@ -53,16 +52,13 @@ import com.app.matchup.models.Address
 import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
+import com.app.matchup.services.EventService
+import com.app.matchup.services.UserService
 import com.app.matchup.ui.components.ColumnWithLabel
-import com.app.matchup.ui.components.MapScreen
 import com.app.matchup.utilities.Tools
 import com.app.matchup.utilities.UserSession
 import com.app.matchup.viewmodels.EnrollmentsViewModel
-import com.google.maps.android.compose.rememberCameraPositionState
-import kotlinx.coroutines.coroutineScope
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
@@ -73,15 +69,16 @@ fun EventDetails(
     context: Context,
     event: Event,
     onClose: () -> Unit,
-    viewModel: EnrollmentsViewModel = viewModel()
+    enrollmentVM: EnrollmentsViewModel = viewModel()
 ){
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     //val cameraPositionState = rememberCameraPositionState()
+
     var currentUser by remember { mutableStateOf<User?>(null)}
 
     LaunchedEffect(Unit) {
         currentUser = UserSession.getUser(context)
-        viewModel.setSelectedEvent(event)
+        enrollmentVM.setSelectedEvent(event)
     }
 
     Box(
@@ -222,7 +219,6 @@ fun EventDetails(
                         textFontSize = 18
                     )
 
-
                     // Duration Column
                     ColumnWithLabel(
                         label = "Duration:",
@@ -266,7 +262,7 @@ fun EventDetails(
                     }
                 }
 
-                // TODO() If has no login then disable button
+                // JOIN / LEAVE / DELETE Button
                 Row (
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -285,7 +281,7 @@ fun EventDetails(
                                 context.startActivity(intent)
                             }
                             else{
-                                viewModel.joinEvent(user = currentUser!!)
+                                enrollmentVM.joinEvent(user = currentUser!!)
                             }
                         }
                     ) {
