@@ -27,6 +27,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -78,7 +79,11 @@ fun MainScreen(
 
     val cameraPositionState = rememberCameraPositionState()
 
-    val scaffoldState = rememberBottomSheetScaffoldState()
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Expanded
+        )
+    )
 
     val sheetState = scaffoldState.bottomSheetState
 
@@ -112,8 +117,14 @@ fun MainScreen(
                 )
             }
         }
+    }
+
+    LaunchedEffect(eventList) {
         coroutineScope.launch {
-            scaffoldState.bottomSheetState.expand()
+            if(eventList.size > 2) {
+                scaffoldState.bottomSheetState.expand()
+            }
+            else scaffoldState.bottomSheetState.partialExpand()
         }
     }
 
@@ -140,7 +151,6 @@ fun MainScreen(
                             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                         )
                 ) {
-
                     if (selectedEvent.isNull()) {
                         EventList(
                             eventList = eventList,
