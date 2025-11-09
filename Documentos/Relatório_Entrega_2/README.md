@@ -60,7 +60,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 ![Diagrama da Base de Dados](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/BD_Diagram.png)
 A base de dados é composta por várias tabelas como: Users, Events, Enrollments, Addresses, Sports, Countries e Reports.
 
-De salientar as relações existentes entre elas, havendo uma relação entre Users e Events através da tabela Enrollments. Os users têm relação com os Reports e com a tabela Countries.
+De salientar as relações existentes entre elas, havendo uma relação entre Users e Events através da tabela Enrollments. Os Users têm relação com os Reports e com a tabela Countries.
 
 Já a tabela Events têm ligação com os dados em Sports e Addresses.
 
