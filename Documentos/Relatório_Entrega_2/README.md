@@ -56,14 +56,65 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 3. Como tecnologias a utilizar para o desenvolvimento do projeto será Java para a criação da API com a utilização do IDE IntelliJ ou Visual Studio. Será usado o SQL Management para desenvolver a base de dados e o Android Studio para o desenvolvimento da aplicação mobile usando a framework Jetpack Compose.
    
 
-## 8. Estrutura da Base de Dados (Diagrama)
+## 8. 🗂️ Estrutura da Base de Dados (Diagrama)
 ![Diagrama da Base de Dados](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/BD_Diagram.png)
-A base de dados é composta por várias tabelas como: Users, Events, Enrollments, Addresses, Sports, Countries e Reports.
 
-De salientar as relações existentes entre elas, havendo uma relação entre Users e Events através da tabela Enrollments. Os Users têm relação com os Reports e com a tabela Countries.
+| **Tabela** | **Campo** | **Tipo de dado** | **Descrição** | **Relação** |
+|-------------|------------|------------------|----------------|--------------|
+| **Events** | eve_id | Uniqueidentifier | Identificador único do evento | **PK** |
+|  | eve_name | Nvarchar(max) | Nome do evento |  |
+|  | eve_date | Datetime | Data em que o evento ocorre |  |
+|  | eve_address_id | Uniqueidentifier | Morada do evento | **FK → Addresses.adr_id**|
+|  | eve_cost | Float | Valor de custo por pessoa |  |
+|  | eve_duration | Int | Tempo de duração do evento (min) |  |
+|  | eve_gender | Nvarchar(50) | Génexo/sexo do evento |  |
+|  | eve_sport_id | Uniqueidentifier | Desporto do evento | **FK → Sports.spo_id** |
+|  | eve_maxMembers | Int | Número de membros máximo do evento |  |
+|  | eve_admin_id | Uniqueidentifier | Administrador do evento | **FK → Users.user_id** |
+|  | eve_notes | Nvarchar(max) | Notas do evento |  |
+|  | eve_createdAt | Datetime | Data em que foi criado o evento |  |
+|  | eve_Status | Nvarchar(50) | Estado do evento (OPEN/CLOSED) |  |
+| |
+| **Users** | user_id | Uniqueidentifier | Identificador único do utilizador | **PK** |
+|  | user_name | Nvarchar(max) | Nome do utilizador |  |
+|  | user_email | Nvarchar(max) | Endereço de e-mail |  |
+|  | user_country_id | Uniqueidentifier | País do utilizador | **FK → Countries.cou_id** |
+|  | user_mobilePhone | Nvarchar(max) | Número de contacto |  |
+|  | user_passwordHash | Nvarchar(max) | Password encriptada |  |
+|  | user_gender | Nvarchar(50) | Género do utilizador |  |
+|  | user_profilePicture | Varbinary(MAX) | Imagem de perfil |  |
+|  | user_created_at | Datetime | Data em que foi criado o utilizador |  |
+| |
+| **Enrollments** | enr_id | Uniqueidentifier | Identificador da inscrição (User-Event) | **PK** |
+|  | eve_id | Uniqueidentifier | Evento ao qual a inscrição pertence | **FK → Events.eve_id** |
+|  | user_id | Uniqueidentifier | Utilizador que se inscreveu | **FK → Users.user_id** |
+|  | enrollment_date | DATETIME | Data em que a inscrição foi efetuada |  |
+| |
+| **Addresses** | adr_id | Uniqueidentifier | Identificador único da Morada | **PK** |
+|  | adr_street | Nvarchar(max) | Rua da morada | |
+|  | adr_city | Nvarchar(max) | Cidade da morada | |
+|  | adr_zipCode | Nvarchar(50) | Código postal da morada | |
+|  | adr_latitude | Float | Latitude da coordenada da morada | |
+|  | adr_longitude | Float | Longitude da coordenada da morada | |
+| |
+| **Countries** | cou_id | Uniqueidentifier | Identificador único do País | **PK** |
+|  | cou_name | Nvarchar(max) | Nome do país | |
+|  | cou_phoneCode | Nvarchar(50) | Código de contacto do país | |
+|  | cou_icon | Varbinary(max) | Ícone do país | |
+| |
+| **Sports** | spo_id | Uniqueidentifier | Identificador único do Desporto | **PK** |
+|  | spo_name | Nvarchar(max) | Nome do desporto | |
+|  | spo_icon | Varbinary(max) | Ícone do desporto | |
+| |
+| **Reports** | spo_id | Uniqueidentifier | Identificador único do Report/Feedback | **PK** |
+|  | rep_user_id | Uniqueidentifier | Utilizador que criou o report | **FK → Users.user_id** |
+|  | rep_description | Nvarchar(max) | Descrição do report/feedback | |
+|  | rep_date | Datetime | Data que o report/feedback foi criado | |
 
-Já a tabela Events têm ligação com os dados em Sports e Addresses.
 
+> **Legenda:**  
+> **PK** = Primary Key  
+> **FK** = Foreign Key
 
 
 ## 9. Mockups e Interfaces
