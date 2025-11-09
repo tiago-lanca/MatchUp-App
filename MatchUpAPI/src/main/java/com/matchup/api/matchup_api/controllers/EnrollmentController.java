@@ -60,5 +60,7 @@ public class EnrollmentController {
 
         Enrollment newEnrollment = _enrollmentRepository.save(enrollment);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEnrollment);
+
+        /*return ResponseEntity.status(HttpStatus.CREATED).body(EnrollmentDTO.fromEntity(newEnrollment));*/
     }
 }

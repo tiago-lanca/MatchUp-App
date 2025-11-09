@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -29,20 +30,27 @@ public class UserController {
     }
 
     @GetMapping(path = "", produces= MediaType.APPLICATION_JSON_VALUE)
-    public List<UserDTO> getUsers() {
+    public List<User> getUsers() {
         logger.info("Getting all users");
-        return _userRepository.findAll()
+        return _userRepository.findAll();
+
+        /*return _userRepository.findAll()
                 .stream()
                 .map(UserDTO::fromEntity)
-                .toList();
+                .toList();*/
     }
 
     @GetMapping(path = "/{id}", produces= MediaType.APPLICATION_JSON_VALUE)
-    public UserDTO getUserById(@PathVariable("id") UUID id) {
+    public User getUserById(@PathVariable("id") UUID id) {
         logger.info("Getting user with id: " + id);
+
         return _userRepository.findById(id)
-                .map(UserDTO::fromEntity)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        /*User foundUser = _userRepository.findById(id)
+                            .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        return UserDTO.fromEntity(foundUser);*/
     }
 
 

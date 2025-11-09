@@ -1,5 +1,6 @@
 package com.matchup.api.matchup_api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -41,10 +42,12 @@ public class User {
     @JoinColumn(name = "user_favSport_id", referencedColumnName = "spo_id")
     private Sport favoriteSport;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Enrollment> enrollments;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Report> reports;
 
 }

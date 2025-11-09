@@ -1,5 +1,7 @@
 package com.matchup.api.matchup_api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.matchup.api.matchup_api.enums.Status;
 import jakarta.persistence.*;
@@ -44,10 +46,12 @@ public class Event {
     @JoinColumn(name = "eve_sport_id", referencedColumnName = "spo_id")
     private Sport Sport;
 
-    @ManyToOne
-    @JoinColumn(name = "eve_admin", referencedColumnName = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "eve_admin_id", referencedColumnName = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "enrollments", "reports"})
     private User Admin;
 
     @OneToMany(mappedBy = "event")
+    @JsonIgnore
     private List<Enrollment> enrollments;
 }

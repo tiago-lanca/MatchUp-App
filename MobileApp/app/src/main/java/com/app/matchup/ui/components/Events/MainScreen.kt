@@ -120,12 +120,7 @@ fun MainScreen(
     }
 
     LaunchedEffect(eventList) {
-        coroutineScope.launch {
-            if(eventList.size > 2) {
-                scaffoldState.bottomSheetState.expand()
-            }
-            else scaffoldState.bottomSheetState.partialExpand()
-        }
+
     }
 
     Box(
