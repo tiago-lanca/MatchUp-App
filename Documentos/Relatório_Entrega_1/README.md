@@ -71,7 +71,7 @@ Com a criação desta aplicação, tem-se como principal objetivo facilitar o co
 
 
 
-## 17. Bibliografia
+## 11. Bibliografia
 1. Figma - www.figma.com
 2. Onlinegantt - www.onlinegantt.com
 3. MockUphone - https://mockuphone.com
