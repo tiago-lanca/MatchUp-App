@@ -118,7 +118,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 |  | spo_name | Nvarchar(max) | Nome do desporto | |
 |  | spo_icon | Varbinary(max) | Ícone do desporto | |
 | |
-| **Reports** | spo_id | Uniqueidentifier | Identificador único do Report/Feedback | **PK** |
+| **Reports** | rep_id | Uniqueidentifier | Identificador único do Report/Feedback | **PK** |
 |  | rep_user_id | Uniqueidentifier | Utilizador que criou o report | **FK → Users.user_id** |
 |  | rep_description | Nvarchar(max) | Descrição do report/feedback | |
 |  | rep_date | Datetime | Data que o report/feedback foi criado | |
