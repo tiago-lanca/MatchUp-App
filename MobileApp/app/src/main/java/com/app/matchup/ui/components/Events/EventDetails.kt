@@ -79,6 +79,7 @@ fun EventDetails(
     isUserEnrolled: Boolean,
     currentUser: User?,
     onClose: (event: Event) -> Unit,
+    onDeleteEvent: (event: Event) -> Unit,
     enrollmentVM: EnrollmentsViewModel = viewModel(),
     joinSnackbar: (result: Boolean) -> Unit,
     leaveEventSnackbar: (result: Boolean) -> Unit
@@ -87,10 +88,10 @@ fun EventDetails(
     //val cameraPositionState = rememberCameraPositionState()
 
 
-    var currentUser by remember { mutableStateOf<User?>(null)}
+    //val currentUser by remember { mutableStateOf<User?>(null)}
 
     LaunchedEffect(Unit) {
-        currentUser = UserSession.getUser(context)
+        //currentUser = UserSession.getUser(context)
         enrollmentVM.setSelectedEvent(event)
     }
 
@@ -306,7 +307,6 @@ fun EventDetails(
                                             setGravity(Gravity.TOP,0,100)
                                             show()
                                        }*/
-
                                     }
                                 }
                             }
@@ -325,6 +325,7 @@ fun EventDetails(
                     }
                     else{
                         // Leave Button
+                        if(currentUser?.id != event.admin?.id)
                         Button(
                             colors = ButtonColors(
                                 contentColor = Color.White,
@@ -379,6 +380,9 @@ fun EventDetails(
                                 if(!UserSession.isLoggedIn(context)) {
                                     val intent = Intent(context, LoginActivity::class.java)
                                     context.startActivity(intent)
+                                }
+                                else{
+
                                 }
                             }
                         ) {

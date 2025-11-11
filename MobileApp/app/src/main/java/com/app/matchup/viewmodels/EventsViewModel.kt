@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.app.matchup.models.Event
 import com.app.matchup.services.EnrollmentService
 import com.app.matchup.services.EventService
-import com.app.matchup.utilities.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -36,7 +35,11 @@ class EventsViewModel : ViewModel() {
         }
     }
 
-    fun getNumberOfEnrolledMembers(){
+    fun deleteEvent(){
+
+    }
+
+    fun getNumberOfMembersEnrolledInCurrentEvent(){
         if(selectedEvent.value != null) {
             viewModelScope.launch {
                 val numberEnrollments =
@@ -46,6 +49,19 @@ class EventsViewModel : ViewModel() {
             }
         }
     }
+
+    fun getNumberOfEnrollmentsByEvent(event: Event?, result: (Int) -> Unit){
+        if(event != null) {
+            viewModelScope.launch {
+                val numberEnrollments =
+                    EnrollmentService.getEnrollmentsByEventId(event.id)
+
+                result(numberEnrollments ?: 0)
+            }
+
+        } else result(0)
+    }
+
 
     fun isUserEnrolled(context: Context, userId: UUID){
         if(selectedEvent.value != null){

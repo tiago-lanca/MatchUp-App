@@ -24,24 +24,6 @@ object EventService {
                     .create()
 
                 gson.fromJson(responseBody, Array<Event>::class.java).toList()
-
-                /*eventDtoList.map { dto ->
-                    Event(
-                        id = dto.id,
-                        name = dto.name,
-                        date = dto.date,
-                        address = dto.address,
-                        cost = dto.cost,
-                        duration = dto.duration,
-                        gender = dto.gender,
-                        sport = dto.sport,
-                        maxMembers = dto.maxMembers,
-                        admin = UserService.GetUserById(dto.adminId),
-                        notes = dto.notes,
-                        status = dto.status ?: Status.CLOSED,
-                        enrollments = EnrollmentService.getEnrollmentsByEventId(dto.id) ?: emptyList()
-                    )
-                }*/
             },
             failure = {
                 emptyList<Event>()
@@ -61,22 +43,6 @@ object EventService {
                     .create()
 
                 gson.fromJson(responseBody, Event::class.java)
-
-                /*Event(
-                    id = eventDto.id,
-                    name = eventDto.name,
-                    date = eventDto.date,
-                    address = eventDto.address,
-                    cost = eventDto.cost,
-                    duration = eventDto.duration,
-                    gender = eventDto.gender,
-                    sport = eventDto.sport,
-                    maxMembers = eventDto.maxMembers,
-                    admin = UserService.GetUserById(eventDto.adminId),
-                    notes = eventDto.notes,
-                    status = eventDto.status ?: Status.CLOSED,
-                    enrollments = EnrollmentService.getEnrollmentsByEventId(eventDto.id) ?: emptyList()
-                )*/
             },
             failure = {
                 null
@@ -98,21 +64,6 @@ object EventService {
                 val admin = gson.fromJson(responseBody, User::class.java)
                 println(admin.name)
                 admin
-                /*Event(
-                    id = eventDto.id,
-                    name = eventDto.name,
-                    date = eventDto.date,
-                    address = eventDto.address,
-                    cost = eventDto.cost,
-                    duration = eventDto.duration,
-                    gender = eventDto.gender,
-                    sport = eventDto.sport,
-                    maxMembers = eventDto.maxMembers,
-                    admin = UserService.GetUserById(eventDto.adminId),
-                    notes = eventDto.notes,
-                    status = eventDto.status ?: Status.CLOSED,
-                    enrollments = EnrollmentService.getEnrollmentsByEventId(eventDto.id) ?: emptyList()
-                )*/
             },
             failure = { error ->
                 println("Error getting event admin: ${error.message}")
@@ -138,19 +89,6 @@ object EventService {
                 println("Event created successfuly!")
                 gson.fromJson(responseBody, Event::class.java)
 
-                /*Event(
-                    id = eventDto.id,
-                    name = eventDto.name,
-                    date = eventDto.date,
-                    address = eventDto.address,
-                    cost = eventDto.cost,
-                    duration = eventDto.duration,
-                    gender = eventDto.gender,
-                    sport = eventDto.sport,
-                    maxMembers = eventDto.maxMembers,
-                    admin = UserService.GetUserById(eventDto.adminId),
-                    notes = eventDto.notes
-                )*/
           },
             failure = { error ->
                 println("Error creating new event: ${error.message}")

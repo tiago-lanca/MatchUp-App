@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -72,16 +71,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.app.matchup.R
 import com.app.matchup.models.User
+import com.app.matchup.services.EnrollmentService
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.utilities.AppConstants.DEFAULT_ZOOM
 import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
 import com.app.matchup.utilities.UserSession
-import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -151,7 +148,7 @@ fun MainScreen(
     }
 
     LaunchedEffect(selectedEvent) {
-        viewModel.getNumberOfEnrolledMembers()
+        viewModel.getNumberOfMembersEnrolledInCurrentEvent()
 
         if(currentUser != null) {
             viewModel.isUserEnrolled(context, currentUser!!.id)
@@ -198,6 +195,9 @@ fun MainScreen(
                                 }
                                 viewModel.selectEvent(event)
                             },
+                            onEventMembersCount = { event ->
+                                EnrollmentService.getEnrollmentsByEventId(event.id)!!
+                            },
                             onRefreshEventList = {
                                 coroutineScope.launch {
                                     viewModel.loadEvents()
@@ -223,6 +223,9 @@ fun MainScreen(
                                 )
                                 viewModel.selectEvent(null)
                             },
+                            onDeleteEvent = { event ->
+                                viewModel.deleteEvent()
+                            },
                             joinSnackbar = { success ->
                                 if(success){
                                     scope.launch {
@@ -231,7 +234,7 @@ fun MainScreen(
                                         )
                                     }
                                     viewModel.setUserEnrolled(true)
-                                    viewModel.getNumberOfEnrolledMembers()
+                                    viewModel.getNumberOfMembersEnrolledInCurrentEvent()
                                 }
                             },
                             leaveEventSnackbar = { success ->
@@ -242,7 +245,7 @@ fun MainScreen(
                                         )
                                     }
                                     viewModel.setUserEnrolled(false)
-                                    viewModel.getNumberOfEnrolledMembers()
+                                    viewModel.getNumberOfMembersEnrolledInCurrentEvent()
                                 }
                             }
                         )

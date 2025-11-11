@@ -1,7 +1,5 @@
 package com.app.matchup.ui.components.Events
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -23,6 +20,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,32 +36,27 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.matchup.EventDetailsActivity
-import com.app.matchup.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.extensions.getSportIconSize
-import com.app.matchup.models.Address
 import com.app.matchup.models.Event
-import com.app.matchup.models.Sport
-import com.app.matchup.models.User
-import com.app.matchup.samples.EventSamples
-import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
+import com.app.matchup.viewmodels.EventsViewModel
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import java.util.UUID
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EventListItem(
     event: Event,
-    onClick: () -> Unit
+    numberOfMembers: Int,
+    onClick: () -> Unit,
 ){
 
     val context = LocalContext.current
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -146,7 +141,7 @@ fun EventListItem(
                                     color = Color.Green
                                 )
                             ) {
-                                append("10")
+                                append(numberOfMembers.toString())
                             }
                             withStyle(
                                 style = SpanStyle(
@@ -155,7 +150,7 @@ fun EventListItem(
                                     color = Color.Green
                                 )
                             ) {
-                                append("/12")
+                                append(" /${event.maxMembers.toString()}")
                             }
                         },
                         modifier = Modifier
