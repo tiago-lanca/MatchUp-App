@@ -29,7 +29,6 @@ public class EnrollmentController {
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EnrollmentDTO> getEnrollments() {
-        logger.info("Getting all enrollments");
 
         return _enrollmentRepository.findAll()
                 .stream()
@@ -39,7 +38,6 @@ public class EnrollmentController {
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public EnrollmentDTO getEnrollmentById(@PathVariable("id")UUID id) {
-        logger.info("Getting enrollment by id");
         Enrollment enrollment = _enrollmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Enrollment not found with id: " + id));
 
@@ -48,13 +46,16 @@ public class EnrollmentController {
 
     @GetMapping(path = "/event/{id}/count-members")
     public int countMembersInEvent(@PathVariable("id") UUID eventId) {
-        logger.info("Counting members in enrollment with id: " + eventId);
         return _enrollmentRepository.countMembersByEventId(eventId);
+    }
+
+    @GetMapping(path = "/event/{eventId}/user/{userId}/is-enrolled")
+    public boolean isUserEnrolled(@PathVariable("eventId") UUID eventId, @PathVariable("userId") UUID userId) {
+        return _enrollmentRepository.isUserEnrolled(eventId, userId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<Enrollment> createEnrollment(@RequestBody Enrollment enrollment) {
-        logger.info("Creating new enrollment");
         if(enrollment == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
@@ -62,5 +63,26 @@ public class EnrollmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newEnrollment);
 
         /*return ResponseEntity.status(HttpStatus.CREATED).body(EnrollmentDTO.fromEntity(newEnrollment));*/
+    }
+
+    @DeleteMapping(path = "/event/{eventId}/user/{userId}")
+    public ResponseEntity<Void> deleteEnrollment(@PathVariable("eventId") UUID eventId, @PathVariable("userId") UUID userId) {
+        // Search all enrollments which matches eventId and userId
+        List<Enrollment> enrollments = _enrollmentRepository.findAll()
+                .stream()
+                .filter(e -> e.getEvent().getId().equals(eventId) && e.getUser().getId().equals(userId))
+                .toList();
+
+        if (enrollments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        // Delete all found enrollments
+        for (Enrollment enrollment : enrollments) {
+            _enrollmentRepository.delete(enrollment);
+        }
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 }

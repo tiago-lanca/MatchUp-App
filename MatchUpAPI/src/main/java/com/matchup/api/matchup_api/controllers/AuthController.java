@@ -26,15 +26,14 @@ public class AuthController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getLogin(@RequestBody User user) {
+    public ResponseEntity<User> getLogin(@RequestBody User user) {
         logger.info("Trying to login user");
 
         Optional<User> existingUser = _userRepository.getUserByEmail(user.getEmail());
         if(existingUser.isPresent()){
             User foundUser = existingUser.get();
             if(foundUser.getPasswordHash().equals(user.getPasswordHash())){
-                var userDto = UserDTO.fromEntity(foundUser);
-                return ResponseEntity.ok(userDto);
+                return ResponseEntity.ok(foundUser);
             } else {
                 logger.info("Invalid password for user: " + user.getEmail());
                 return ResponseEntity.status(401).body(null);
