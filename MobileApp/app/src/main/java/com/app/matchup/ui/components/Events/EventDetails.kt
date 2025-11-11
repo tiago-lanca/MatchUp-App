@@ -382,7 +382,7 @@ fun EventDetails(
                                     context.startActivity(intent)
                                 }
                                 else{
-
+                                    onDeleteEvent(event)
                                 }
                             }
                         ) {

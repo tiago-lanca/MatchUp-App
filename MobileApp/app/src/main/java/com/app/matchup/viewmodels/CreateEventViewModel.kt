@@ -127,6 +127,7 @@ class CreateEventViewModel : ViewModel() {
                     val createdEnrollment = EnrollmentService.createEnrollment(createdEvent, UserSession.getUser(context)!!)
 
                     if(createdEnrollment != null) {
+                        _event.value = createdEvent
                         result(true)
                     }
                     else

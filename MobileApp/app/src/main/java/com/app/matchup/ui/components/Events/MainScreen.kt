@@ -224,7 +224,17 @@ fun MainScreen(
                                 viewModel.selectEvent(null)
                             },
                             onDeleteEvent = { event ->
-                                viewModel.deleteEvent()
+                                viewModel.deleteEvent { success ->
+                                    if(success){
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                "Event deleted successfully!"
+                                            )
+                                        }
+                                        viewModel.selectEvent(null)
+                                        viewModel.loadEvents()
+                                    }
+                                }
                             },
                             joinSnackbar = { success ->
                                 if(success){

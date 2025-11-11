@@ -6,6 +6,7 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.User
 import com.app.matchup.utilities.AppConstants.SERVER_ROOT
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
+import com.github.kittinunf.fuel.httpDelete
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.google.gson.GsonBuilder
@@ -86,7 +87,7 @@ object EventService {
 
         return result.fold(
             success = { responseBody ->
-                println("Event created successfuly!")
+                println("Event created successfully!")
                 gson.fromJson(responseBody, Event::class.java)
 
           },
@@ -95,5 +96,25 @@ object EventService {
                 null
             }
         )
+    }
+
+    suspend fun deleteEvent(eventId: UUID): Boolean {
+        return try {
+            val (_, _, result) = "${SERVER_ROOT}/api/events/${eventId}"
+                .httpDelete()
+                .awaitStringResponseResult()
+
+            result.fold(
+                success = { true },
+                failure = {
+                    println("Error deleting event: ${it.message}")
+                    false
+                }
+            )
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+            false
+        }
     }
 }

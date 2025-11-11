@@ -35,8 +35,16 @@ class EventsViewModel : ViewModel() {
         }
     }
 
-    fun deleteEvent(){
-
+    fun deleteEvent(result: (Boolean) -> Unit){
+        viewModelScope.launch {
+            try {
+                result(EventService.deleteEvent(_selectedEvent.value!!.id))
+            }
+            catch (e: Exception){
+                e.printStackTrace()
+                result(false)
+            }
+        }
     }
 
     fun getNumberOfMembersEnrolledInCurrentEvent(){
