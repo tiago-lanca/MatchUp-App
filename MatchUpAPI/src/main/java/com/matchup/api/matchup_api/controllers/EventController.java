@@ -1,8 +1,10 @@
 package com.matchup.api.matchup_api.controllers;
 
 import com.matchup.api.matchup_api.dtos.EventDTO;
+import com.matchup.api.matchup_api.models.Enrollment;
 import com.matchup.api.matchup_api.models.Event;
 import com.matchup.api.matchup_api.models.User;
+import com.matchup.api.matchup_api.repositories.EnrollmentRepository;
 import com.matchup.api.matchup_api.repositories.EventRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,10 +25,12 @@ import java.util.UUID;
 public class EventController {
     private Logger logger = LoggerFactory.getLogger(EventController.class);
     private EventRepository _eventRepository;
+    private EnrollmentRepository _enrollmentRepository;
 
-    public EventController(EventRepository eventRepository)
+    public EventController(EventRepository eventRepository, EnrollmentRepository enrollmentRepository)
     {
         _eventRepository = eventRepository;
+        _enrollmentRepository = enrollmentRepository;
     }
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,11 +38,6 @@ public class EventController {
         logger.info("Getting all events");
 
         return _eventRepository.findAll();
-
-        /*return _eventRepository.findAll()
-                .stream()
-                .map(EventDTO::fromEntity)
-                .toList();*/
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -47,9 +47,6 @@ public class EventController {
         return _eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
 
-        /*return _eventRepository.findById(id)
-                .map(EventDTO::fromEntity)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));*/
     }
 
     @GetMapping(path = "/{id}/admin", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,9 +66,28 @@ public class EventController {
 
         Event newEvent = _eventRepository.save(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEvent);
-
-        /*Event newEvent = _eventRepository.save(event);
-        return ResponseEntity.status(HttpStatus.CREATED).body(EventDTO.fromEntity(newEvent));*/
     }
 
+    @DeleteMapping(path = "/{id}")
+    @Transactional
+    public HttpEntity<Void> deleteEvent(@PathVariable("id") UUID id) {
+        Event event = _eventRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
+
+        try
+        {
+            // First, delete all enrollments associated with the event
+            List<Enrollment> enrollments = _enrollmentRepository.findByEventId(id);
+            _enrollmentRepository.deleteAll(enrollments);
+
+            // Then, delete the event
+            _eventRepository.delete(event);
+
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        catch (Exception e) {
+            logger.error("Error deleting event with id: " + id, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }

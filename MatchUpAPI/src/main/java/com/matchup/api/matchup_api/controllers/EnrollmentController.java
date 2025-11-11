@@ -68,21 +68,16 @@ public class EnrollmentController {
     @DeleteMapping(path = "/event/{eventId}/user/{userId}")
     public ResponseEntity<Void> deleteEnrollment(@PathVariable("eventId") UUID eventId, @PathVariable("userId") UUID userId) {
         // Search all enrollments which matches eventId and userId
-        List<Enrollment> enrollments = _enrollmentRepository.findAll()
-                .stream()
-                .filter(e -> e.getEvent().getId().equals(eventId) && e.getUser().getId().equals(userId))
-                .toList();
+        List<Enrollment> enrollments = _enrollmentRepository.findByEventIdAndUserId(eventId, userId);
 
         if (enrollments.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         // Delete all found enrollments
-        for (Enrollment enrollment : enrollments) {
-            _enrollmentRepository.delete(enrollment);
-        }
+        _enrollmentRepository.deleteAll(enrollments);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
 
     }
 }
