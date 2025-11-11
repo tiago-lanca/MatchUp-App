@@ -11,14 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.app.matchup.R
-import com.app.matchup.models.Gender
 import com.app.matchup.ui.theme.GENDER_FEMALE_COLOR
 import com.app.matchup.ui.theme.GENDER_MALE_COLOR
 import com.app.matchup.ui.theme.GENDER_MIX_COLOR
-import com.app.matchup.utilities.AppConstants.MAP_DISPLAY_OFFSET
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -28,7 +25,7 @@ import kotlinx.coroutines.launch
 object Tools{
     fun moveCameraTo(
         latLng: LatLng,
-        zoom: Float = AppConstants.defaultZoom,
+        zoom: Float = AppConstants.DEFAULT_ZOOM,
         coroutineScope: CoroutineScope,
         cameraPositionState: CameraPositionState
     ) {
@@ -36,17 +33,17 @@ object Tools{
             cameraPositionState.animate(
                 update = CameraUpdateFactory.newLatLngZoom(
                     latLng,
-                    15f
+                    zoom
                 ),
                 durationMs = 2000
             )
         }
     }
 
-    fun Activity.navigateTo(activity: Class<*>){
+    fun Activity.navigateTo(activity: Class<*>, closeCurrentActivity: Boolean){
         val intent = Intent(this, activity)
         startActivity(intent)
-        finish()
+        if(closeCurrentActivity) finish()
     }
 
     fun getGenderColor(gender: String): Color{

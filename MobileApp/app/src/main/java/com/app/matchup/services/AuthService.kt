@@ -26,9 +26,9 @@ object AuthService {
         return result.fold(
             success = { responseBody ->
                 Log.d("AuthService", "Login success: ${responseBody}")
-                val userDto = gson.fromJson(responseBody, UserDTO::class.java)
+                gson.fromJson(responseBody, User::class.java)
 
-                User(
+                /*User(
                     id = userDto.id,
                     name = userDto.name,
                     email = userDto.email,
@@ -39,7 +39,7 @@ object AuthService {
                     gender = userDto.gender,
                     profilePicture = userDto.profilePicture,
                     favoriteSport = userDto.favoriteSport
-                )
+                )*/
             },
             failure = {
                 Log.d("AuthService:", "Login error: ${response}")

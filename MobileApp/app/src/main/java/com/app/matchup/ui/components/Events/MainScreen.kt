@@ -8,16 +8,22 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
@@ -26,13 +32,16 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -59,6 +68,20 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.app.matchup.R
+import com.app.matchup.models.User
+import com.app.matchup.ui.components.Login.LoginActivity
+import com.app.matchup.utilities.AppConstants.DEFAULT_ZOOM
+import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
+import com.app.matchup.utilities.UserSession
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -72,12 +95,18 @@ fun MainScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     val context = LocalContext.current
+    var currentUser by remember { mutableStateOf<User?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val numberEvents = viewModel.events.collectAsState().value.size
     val eventList by viewModel.events.collectAsState()
     val selectedEvent by viewModel.selectedEvent.collectAsState()
+    val numberOfMembers by viewModel.numberOfMembers.collectAsState()
+    val isUserEnrolled by viewModel.isUserEnrolled.collectAsState()
 
     val cameraPositionState = rememberCameraPositionState()
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
@@ -117,10 +146,16 @@ fun MainScreen(
                 )
             }
         }
+        // Loads current user
+        currentUser = UserSession.getUser(context)
     }
 
-    LaunchedEffect(eventList) {
+    LaunchedEffect(selectedEvent) {
+        viewModel.getNumberOfEnrolledMembers()
 
+        if(currentUser != null) {
+            viewModel.isUserEnrolled(context, currentUser!!.id)
+        }
     }
 
     Box(
@@ -153,9 +188,10 @@ fun MainScreen(
                                 event.address?.let { address ->
                                     Tools.moveCameraTo(
                                         latLng = LatLng(
-                                            address.latitude!! - MAP_DISPLAY_OFFSET,
-                                            address.longitude!!
+                                            address.latitude!! - MAP_DISPLAY_OFFSET / EVENT_ZOOMED,
+                                            address.longitude!!,
                                         ),
+                                        zoom = EVENT_ZOOMED,
                                         coroutineScope = coroutineScope,
                                         cameraPositionState = cameraPositionState
                                     )
@@ -172,7 +208,43 @@ fun MainScreen(
                         EventDetails(
                             context,
                             event = selectedEvent!!,
-                            onClose = { viewModel.selectEvent(null) },
+                            numberOfMembers = numberOfMembers,
+                            isUserEnrolled = isUserEnrolled,
+                            currentUser = currentUser,
+                            onClose = { event ->
+                                Tools.moveCameraTo(
+                                    latLng = LatLng(
+                                        event.address?.latitude!! - (MAP_DISPLAY_OFFSET / DEFAULT_ZOOM),
+                                        event.address?.longitude!!
+                                    ),
+                                    zoom = DEFAULT_ZOOM,
+                                    coroutineScope = coroutineScope,
+                                    cameraPositionState = cameraPositionState
+                                )
+                                viewModel.selectEvent(null)
+                            },
+                            joinSnackbar = { success ->
+                                if(success){
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            "Enrollment created successfully!"
+                                        )
+                                    }
+                                    viewModel.setUserEnrolled(true)
+                                    viewModel.getNumberOfEnrolledMembers()
+                                }
+                            },
+                            leaveEventSnackbar = { success ->
+                                if(success){
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            "You have left the event with success."
+                                        )
+                                    }
+                                    viewModel.setUserEnrolled(false)
+                                    viewModel.getNumberOfEnrolledMembers()
+                                }
+                            }
                         )
                     }
                 }
@@ -191,10 +263,10 @@ fun MainScreen(
 
                         Tools.moveCameraTo(
                             LatLng(
-                                event.address?.latitude!! - MAP_DISPLAY_OFFSET,
+                                event.address?.latitude!! - MAP_DISPLAY_OFFSET / EVENT_ZOOMED,
                                 event.address?.longitude!!
                             ),
-                            AppConstants.defaultZoom,
+                            AppConstants.EVENT_ZOOMED,
                             coroutineScope,
                             cameraPositionState
                         )
@@ -225,23 +297,76 @@ fun MainScreen(
                 }
 
 
+                // Create New Event button
                 FloatingButtonsMainScreen(
                     onMyLocationButtonClick = {
                         Tools.moveCameraTo(
                             SeixalCoords.toMapDisplay(),
-                            AppConstants.defaultZoom,
+                            AppConstants.DEFAULT_ZOOM,
                             coroutineScope,
                             cameraPositionState
                         )
                     },
                     onCreateNewEventButtonClick = {
-                        //Log.i("TEST", "Button create event clicked.")
-                        (context as Activity).navigateTo(SelectLocationActivity::class.java)
+                        if(UserSession.isLoggedIn(context)) {
+                            (context as Activity).navigateTo(
+                                activity = SelectLocationActivity::class.java,
+                                closeCurrentActivity = false
+                            )
+                        }
+                        else (context as Activity).navigateTo(
+                            activity = LoginActivity::class.java,
+                            closeCurrentActivity = false
+                        )
                     },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(end = 10.dp, bottom = fabPadding)
                 )
+
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 50.dp)
+                ) { data ->
+                    val isSuccess = data.visuals.message.contains("success", ignoreCase = true)
+
+                    Snackbar(
+                        containerColor = if (isSuccess) Color(0xFF025D14) else Color(0xFF880202),
+                        contentColor = Color.White,
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .widthIn(max = 300.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (isSuccess) Icons.Default.Check else Icons.Default.Close,
+                                tint = if (isSuccess) Color(0xFFFFFFFF) else Color(0xFF000000),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+
+                            Text(
+                                text = data.visuals.message,
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+
+                }
             }
         }
     }

@@ -130,8 +130,6 @@ fun CreateEventScreen(
                     // Icon to go back
                     FloatingActionButton(
                         onClick = {
-                            val intent = Intent(context, SelectLocationActivity::class.java)
-                            context.startActivity(intent)
                             if(context is Activity) context.finish()
                         },
                         containerColor = Color.Transparent,

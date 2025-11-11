@@ -1,9 +1,7 @@
 package com.app.matchup.ui.components.MainMenu
 
 import android.app.Activity
-import android.content.Intent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,16 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material.icons.filled.ReportGmailerrorred
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,10 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.matchup.LoginActivity
+import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.MainActivity
 import com.app.matchup.R
 import com.app.matchup.SelectLocationActivity
+import com.app.matchup.models.User
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.utilities.Tools.navigateTo
@@ -46,6 +46,11 @@ import com.app.matchup.utilities.UserSession
 fun MainMenuScreen() {
 
     val context = LocalContext.current
+    var user by remember { mutableStateOf<User?>(null) }
+
+    LaunchedEffect(Unit) {
+        user = UserSession.getUser(context)
+    }
 
     Scaffold(
         containerColor = BACKGROUND_COLOR,
@@ -117,8 +122,7 @@ fun MainMenuScreen() {
                 Spacer(modifier = Modifier.height(40.dp))
 
                 if(UserSession.isLoggedIn(context)) {
-                    // Logged user profile pic. and name/email
-                    UserProfileSection()
+                    user?.let { UserProfileSection(user!!) }
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -126,17 +130,15 @@ fun MainMenuScreen() {
                 // Menu items
                 MenuItems(
                     modifier = Modifier.padding(innerPadding),
-                    onLoginClick = { (context as Activity).navigateTo(LoginActivity::class.java) },
-                    onHomeClick = { (context as Activity).navigateTo(MainActivity::class.java) },
+                    onLoginClick = { (context as Activity).navigateTo(activity = LoginActivity::class.java, closeCurrentActivity = false) },
+                    onHomeClick = { (context as Activity).navigateTo(activity = MainActivity::class.java, closeCurrentActivity = false) },
                     onMyEventsClick = { /*TODO*/ },
-                    onSearchEventsClick = { (context as Activity).navigateTo(MainActivity::class.java) },
-                    onCreateNewEventClick = { (context as Activity).navigateTo(SelectLocationActivity::class.java) },
+                    onSearchEventsClick = { (context as Activity).navigateTo(activity = MainActivity::class.java, closeCurrentActivity = false) },
+                    onCreateNewEventClick = { (context as Activity).navigateTo(activity = SelectLocationActivity::class.java, closeCurrentActivity = false) },
                     onProfileClick = { /*TODO*/ },
                     onSignOutClick = {
                         UserSession.logoutUser(context)
-                        val intent = Intent(context, LoginActivity::class.java)
-                        context.startActivity(intent)
-                        if(context is Activity) context.finish()
+                        (context as Activity).navigateTo(activity = LoginActivity::class.java, closeCurrentActivity = true)
                     }
                 )
             }

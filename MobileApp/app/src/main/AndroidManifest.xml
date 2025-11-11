@@ -44,7 +44,7 @@
             android:label="@string/title_activity_register"
             android:theme="@style/Theme.MatchUp" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.components.Login.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.MatchUp" />

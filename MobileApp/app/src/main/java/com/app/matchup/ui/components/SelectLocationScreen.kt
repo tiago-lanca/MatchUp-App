@@ -173,7 +173,10 @@ fun SelectLocationScreen() {
                         // Close Button
                         IconButton(
                             onClick = {
-                                (context as Activity).navigateTo(MainActivity::class.java)
+                                (context as Activity).navigateTo(
+                                    activity = MainActivity::class.java,
+                                    closeCurrentActivity = true
+                                )
                             },
                             modifier = Modifier
                                 .align(Alignment.CenterEnd)

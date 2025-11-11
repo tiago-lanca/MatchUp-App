@@ -29,15 +29,16 @@ import com.app.matchup.models.User
 import java.util.UUID
 
 @Composable
-fun UserProfileSection(){
-    val user = User(
+fun UserProfileSection(user: User){
+    /*val user = User(
         id = UUID.randomUUID(),
         name = "Tiago Lança",
         email = "tiagotestest@email.com",
         passwordHash = "1234",
         profilePicture = R.drawable.profile_picture.toString()
-    )
+    )*/
 
+    user.profilePicture = R.drawable.profile_picture.toString()
     Row (
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -86,5 +87,5 @@ fun UserProfileSection(){
 @Preview
 @Composable
 fun UserProfileSectionPreview(){
-    UserProfileSection()
+    UserProfileSection(user = User())
 }

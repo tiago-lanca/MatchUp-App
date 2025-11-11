@@ -6,6 +6,7 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.User
 import com.app.matchup.utilities.AppConstants.SERVER_ROOT
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
+import com.github.kittinunf.fuel.httpDelete
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.google.gson.GsonBuilder
@@ -42,16 +43,16 @@ object EnrollmentService {
         )
     }
 
-    suspend fun getEnrollmentsByEventId(eventId: UUID): List<Enrollment>?{
+    suspend fun getEnrollmentsByEventId(eventId: UUID): Int?{
         return try {
-            val (_,_, result) = "${SERVER_ROOT}/api/enrollments/event/$eventId"
+            val (_,_, result) = "${SERVER_ROOT}/api/enrollments/event/${eventId}/count-members"
                 .httpGet()
                 .awaitStringResponseResult()
 
             result.fold(
                 success = { responseBody ->
 
-                    gson.fromJson(responseBody, Array<Enrollment>::class.java).toList()
+                    gson.fromJson(responseBody, Int::class.java)
 
                     /*enrollmentsDtoList.map { dto ->
                         Enrollment(
@@ -80,7 +81,7 @@ object EnrollmentService {
         )
 
         val bodyJson = gson.toJson(enrollment)
-        println("📦 JSON enviado: $bodyJson")
+
         return try {
             val (_,_, result) = "${SERVER_ROOT}/api/enrollments"
                 .httpPost()
@@ -110,6 +111,51 @@ object EnrollmentService {
         catch (e: Exception) {
             e.printStackTrace()
             null
+        }
+    }
+
+    suspend fun isUserEnrolled(eventId: UUID, userId: UUID): Boolean{
+        return try {
+            val (_,_, result) = "${SERVER_ROOT}/api/enrollments/event/${eventId}/user/${userId}/is-enrolled"
+                .httpGet()
+                .awaitStringResponseResult()
+
+            result.fold(
+                success = { responseBody ->
+
+                    gson.fromJson(responseBody, Boolean::class.java)
+                },
+                failure = {
+                    false
+                }
+            )
+        } catch (e: Exception){
+            e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun deleteEnrollment(eventId: UUID, userId: UUID): Boolean{
+        return try {
+            val (_,_, result) = "${SERVER_ROOT}/api/enrollments/event/${eventId}/user/${userId}"
+                .httpDelete()
+                .awaitStringResponseResult()
+
+            result.fold(
+                success = { responseBody ->
+                    println("Enrollment deleted successfuly!")
+                    true
+                },
+                failure = { error ->
+                    println("Error deleting enrollment")
+                    println("Body: ${error.response.body().asString("application/json")}")
+                    false
+                }
+            )
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 }

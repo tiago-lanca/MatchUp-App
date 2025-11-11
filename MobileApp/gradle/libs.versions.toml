@@ -16,6 +16,7 @@ material3 = "1.4.0"
 foundationLayout = "1.9.3"
 playServicesMaps = "19.2.0"
 animationCore = "1.9.3"
+runtime = "1.9.4"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
@@ -45,6 +46,7 @@ androidx-compose-foundation-layout = { group = "androidx.compose.foundation", na
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 androidx-compose-animation-core = { group = "androidx.compose.animation", name = "animation-core", version.ref = "animationCore" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
