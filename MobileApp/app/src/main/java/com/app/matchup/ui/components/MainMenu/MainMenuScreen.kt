@@ -121,7 +121,7 @@ fun MainMenuScreen() {
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                if(UserSession.isLoggedIn(context)) {
+                if(user != null) {
                     user?.let { UserProfileSection(user!!) }
                 }
 

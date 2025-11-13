@@ -7,4 +7,21 @@
     <string name="title_activity_select_location">SelectLocationActivity</string>
     <string name="title_activity_events_list">EventsListActivity</string>
     <string name="title_activity_event_details">EventDetailsActivity</string>
+    <string name="join_event">JOIN</string>
+    <string name="date_pattern">dd/MM/yyyy HH:mm</string>
+    <string name="settings_icon_desc">Settings Icon</string>
+    <string name="location_icon_desc">Location Icon</string>
+    <string name="date_hour_label">Date/Hour:</string>
+    <string name="sports_label">Sport:</string>
+    <string name="gender_label">Gender:</string>
+    <string name="cost_label">Cost:</string>
+    <string name="duration_label">Duration:</string>
+    <string name="max_members_label">Members:</string>
+    <string name="close_icon_desc">"Close Icon "</string>
+    <string name="leave_event">LEAVE</string>
+    <string name="delete_button_desc">Delete Button</string>
+    <string name="event_deleted_message">Event deleted successfully!</string>
+    <string name="enrollment_created_message">Enrollment created successfully!</string>
+    <string name="user_left_event_message">You have left the event with success.</string>
+    <string name="open_menu_icon_desc">Open menu icon</string>
 </resources>

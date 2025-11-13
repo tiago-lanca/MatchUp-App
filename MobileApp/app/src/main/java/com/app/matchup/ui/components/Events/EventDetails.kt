@@ -3,8 +3,6 @@ package com.app.matchup.ui.components.Events
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.view.Gravity
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,25 +23,17 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.RestoreFromTrash
-import androidx.compose.material.icons.sharp.DeleteForever
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.R
 import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.models.Address
@@ -60,11 +49,11 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
+import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.ui.theme.RED_BUTTON
 import com.app.matchup.utilities.Tools
 import com.app.matchup.utilities.UserSession
 import com.app.matchup.viewmodels.EnrollmentsViewModel
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -84,21 +73,15 @@ fun EventDetails(
     joinSnackbar: (result: Boolean) -> Unit,
     leaveEventSnackbar: (result: Boolean) -> Unit
 ){
-    val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-    //val cameraPositionState = rememberCameraPositionState()
-
-
-    //val currentUser by remember { mutableStateOf<User?>(null)}
+    val dateFormatter = SimpleDateFormat(stringResource(R.string.date_pattern), Locale.getDefault())
 
     LaunchedEffect(Unit) {
-        //currentUser = UserSession.getUser(context)
         enrollmentVM.setSelectedEvent(event)
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-
     ) {
 
         Box(
@@ -130,7 +113,7 @@ fun EventDetails(
                         modifier = Modifier
                             .clickable { onClose(event) },
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "Settings",
+                        contentDescription = stringResource(R.string.settings_icon_desc),
                         tint = Color.White
                     )
                 }
@@ -145,7 +128,7 @@ fun EventDetails(
                     Icon(
                         imageVector = Icons.Filled.LocationOn,
                         tint = Color.Red,
-                        contentDescription = "Location Icon",
+                        contentDescription = stringResource(R.string.location_icon_desc),
                         modifier = Modifier
                             .size(30.dp)
                     )
@@ -167,7 +150,7 @@ fun EventDetails(
                 }
 
                 Text(
-                    text = "Date/Hour:",
+                    text = stringResource(R.string.date_hour_label),
                     color = Color.Gray,
                     modifier = Modifier.padding(top = 20.dp)
                 )
@@ -182,13 +165,6 @@ fun EventDetails(
                         color = Color.White,
                         fontSize = 18.sp
                     )
-                    /*Text(
-                        text = SimpleDateFormat("HH':'mm'h'", Locale.getDefault()).format(event.date),
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        modifier = Modifier
-                            .padding(start = 10.dp)
-                    )*/
 
                     // Only shows if there's notes in that event
                     if(!event.notes.isNullOrEmpty()) {
@@ -213,14 +189,14 @@ fun EventDetails(
                 ) {
                     // Sport Column
                     ColumnWithLabel(
-                        label = "Sport:",
+                        label = stringResource(R.string.sports_label),
                         imageIcon = event.sport?.getSportIcon()!!,
                         text = event.sport!!.name,
                     )
 
                     // Gender Column
                     ColumnWithLabel(
-                        label = "Gender:",
+                        label = stringResource(R.string.gender_label),
                         text = event.gender,
                         textColor = Tools.getGenderColor(event.gender),
                         textFontWeight = FontWeight.Bold
@@ -228,14 +204,14 @@ fun EventDetails(
 
                     // Cost Column
                     ColumnWithLabel(
-                        label = "Cost:",
+                        label = stringResource(R.string.cost_label),
                         text = "${event.cost}€",
                         textFontSize = 18
                     )
 
                     // Duration Column
                     ColumnWithLabel(
-                        label = "Duration:",
+                        label = stringResource(R.string.duration_label),
                         text = "${event.duration}min",
                     )
                 }
@@ -247,7 +223,7 @@ fun EventDetails(
                             .padding(top = 15.dp)
                     ) {
                         Text(
-                            text = "Members:",
+                            text = stringResource(R.string.max_members_label),
                             color = Color.Gray
                         )
                         Text(
@@ -318,7 +294,7 @@ fun EventDetails(
                                 modifier = Modifier.padding(end = 5.dp)
                             )
                             Text(
-                                text = "JOIN",
+                                text = stringResource(R.string.join_event),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -356,12 +332,12 @@ fun EventDetails(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Join Event",
+                                contentDescription = stringResource(R.string.close_icon_desc),
                                 tint = Color.White,
                                 modifier = Modifier.padding(end = 5.dp)
                             )
                             Text(
-                                text = "Leave",
+                                text = stringResource(R.string.leave_event),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -388,7 +364,7 @@ fun EventDetails(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.DeleteForever,
-                                contentDescription = "Delete button",
+                                contentDescription = stringResource(R.string.delete_button_desc),
                                 tint = Color.White,
                                 modifier = Modifier.padding(end = 5.dp)
                             )

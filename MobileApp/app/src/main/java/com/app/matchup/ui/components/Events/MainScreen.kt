@@ -71,8 +71,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.app.matchup.R
+import com.app.matchup.extensions.isNull
 import com.app.matchup.models.User
 import com.app.matchup.services.EnrollmentService
 import com.app.matchup.ui.components.Login.LoginActivity
@@ -89,12 +92,12 @@ fun MainScreen(
     event: Event? = null
 ) {
 
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    //val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     val context = LocalContext.current
     var currentUser by remember { mutableStateOf<User?>(null) }
     val coroutineScope = rememberCoroutineScope()
-    val numberEvents = viewModel.events.collectAsState().value.size
+    //val numberEvents = viewModel.events.collectAsState().value.size
     val eventList by viewModel.events.collectAsState()
     val selectedEvent by viewModel.selectedEvent.collectAsState()
     val numberOfMembers by viewModel.numberOfMembers.collectAsState()
@@ -131,7 +134,11 @@ fun MainScreen(
             // Adds the admin user to the event object
             val eventCreated = event.copy(admin = EventService.getEventAdmin(event.id))
             viewModel.selectEvent(eventCreated)
+            viewModel.getNumberOfMembersEnrolledInCurrentEvent()
 
+            if(currentUser != null) {
+                viewModel.isUserEnrolled(context, currentUser!!.id)
+            }
             eventCreated.address?.let { address ->
                 Tools.moveCameraTo(
                     latLng = LatLng(
@@ -228,7 +235,7 @@ fun MainScreen(
                                     if(success){
                                         scope.launch {
                                             snackbarHostState.showSnackbar(
-                                                "Event deleted successfully!"
+                                                context.getString(R.string.event_deleted_message)
                                             )
                                         }
                                         viewModel.selectEvent(null)
@@ -240,7 +247,7 @@ fun MainScreen(
                                 if(success){
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
-                                            "Enrollment created successfully!"
+                                            context.getString(R.string.enrollment_created_message)
                                         )
                                     }
                                     viewModel.setUserEnrolled(true)
@@ -251,7 +258,7 @@ fun MainScreen(
                                 if(success){
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
-                                            "You have left the event with success."
+                                            context.getString(R.string.user_left_event_message)
                                         )
                                     }
                                     viewModel.setUserEnrolled(false)
@@ -305,7 +312,7 @@ fun MainScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Menu,
-                        contentDescription = "Open menu icon"
+                        contentDescription = stringResource(R.string.open_menu_icon_desc)
                     )
                 }
 
@@ -385,7 +392,6 @@ fun MainScreen(
     }
 }
 
-fun Event?.isNull() = this == null
 
 
 @RequiresApi(Build.VERSION_CODES.O)

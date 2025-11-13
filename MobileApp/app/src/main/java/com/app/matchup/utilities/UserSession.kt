@@ -6,6 +6,7 @@ import com.app.matchup.models.User
 import com.app.matchup.services.UserService
 import com.google.gson.Gson
 import java.util.UUID
+import androidx.core.content.edit
 
 object UserSession {
 
@@ -20,11 +21,11 @@ object UserSession {
     }
 
     fun saveUserSession(context: Context, user: User){
-        getPrefs(context).edit()
-            .putBoolean(KEY_IS_LOGGED_IN, true)
-            .putString(KEY_EMAIL, user.email)
-            .putString(KEY_USER_ID, user.id.toString())
-            .apply()
+        getPrefs(context).edit {
+            putBoolean(KEY_IS_LOGGED_IN, true)
+                .putString(KEY_EMAIL, user.email)
+                .putString(KEY_USER_ID, user.id.toString())
+        }
     }
 
     suspend fun getUser(context: Context): User? {
@@ -47,7 +48,7 @@ object UserSession {
     }
 
     fun logoutUser(context: Context) {
-        getPrefs(context).edit().clear().apply()
+        getPrefs(context).edit { clear() }
     }
 
 
