@@ -73,7 +73,7 @@ fun EventDetails(
     joinSnackbar: (result: Boolean) -> Unit,
     leaveEventSnackbar: (result: Boolean) -> Unit
 ){
-    val dateFormatter = SimpleDateFormat(stringResource(R.string.date_pattern), Locale.getDefault())
+    val dateFormatter = SimpleDateFormat(stringResource(R.string.date_time_pattern), Locale.getDefault())
 
     LaunchedEffect(Unit) {
         enrollmentVM.setSelectedEvent(event)
@@ -150,7 +150,7 @@ fun EventDetails(
                 }
 
                 Text(
-                    text = stringResource(R.string.date_hour_label),
+                    text = "${stringResource(R.string.date_hour_label)}:",
                     color = Color.Gray,
                     modifier = Modifier.padding(top = 20.dp)
                 )
@@ -189,14 +189,14 @@ fun EventDetails(
                 ) {
                     // Sport Column
                     ColumnWithLabel(
-                        label = stringResource(R.string.sports_label),
+                        label = "${stringResource(R.string.sports_label)}:",
                         imageIcon = event.sport?.getSportIcon()!!,
                         text = event.sport!!.name,
                     )
 
                     // Gender Column
                     ColumnWithLabel(
-                        label = stringResource(R.string.gender_label),
+                        label = "${stringResource(R.string.gender_label)}:",
                         text = event.gender,
                         textColor = Tools.getGenderColor(event.gender),
                         textFontWeight = FontWeight.Bold
@@ -204,14 +204,14 @@ fun EventDetails(
 
                     // Cost Column
                     ColumnWithLabel(
-                        label = stringResource(R.string.cost_label),
+                        label = "${stringResource(R.string.cost_label)}:",
                         text = "${event.cost}€",
                         textFontSize = 18
                     )
 
                     // Duration Column
                     ColumnWithLabel(
-                        label = stringResource(R.string.duration_label),
+                        label = "${stringResource(R.string.duration_label)}:",
                         text = "${event.duration}min",
                     )
                 }
@@ -223,7 +223,7 @@ fun EventDetails(
                             .padding(top = 15.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.max_members_label),
+                            text = "${stringResource(R.string.max_members_label)}:",
                             color = Color.Gray
                         )
                         Text(

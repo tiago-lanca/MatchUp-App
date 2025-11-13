@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.app.matchup.R
 import com.app.matchup.utilities.Tools
 import com.google.android.gms.maps.CameraUpdateFactory
 import kotlinx.coroutines.launch
@@ -46,7 +48,7 @@ fun FloatingButtonsMainScreen(
         ) {
             Icon(
                 imageVector = Icons.Default.NearMe,
-                contentDescription = "Go to my location"
+                contentDescription = stringResource(R.string.go_to_my_location_icon_desc)
             )
         }
 
@@ -63,7 +65,7 @@ fun FloatingButtonsMainScreen(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Create new event icon"
+                contentDescription = stringResource(R.string.create_new_event_icon_desc)
             )
         }
     }

@@ -10,9 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.matchup.R
 
 @Composable
 fun MenuItem(
@@ -44,8 +46,8 @@ fun MenuItem(
 fun MenuItemPreview(){
     MenuItem(
         icon = Icons.Default.Home,
-        iconDescription = "Home Icon",
-        text = "Home",
+        iconDescription = stringResource(R.string.home_icon_desc),
+        text = stringResource(R.string.home_label),
         onMenuItemClick = {}
     )
 }

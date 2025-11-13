@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,10 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.filled.Login
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -34,14 +30,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -84,7 +79,7 @@ fun LoginScreen(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = "MatchUp - v.1.0.0",
+                    text = stringResource(R.string.app_name_and_version),
                 )
             }
         }
@@ -113,7 +108,7 @@ fun LoginScreen(
                     // Logo
                     Image(
                         painter = painterResource(R.drawable.matchup_white),
-                        contentDescription = "MatchUp Logo",
+                        contentDescription = stringResource(R.string.app_logo_desc),
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .wrapContentHeight()
@@ -121,7 +116,7 @@ fun LoginScreen(
                     )
 
                     Text(
-                        text = "Sign in to your\naccount",
+                        text = stringResource(R.string.signin_title_text),
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
@@ -167,24 +162,26 @@ fun LoginScreen(
                     else {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Login,
-                            contentDescription = "Login Icon",
+                            contentDescription = stringResource(R.string.login_icon_desc),
                             modifier = Modifier
                                 .padding(end = 5.dp)
                         )
                     }
-                    Text("Sign In")
+                    Text(stringResource(R.string.signin_label))
                 }
 
                 // Link to Sign Up account
                 Row(
                     modifier = Modifier.padding(top = 20.dp)
                 ) {
+                    // "Don’t have an account?"
                     Text(
-                        text ="Don’t have an account? ",
+                        text = stringResource(R.string.signup_text_1),
                         color = Color.White,
                         fontSize = 16.sp
                     )
-                    Text(text = "Sign Up",
+                    // "Sign Up"
+                    Text(text = stringResource(R.string.signup_text_2),
                         color = Color(0xFF1565C0),
                         fontSize = 16.sp,
                         modifier = Modifier

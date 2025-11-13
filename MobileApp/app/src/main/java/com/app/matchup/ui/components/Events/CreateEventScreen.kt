@@ -5,13 +5,11 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,9 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -32,11 +28,9 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,12 +39,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +52,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.MainActivity
 import com.app.matchup.R
-import com.app.matchup.SelectLocationActivity
 import com.app.matchup.models.Address
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
@@ -98,13 +90,11 @@ fun CreateEventScreen(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = "MatchUp - v.1.0.0",
+                    text = stringResource(R.string.app_name_and_version),
                 )
             }
         }
     ) { innerPadding ->
-
-
 
         Box(
             modifier = Modifier
@@ -139,13 +129,13 @@ fun CreateEventScreen(
                         ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Go back button"
+                            contentDescription = stringResource(R.string.go_back_button_desc)
                         )
                     }
                     // Logo
                     Image(
                         painter = painterResource(R.drawable.matchup_white),
-                        contentDescription = "MatchUp Logo",
+                        contentDescription = stringResource(R.string.matchup_logo_desc),
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .height(80.dp)
@@ -157,7 +147,7 @@ fun CreateEventScreen(
 
                 // Title
                 Text(
-                    text = "Create New Event",
+                    text = stringResource(R.string.create_new_event_label),
                     textAlign = TextAlign.Center,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,
@@ -222,17 +212,17 @@ fun CreateEventScreen(
                 icon = {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
-                        contentDescription = "Check icon",
+                        contentDescription = stringResource(R.string.check_icon_desc),
                         tint = Color(0xFF4CAF50),
                         modifier = Modifier.size(40.dp)
                     )
                 },
-                title = { Text("Success") },
+                title = { Text(stringResource(R.string.success_title_label)) },
                 text = {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
-                        Text("Event was created successfully.")
+                        Text(stringResource(R.string.event_created_message))
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -240,7 +230,7 @@ fun CreateEventScreen(
                                 checked = goToNewEventChecked,
                                 onCheckedChange = { goToNewEventChecked = it }
                             )
-                            Text("Go to new event")
+                            Text(stringResource(R.string.go_to_new_event_checkbox_label))
                         }
                     }
                    },
@@ -253,7 +243,7 @@ fun CreateEventScreen(
                             if(context is Activity) context.finish()
                         }
                     ) {
-                        Text("OK", color = Color(0xFF4CAF50))
+                        Text(stringResource(R.string.ok_button_label), color = Color(0xFF4CAF50))
                     }
                 }
             )

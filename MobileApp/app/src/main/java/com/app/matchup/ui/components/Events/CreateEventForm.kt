@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -148,7 +149,7 @@ fun CreateEventForm(
         ){
             // Gender Field
             DropdownMenuGeneric(
-                label = "Gender",
+                label = stringResource(R.string.gender_label),
                 items = genders,
                 selectedItem = event.gender,
                 onItemSelected = { onGenderChanged(it) },
@@ -165,7 +166,7 @@ fun CreateEventForm(
                 value = durationInput,
                 onValueChange = { onDurationChanged(it) },
                 label = { Text(
-                    text = "Duration (min)",
+                    text = stringResource(R.string.duration_minutes_label),
                     fontSize = 14.sp
                     )
                 },
@@ -180,7 +181,7 @@ fun CreateEventForm(
             TextField(
                 value = costInput,
                 onValueChange = { onCostChanged(it) },
-                label = { Text(text = "€/p") },
+                label = { Text(stringResource(R.string.cost_label_create_event_form)) },
                 isError = validationState.costError != null,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,

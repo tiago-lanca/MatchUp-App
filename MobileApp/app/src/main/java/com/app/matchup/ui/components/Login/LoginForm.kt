@@ -31,10 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.matchup.R
 
 
 @Composable
@@ -61,11 +63,11 @@ fun LoginForm(
             OutlinedTextField(
                 value = email,
                 onValueChange = { onEmailChanged(it) },
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.email_label)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Email,
-                        contentDescription = "Email Icon",
+                        contentDescription = stringResource(R.string.email_icon_desc),
                         tint = Color(0xFF1565C0)
                     )
                 },
@@ -100,11 +102,11 @@ fun LoginForm(
             OutlinedTextField(
                 value = password,
                 onValueChange = { onPasswordChanged(it) },
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.password_label)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Lock,
-                        contentDescription = "Password Icon",
+                        contentDescription = stringResource(R.string.password_icon_desc),
                         tint = Color(0xFF1565C0)
                     )
                 },

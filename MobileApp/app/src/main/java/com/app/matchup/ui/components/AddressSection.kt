@@ -11,7 +11,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.app.matchup.R
 import com.app.matchup.models.Address
 
 @Composable
@@ -40,7 +42,7 @@ fun AddressSection(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Address",
+            text = stringResource(R.string.address_label),
             color = Color.White,
             style = MaterialTheme.typography.titleSmall
         )
@@ -49,7 +51,7 @@ fun AddressSection(
         TextField(
             value = address?.street!!,
             onValueChange = {},
-            label = { Text("Street") },
+            label = { Text(stringResource(R.string.street_label)) },
             readOnly = true,
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
@@ -60,7 +62,7 @@ fun AddressSection(
             TextField(
                 value = address.city,
                 onValueChange = {},
-                label = { Text("City") },
+                label = { Text(stringResource(R.string.city_label)) },
                 readOnly = true,
                 singleLine = true,
                 modifier = Modifier.weight(2f)
@@ -69,7 +71,7 @@ fun AddressSection(
             TextField(
                 value = address.zipCode,
                 onValueChange = {},
-                label = { Text("Zip Code") },
+                label = { Text(stringResource(R.string.zip_code_label)) },
                 readOnly = true,
                 singleLine = true,
                 modifier = Modifier.weight(1f)

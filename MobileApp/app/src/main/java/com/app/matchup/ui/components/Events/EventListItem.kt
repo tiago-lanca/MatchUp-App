@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.matchup.R
 import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.extensions.getSportIconSize
 import com.app.matchup.models.Event
@@ -55,7 +57,7 @@ fun EventListItem(
 ){
 
     val context = LocalContext.current
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val dateFormatter = DateTimeFormatter.ofPattern(stringResource(R.string.date_pattern))
 
 
     Row(
@@ -68,10 +70,10 @@ fun EventListItem(
     ){
         Image(
             painter = painterResource(event.sport?.getSportIcon()!!),
-            contentDescription = "Football Icon",
+            contentDescription = stringResource(R.string.sport_icon_des),
             modifier = Modifier
                 .padding(end = 15.dp)
-                .size( event.sport?.getSportIcon()!!.getSportIconSize()),
+                .size(event.sport?.getSportIcon()!!.getSportIconSize()),
             contentScale = ContentScale.Fit
         )
 
@@ -81,7 +83,7 @@ fun EventListItem(
             Row {
                 Icon(
                     imageVector = Icons.Filled.LocationOn,
-                    contentDescription = "Location Icon",
+                    contentDescription = stringResource(R.string.location_icon_desc),
                     tint = Color.Red
                 )
 
@@ -109,12 +111,13 @@ fun EventListItem(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Schedule,
-                    contentDescription = "Schedule Icon",
+                    contentDescription = stringResource(R.string.schedule_icon_desc),
                     tint = Color.White
                 )
                 Text(
-                    text = SimpleDateFormat("dd/MM/yyyy HH:mm'h'", Locale.getDefault())
-                        .format(event.date),
+                    text = SimpleDateFormat("${context.getString(R.string.date_time_pattern)}h",
+                        Locale.getDefault())
+                        .format(event.date!!),
                     color = Color.White,
                     modifier = Modifier
                         .padding(start = 5.dp)
@@ -129,7 +132,7 @@ fun EventListItem(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Groups,
-                        contentDescription = "Members of the event",
+                        contentDescription = stringResource(R.string.members_of_event_label) ,
                         tint = Color.White
                     )
                     Text(
@@ -150,7 +153,7 @@ fun EventListItem(
                                     color = Color.Green
                                 )
                             ) {
-                                append(" /${event.maxMembers.toString()}")
+                                append(" /${event.maxMembers}")
                             }
                         },
                         modifier = Modifier
@@ -176,7 +179,7 @@ fun EventListItem(
         ) {
             Icon(
                 imageVector = Icons.Filled.ChevronRight,
-                contentDescription = "Click to see respective event details",
+                contentDescription = stringResource(R.string.go_to_event_details),
                 tint = Color.White,
                 modifier = Modifier
             )

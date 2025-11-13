@@ -29,8 +29,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.app.matchup.R
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -67,7 +69,7 @@ fun DateTimePicker(
         Row(verticalAlignment = Alignment.CenterVertically) {
             TextField(
                 value = selectedDate?.format(dateFormatter) ?: "",
-                label = { Text("Date") },
+                label = { Text(stringResource(R.string.date_label)) },
                 onValueChange = {},
                 readOnly = true,
                 isError = error != null,
@@ -75,7 +77,7 @@ fun DateTimePicker(
             )
             TextField(
                 value = selectedTime?.format(timeFormat) ?: "",
-                label = { Text("Hour") },
+                label = { Text(stringResource(R.string.hour_label)) },
                 onValueChange = {},
                 isError = error != null,
                 readOnly = true,
@@ -94,7 +96,7 @@ fun DateTimePicker(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.DateRange,
-                    contentDescription = "Pick Date and Time"
+                    contentDescription = stringResource(R.string.pick_date_time_label_desc)
                 )
             }
         }
@@ -127,7 +129,7 @@ fun DateTimePicker(
         // Time Picker
         if (openTimePicker.value) {
             TimePickerDialog(
-                title = { Text("Time Picker")},
+                title = { Text(stringResource(R.string.time_picker_title))},
                 onDismissRequest = { openTimePicker.value = false },
                 confirmButton = {
                     TextButton(onClick = {
@@ -148,7 +150,7 @@ fun DateTimePicker(
                         }
 
                     }) {
-                        Text("OK")
+                        Text(stringResource(R.string.ok_button_label))
                     }
                 }
             ) {

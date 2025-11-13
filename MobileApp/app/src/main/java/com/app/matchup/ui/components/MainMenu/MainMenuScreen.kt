@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -72,12 +73,12 @@ fun MainMenuScreen() {
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ReportGmailerrorred,
-                            contentDescription = "Report/Feedback Icon",
+                            contentDescription = stringResource(R.string.report_feedback_icon_desc),
                             tint = Color.Red,
                             modifier = Modifier.padding(end = 8.dp)
                         )
                         Text(
-                            text = "Report / Feedback Problem",
+                            text = stringResource(R.string.report_feedback_label),
                             textAlign = TextAlign.Center,
                             color = Color.White,
                             fontSize = 15.sp
@@ -87,7 +88,7 @@ fun MainMenuScreen() {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        text = "MatchUp - v.1.0.0",
+                        text = stringResource(R.string.app_name_and_version),
                     )
                 }
             }
@@ -130,6 +131,7 @@ fun MainMenuScreen() {
                 // Menu items
                 MenuItems(
                     modifier = Modifier.padding(innerPadding),
+                    isUserLoggedIn = user != null,
                     onLoginClick = { (context as Activity).navigateTo(activity = LoginActivity::class.java, closeCurrentActivity = false) },
                     onHomeClick = { (context as Activity).navigateTo(activity = MainActivity::class.java, closeCurrentActivity = false) },
                     onMyEventsClick = { /*TODO*/ },

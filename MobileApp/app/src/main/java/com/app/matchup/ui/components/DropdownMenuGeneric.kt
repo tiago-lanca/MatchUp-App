@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import com.app.matchup.models.Country
 import com.app.matchup.R
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -73,7 +74,10 @@ fun <T>  DropdownMenuGeneric(
             leadingIcon = leadingIcon,
             trailingIcon = {
                 IconButton(onClick = { expanded = !expanded }) {
-                    Icon(Icons.Default.ArrowDropDown, contentDescription = "Dropdown Arrow")
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = stringResource(R.string.dropdown_arrow_icon_desc)
+                    )
                 }
             },
             modifier = Modifier
@@ -112,7 +116,7 @@ fun <T>  DropdownMenuGeneric(
                                 intIcon != null -> {
                                     Icon(
                                         painterResource(intIcon(item)),
-                                        contentDescription = "Sport icon",
+                                        contentDescription = stringResource(R.string.sport_icon_des),
                                         modifier = Modifier.size(20.dp),
                                         tint = Color.Unspecified
                                     )

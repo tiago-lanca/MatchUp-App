@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,13 +31,6 @@ import java.util.UUID
 
 @Composable
 fun UserProfileSection(user: User){
-    /*val user = User(
-        id = UUID.randomUUID(),
-        name = "Tiago Lança",
-        email = "tiagotestest@email.com",
-        passwordHash = "1234",
-        profilePicture = R.drawable.profile_picture.toString()
-    )*/
 
     user.profilePicture = R.drawable.profile_picture.toString()
     Row (
@@ -50,7 +44,7 @@ fun UserProfileSection(user: User){
     ) {
         Image(
             painter = painterResource(user.profilePicture!!.toInt()),
-            contentDescription = "Profile Picture",
+            contentDescription = stringResource(R.string.profile_picture_image_desc),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(90.dp)
@@ -75,7 +69,7 @@ fun UserProfileSection(user: User){
 
         Icon(
             imageVector = Icons.Filled.ChevronRight,
-            contentDescription = "Go To Profile Icon",
+            contentDescription = stringResource(R.string.go_to_profile_icon_desc),
             tint = Color.White,
             modifier = Modifier
                 .size(40.dp)

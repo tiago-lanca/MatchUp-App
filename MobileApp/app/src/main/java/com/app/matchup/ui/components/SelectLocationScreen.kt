@@ -50,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +60,7 @@ import com.app.matchup.MainActivity
 import com.app.matchup.services.GeocodeService
 import com.app.matchup.ui.theme.LOCATION_ICON_COLOR
 import com.app.matchup.ui.theme.MY_LOCATION_ICON_COLOR
+import com.app.matchup.R
 import com.app.matchup.utilities.Tools.navigateTo
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -163,7 +165,7 @@ fun SelectLocationScreen() {
                     // Title Section and Close button
                     Box(Modifier.fillMaxWidth()) {
                         Text(
-                            text = "Select a Location",
+                            text = stringResource(R.string.select_location_label),
                             color = Color.White,
                             fontSize = 27.sp,
                             fontWeight = FontWeight.Bold,
@@ -185,7 +187,7 @@ fun SelectLocationScreen() {
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Close",
+                                contentDescription = stringResource(R.string.close_icon_desc),
                                 tint = Color.White
                             )
                         }
@@ -224,7 +226,7 @@ fun SelectLocationScreen() {
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.MyLocation,
-                                    contentDescription = "My Location Icon",
+                                    contentDescription = stringResource(R.string.go_to_my_location_icon_desc),
                                     tint = Color.White,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -233,7 +235,7 @@ fun SelectLocationScreen() {
                             OutlinedTextField(
                                 value = filterLocation,
                                 onValueChange = { filterLocation = it },
-                                label = { Text("City") },
+                                label = { Text(stringResource(R.string.city_label)) },
                                 singleLine = true,
                                 trailingIcon = {
                                     Row (
@@ -243,7 +245,7 @@ fun SelectLocationScreen() {
                                         if (filterLocation.isNotEmpty()) {
                                                 Icon(
                                                     imageVector = Icons.Default.Close,
-                                                    contentDescription = "Clear text",
+                                                    contentDescription = stringResource(R.string.clear_text_icon_desc),
                                                     tint = Color.Black,
                                                     modifier = Modifier
                                                         .size(20.dp)
@@ -254,7 +256,7 @@ fun SelectLocationScreen() {
 
                                             Icon(
                                                 imageVector = Icons.Default.Search,
-                                                contentDescription = "Search Icon",
+                                                contentDescription = stringResource(R.string.search_icon_desc),
                                                 tint = Color(0xFF006400),
                                                 modifier = Modifier
                                                     .clickable{
@@ -335,7 +337,7 @@ fun SelectLocationScreen() {
             // Map Marker Location
             Icon(
                 imageVector = Icons.Filled.LocationOn,
-                contentDescription = "Marker",
+                contentDescription = stringResource(R.string.marker_icon_desc),
                 tint = LOCATION_ICON_COLOR,
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -364,7 +366,7 @@ fun SelectLocationScreen() {
                     .padding(bottom = 24.dp)
             ) {
                 Text(
-                    text = "CONFIRM",
+                    text = stringResource(R.string.confirm_uppercase_label),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 2.sp

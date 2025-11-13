@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -64,7 +65,7 @@ fun RegisterScreen() {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = "MatchUp - v.1.0.0",
+                    text = stringResource(R.string.app_name_and_version),
                 )
             }
         }
@@ -93,7 +94,7 @@ fun RegisterScreen() {
                     // Logo
                     Image(
                         painter = painterResource(R.drawable.matchup_white),
-                        contentDescription = "MatchUp Logo",
+                        contentDescription = stringResource(R.string.app_logo_desc),
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
@@ -103,7 +104,7 @@ fun RegisterScreen() {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Text(
-                        text = "Register",
+                        text = stringResource(R.string.register_label),
                         textAlign = TextAlign.Start,
                         color = Color.White,
                         fontWeight = FontWeight.ExtraBold,
@@ -120,7 +121,7 @@ fun RegisterScreen() {
                                     color = Color.White
                                 )
                             ) {
-                                append("Already have an account?  ")
+                                append(stringResource(R.string.already_have_account_label))
                             }
                             withStyle(
                                 style = SpanStyle(
@@ -130,7 +131,7 @@ fun RegisterScreen() {
                                     textDecoration = TextDecoration.Underline
                                 )
                             ) {
-                                append("Log in")
+                                append(stringResource(R.string.log_in_label))
                             }
                         },
                     )
@@ -156,7 +157,7 @@ fun RegisterScreen() {
                         .align(Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("Register")
+                    Text(stringResource(R.string.register_label))
                 }
             }
         }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,23 +22,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.app.matchup.viewmodels.RegisterViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.app.matchup.models.Sport
 import com.app.matchup.R
 import com.app.matchup.models.Country
+import com.app.matchup.models.Sport
 import com.app.matchup.ui.components.DropdownMenuGeneric
 import com.app.matchup.ui.theme.GENDER_MALE_COLOR
+import com.app.matchup.viewmodels.RegisterViewModel
 
 @Composable
 fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
@@ -91,11 +88,11 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
             OutlinedTextField(
                 value = user.name,
                 onValueChange = { viewModel.onNameChanged(it) },
-                label = { Text("Name") },
+                label = { Text(stringResource(R.string.name_label)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Person,
-                        contentDescription = "Email Icon",
+                        contentDescription = stringResource(R.string.name_icon_desc),
                         tint = Color(0xFF1565C0)
                     )
                 },
@@ -117,11 +114,11 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
             OutlinedTextField(
                 value = user.email,
                 onValueChange = { viewModel.onEmailChanged(it) },
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.email_label)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Email,
-                        contentDescription = "Email Icon",
+                        contentDescription = stringResource(R.string.email_icon_desc),
                         tint = Color(0xFF1565C0)
                     )
                 },
@@ -147,7 +144,8 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
             ) {
                 // Country Field
                 DropdownMenuGeneric(
-                    label = "Country",
+                    label = stringResource(R.string.country_label),
+                    labelColor = Color.Gray,
                     items = countries,
                     selectedItem = user.country,
                     onItemSelected = { viewModel.onCountryChanged(it) },
@@ -156,7 +154,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                         user.country?.icon?.let { flagIcon ->
                             Icon(
                                 painter = painterResource(id = flagIcon),
-                                contentDescription = "Flag",
+                                contentDescription = stringResource(R.string.country_flag_icon_desc),
                                 tint = Color.Unspecified,
                                 modifier = Modifier.size(20.dp)
                             )
@@ -170,11 +168,11 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                 OutlinedTextField(
                     value = user.city,
                     onValueChange = { viewModel.onCityChanged(it) },
-                    label = { Text("City") },
+                    label = { Text(stringResource(R.string.city_label)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.LocationOn,
-                            contentDescription = "Email Icon",
+                            contentDescription = stringResource(R.string.location_icon_desc),
                             tint = Color(0xFF1565C0)
                         )
                     },
@@ -197,11 +195,11 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
             OutlinedTextField(
                 value = user.mobilePhone,
                 onValueChange = { viewModel.onMobilePhoneChanged(it) },
-                label = { Text("Mobile Phone") },
+                label = { Text(stringResource(R.string.mobile_phone_label)) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Phone,
-                        contentDescription = "Phone Icon",
+                        contentDescription = stringResource(R.string.mobile_phone_icon_desc),
                         tint = Color(0xFF1565C0)
                     )
                 },
@@ -225,13 +223,13 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                 onValueChange = { viewModel.onPasswordChanged(it) },
                 label = {
                     Text(
-                        text = "Password"
+                        text = stringResource(R.string.password_label)
                     )
                 },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Lock,
-                        contentDescription = "Password Icon",
+                        contentDescription = stringResource(R.string.password_icon_desc),
                         tint = Color(0xFF1565C0)
                     )
                 },
@@ -256,13 +254,13 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                 onValueChange = {  },
                 label = {
                     Text(
-                        text = "Confirm Password"
+                        text = stringResource(R.string.confirm_password_label)
                     )
                 },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Lock,
-                        contentDescription = "Password Icon",
+                        contentDescription = stringResource(R.string.password_icon_desc),
                         tint = Color(0xFF1565C0)
                     )
                 },
@@ -283,14 +281,15 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
 
             // Gender Field
             DropdownMenuGeneric(
-                label = "Gender",
+                label = stringResource(R.string.gender_label),
+                labelColor = Color.Gray,
                 items = listOf("M", "F"),
                 selectedItem = user.gender,
                 onItemSelected = { viewModel.onGenderChanged(it) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Male,
-                        contentDescription = "Flag",
+                        contentDescription = stringResource(R.string.gender_icon_desc),
                         tint = GENDER_MALE_COLOR
                     )
                 },
@@ -300,7 +299,8 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
 
             // Favorite Sport Field
             DropdownMenuGeneric(
-                label = "Favorite Sport",
+                label = stringResource(R.string.favorite_sport_label),
+                labelColor = Color.Gray,
                 items = sports,
                 selectedItem = user.favoriteSport,
                 onItemSelected = { viewModel.onFavoriteSportChanged(it) },
@@ -308,7 +308,7 @@ fun RegisterForm(viewModel: RegisterViewModel = viewModel()){
                     user.favoriteSport?.icon?.let { sportIcon ->
                         Icon(
                             painter = painterResource(sportIcon),
-                            contentDescription = "Flag",
+                            contentDescription = stringResource(R.string.favorite_sport_icon_desc),
                             modifier = Modifier.size(20.dp),
                             tint = Color.Unspecified
                         )
