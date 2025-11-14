@@ -96,4 +96,7 @@
     <string name="search_icon_desc">Search Icon</string>
     <string name="marker_icon_desc">Marker icon</string>
     <string name="confirm_uppercase_label">CONFIRM</string>
+    <string name="refresh_icon_desc">Refresh icon</string>
+    <string name="empty_event_list_textLabel">No events to be shown</string>
+    <string name="refresh_event_list_message">Event list refreshed with success!</string>
 </resources>

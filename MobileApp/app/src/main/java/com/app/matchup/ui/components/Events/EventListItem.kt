@@ -81,20 +81,22 @@ fun EventListItem(
             modifier = Modifier.weight(1f)
         ) {
             Row {
+                // Address Icon
                 Icon(
                     imageVector = Icons.Filled.LocationOn,
                     contentDescription = stringResource(R.string.location_icon_desc),
                     tint = Color.Red
                 )
-
                 Column(
                     modifier = Modifier
                         .padding(start = 5.dp)
                 ) {
+                    // Address Street
                     Text(
                         text = event.address!!.street,
                         color = Color.White
                     )
+                    // City
                     Text(
                         text = event.address!!.city,
                         color = Color.Gray,
@@ -109,13 +111,15 @@ fun EventListItem(
                 modifier = Modifier
                     .padding(top = 5.dp),
             ) {
+                // Hour icon
                 Icon(
                     imageVector = Icons.Filled.Schedule,
                     contentDescription = stringResource(R.string.schedule_icon_desc),
                     tint = Color.White
                 )
+                // Date Hour
                 Text(
-                    text = SimpleDateFormat("${context.getString(R.string.date_time_pattern)}h",
+                    text = SimpleDateFormat("${context.getString(R.string.date_time_pattern)}'h'",
                         Locale.getDefault())
                         .format(event.date!!),
                     color = Color.White,

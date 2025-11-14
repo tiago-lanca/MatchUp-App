@@ -43,7 +43,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -102,6 +101,8 @@ fun MainScreen(
     val selectedEvent by viewModel.selectedEvent.collectAsState()
     val numberOfMembers by viewModel.numberOfMembers.collectAsState()
     val isUserEnrolled by viewModel.isUserEnrolled.collectAsState()
+    var showFilterEventSheet by remember { mutableStateOf(false) }
+
 
     val cameraPositionState = rememberCameraPositionState()
 
@@ -207,8 +208,20 @@ fun MainScreen(
                             },
                             onRefreshEventList = {
                                 coroutineScope.launch {
-                                    viewModel.loadEvents()
+                                    viewModel.loadEvents(){ success ->
+                                        if(success){
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    context.getString(R.string.refresh_event_list_message)
+                                                )
+                                            }
+                                        }
+                                    }
+
                                 }
+                            },
+                            onFilterEventClicked = {
+                                showFilterEventSheet = true
                             }
                         )
                     } else {
@@ -385,8 +398,14 @@ fun MainScreen(
                             )
                         }
                     }
-
                 }
+            }
+
+            if(showFilterEventSheet) {
+                FilterEventBottomSheet(
+                    context = context,
+                    onDismiss = { showFilterEventSheet = false }
+                )
             }
         }
     }

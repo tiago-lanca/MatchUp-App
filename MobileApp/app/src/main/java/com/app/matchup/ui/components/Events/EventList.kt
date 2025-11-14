@@ -30,10 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.matchup.R
 import com.app.matchup.models.Event
 import com.app.matchup.services.EnrollmentService
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
@@ -48,6 +50,7 @@ fun EventList(
     eventList: List<Event>,
     onClickEventItem: (Event) -> Unit,
     onRefreshEventList: () -> Unit,
+    onFilterEventClicked: () -> Unit,
     onEventMembersCount:suspend (Event) -> Int,
     modifier: Modifier = Modifier
 ){
@@ -90,17 +93,21 @@ fun EventList(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
+                    // Refresh Icon
                     Icon(
                         imageVector = Icons.Filled.Refresh,
-                        contentDescription = "Refresh icon",
+                        contentDescription = stringResource(R.string.refresh_icon_desc),
                         tint = Color.Gray,
                         modifier = Modifier
                             .clickable(onClick = onRefreshEventList)
                     )
+                    // Filter Icon
                     Icon(
                         imageVector = Icons.Filled.Settings,
-                        contentDescription = "Settings icon",
-                        tint = Color.Gray
+                        contentDescription =  stringResource(R.string.settings_icon_desc),
+                        tint = Color.Gray,
+                        modifier = Modifier
+                            .clickable(onClick = onFilterEventClicked)
                     )
                 }
             }
@@ -113,7 +120,7 @@ fun EventList(
                 if (eventList.isEmpty()) {
                     item {
                         Text(
-                            text = "No events to be shown",
+                            text = stringResource(R.string.empty_event_list_textLabel),
                             color = Color.White,
                             modifier = Modifier
                                 .padding(bottom = 10.dp)

@@ -28,10 +28,17 @@ class EventsViewModel : ViewModel() {
         loadEvents()
     }
 
-    fun loadEvents() {
+    fun loadEvents(result: (Boolean) -> Unit = {}) {
         viewModelScope.launch {
-            val eventList = EventService.getEvents()
-            _events.value = eventList
+            try {
+                val eventList = EventService.getEvents()
+                _events.value = eventList
+                result(true)
+            }
+            catch (e: Exception){
+                e.printStackTrace()
+                result(false)
+            }
         }
     }
 

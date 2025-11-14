@@ -33,30 +33,32 @@ import com.app.matchup.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun <T>  DropdownMenuGeneric(
-    label: String,
+    label: String = "",
     labelColor: Color = Color.DarkGray,
     items: List<T>,
     selectedItem: T?,
     backgroundColor: Color = Color.White,
     onItemSelected: (T) -> Unit,
     getName: (T) -> String,
-    intIcon: ((T) -> Int)? = null,
+    intIcon: ((T) -> Int?)? = null,
     composableIcon: (@Composable (T) -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     errorText: String? = null,
+    roundedCornerShapeDp: Dp = 5.dp,
     modifier: Modifier = Modifier
 ){
     var expanded by remember { mutableStateOf(false) }
 
     Box (
         modifier = modifier
-            .clip(RoundedCornerShape(5.dp))
+            .clip(RoundedCornerShape(roundedCornerShapeDp))
             .background(backgroundColor)
     ) {
         OutlinedTextField(
@@ -83,7 +85,7 @@ fun <T>  DropdownMenuGeneric(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(57.dp),
-            shape = RoundedCornerShape(5.dp),
+            shape = RoundedCornerShape(roundedCornerShapeDp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = if(isError) Color.Red else Color(0xFF2C85FF),
                 unfocusedBorderColor = if(isError) Color.Red else Color.Transparent,
@@ -94,7 +96,7 @@ fun <T>  DropdownMenuGeneric(
             ),
             isError = isError,
             textStyle = LocalTextStyle.current.copy(
-                fontSize = 15.sp,
+                fontSize = 16.sp,
                 lineHeight = 2.sp
             ),
         )
@@ -114,12 +116,16 @@ fun <T>  DropdownMenuGeneric(
                                 composableIcon != null -> composableIcon(item)
 
                                 intIcon != null -> {
-                                    Icon(
-                                        painterResource(intIcon(item)),
-                                        contentDescription = stringResource(R.string.sport_icon_des),
-                                        modifier = Modifier.size(20.dp),
-                                        tint = Color.Unspecified
-                                    )
+                                    val iconRes = intIcon.invoke(item)
+
+                                    if (iconRes != null && iconRes != 0) {
+                                        Icon(
+                                            painterResource(iconRes),
+                                            contentDescription = stringResource(R.string.sport_icon_des),
+                                            modifier = Modifier.size(20.dp),
+                                            tint = Color.Unspecified
+                                        )
+                                    }
                                 }
                             }
 
