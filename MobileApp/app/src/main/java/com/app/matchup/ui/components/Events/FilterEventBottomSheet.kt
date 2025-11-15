@@ -1,29 +1,31 @@
 package com.app.matchup.ui.components.Events
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -50,16 +52,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
-import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.models.Sport
 import com.app.matchup.services.SportService
+import com.app.matchup.ui.components.DatePickerDial
+import com.app.matchup.ui.components.DateRangePickerDialog
 import com.app.matchup.ui.components.DropdownMenuGeneric
 import com.app.matchup.ui.theme.MatchUpTheme
 import com.app.matchup.utilities.Tools
 import com.app.matchup.viewmodels.EventFiltersViewModel
 import com.app.matchup.viewmodels.EventsViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.util.Date
+import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterEventBottomSheet(
@@ -68,15 +76,40 @@ fun FilterEventBottomSheet(
     onDismiss: () -> Unit,
     eventVM: EventsViewModel = viewModel()
 ){
+    val labelFontSize = 17.sp
     val filters by filtersVM.filters.collectAsState()
     var sports by remember { mutableStateOf<List<Sport>>(emptyList()) }
 
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showDatePicker by remember { mutableStateOf(false) }
+    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+    val dateRangeText =
+        if(filters.startDate != null && filters.startDate == filters.endDate) {
+            "${formatter.format(filters.startDate)}"
+        }
+        else if(filters.startDate != null && filters.endDate != null){
+            "${formatter.format(filters.startDate)} - ${formatter.format(filters.endDate)}"
+        }
+        else ""
+
 
     LaunchedEffect(Unit) {
         sports = SportService.getSports()
         sports += Sport(name = "Any")
+        sheetState.expand()
+    }
+
+    if (showDatePicker) {
+        DateRangePickerDialog(
+            onDismiss = { showDatePicker = false },
+            onRangeSelected = { startSelected, endSelected ->
+                startSelected?.let { filtersVM.updateStartDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant())) }
+                endSelected?.let { filtersVM.updateEndDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant())) }
+                showDatePicker = false
+            }
+        )
     }
 
     ModalBottomSheet(
@@ -89,40 +122,40 @@ fun FilterEventBottomSheet(
         sheetState = sheetState,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
     ) {
-            // Top bar title "Filter" and X close button
-            Box(
+        // Top bar title "Filter" and X close button
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp)
+        ) {
+            // Filter title
+            Text(
+                text = "Filter",
+                fontWeight = FontWeight.Bold,
+                fontSize = 27.sp,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp)
-            ) {
-                // Filter title
-                Text(
-                    text = "Filter",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 27.sp,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                )
+                    .align(Alignment.Center)
+            )
 
-                // X close button
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(R.string.close_icon_desc),
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .padding(end = 15.dp)
-                        .align(Alignment.CenterEnd)
-                        .size(27.dp)
-                        .clickable {
-                            scope.launch {
-                                sheetState.hide()
-                                onDismiss()
-                            }
+            // X close button
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = stringResource(R.string.close_icon_desc),
+                tint = Color.Black,
+                modifier = Modifier
+                    .padding(end = 15.dp)
+                    .align(Alignment.CenterEnd)
+                    .size(27.dp)
+                    .clickable {
+                        scope.launch {
+                            sheetState.hide()
+                            onDismiss()
                         }
-                )
-            }
+                    }
+            )
+        }
 
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -131,21 +164,21 @@ fun FilterEventBottomSheet(
         ) {
 
             // Gender
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Gender: ",
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
+                    fontSize = labelFontSize,
                     modifier = Modifier
                         .weight(0.6f)
                 )
                 DropdownMenuGeneric(
                     items = listOf("M", "F", "Mix", "Any"),
                     selectedItem = filters.gender ?: "Any",
-                    leadingIcon = { Tools.GetGenderIcon(filters.gender ?: "Any")},
+                    leadingIcon = { Tools.GetGenderIcon(filters.gender ?: "Any") },
                     onItemSelected = { filtersVM.updateGender(it) },
                     getName = { it },
                     composableIcon = { Tools.GetGenderIcon(it) },
@@ -154,15 +187,15 @@ fun FilterEventBottomSheet(
                 )
             }
             // Sport
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
-            ){
+            ) {
                 Text(
                     text = "Sport:",
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
+                    fontSize = labelFontSize,
                     modifier = Modifier
                         .weight(0.6f)
                 )
@@ -194,14 +227,14 @@ fun FilterEventBottomSheet(
             }
 
             // City
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "City: ",
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
+                    fontSize = labelFontSize,
                     modifier = Modifier
                         .weight(0.6f)
                 )
@@ -229,15 +262,60 @@ fun FilterEventBottomSheet(
                     modifier = Modifier.weight(1f)
                 )
             }
-            // Only My Events Filter
-            Row (
+
+            // Date
+            Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
+                Text(
+                    text = "Date: ",
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = labelFontSize,
+                    modifier = Modifier
+                        .weight(0.6f)
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { showDatePicker = true }
+                ) {
+                    TextField(
+                        value = dateRangeText,
+                        onValueChange = { },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.CalendarMonth,
+                                contentDescription = stringResource(R.string.calendar_icon_desc),
+                                tint = Color.Gray
+                            )
+                        },
+                        placeholder = { Text("Choose date...") },
+                        readOnly = true,
+                        enabled = false,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = TextFieldDefaults.colors(
+                            disabledContainerColor = Color.White,
+                            disabledIndicatorColor = Color.Transparent,
+                            disabledTextColor = Color.Black,
+                            disabledLabelColor = Color.Black,
+                            disabledPlaceholderColor = Color.Gray
+                        ),
+                    )
+                }
+            }
+
+
+            // Only My Events Filter
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = "Show only my created events:",
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
+                    fontSize = labelFontSize,
                     modifier = Modifier
                         .weight(0.7f)
                 )
@@ -256,22 +334,32 @@ fun FilterEventBottomSheet(
 
             // Footer Cancel / OK buttons
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 15.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ){
+            ) {
                 // Clear button
                 Button(
-                    modifier = Modifier.weight(0.6f),
-                    onClick = { filtersVM.reset() },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.LightGray
-                    )
+                    border = BorderStroke(1.dp, Color.Black),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.White
+                    ),
+
+                    onClick = { filtersVM.reset() }
                 ) {
-                    Text("Clear")
+                    Text("Clear all",
+                        fontSize = labelFontSize,
+                        color = Color.Black,
+                    )
                 }
 
-                // Apply button
+                // Show button
                 Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black
+                    ),
                     modifier = Modifier.weight(1f),
                     onClick = {
                         // apply filters()
@@ -280,15 +368,20 @@ fun FilterEventBottomSheet(
                             onDismiss()
                         }
                     }
-                ){
-                    Text("Apply")
+                ) {
+                    Text(
+                        text = "Show",
+                        fontSize = labelFontSize,
+                    )
                 }
             }
         }
     }
+
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun FilterEventBottomSheetPreview(){
