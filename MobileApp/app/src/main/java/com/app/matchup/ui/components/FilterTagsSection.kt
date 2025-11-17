@@ -42,7 +42,7 @@ fun FilterTagsSection(
             FilterTag(
                 text = "My Events",
                 onRemoveFilterClick = {
-                    filtersVM.updateOnlyMyEvents(false, context)
+                    filtersVM.updateOnlyMyEvents(false)
                     onFilterRemoved()
                 }
             )
@@ -59,7 +59,7 @@ fun FilterTagsSection(
                 text = filters.gender!!,
                 backgroundColor = color,
                 onRemoveFilterClick = {
-                    filtersVM.updateGender("Any", context)
+                    filtersVM.updateGender("Any")
                     onFilterRemoved()
                 }
             )
@@ -70,7 +70,7 @@ fun FilterTagsSection(
                 FilterTag(
                     icon = icon,
                     onRemoveFilterClick = {
-                        filtersVM.updateSport(Sport(name = "Any"), context)
+                        filtersVM.updateSport(Sport(name = "Any"))
                         onFilterRemoved()
                     }
                 )
@@ -81,7 +81,7 @@ fun FilterTagsSection(
             FilterTag(
                 text = filters.city,
                 onRemoveFilterClick = {
-                    filtersVM.updateCity(null, context)
+                    filtersVM.updateCity(null)
                     onFilterRemoved()
                 }
             )
@@ -100,8 +100,8 @@ fun FilterTagsSection(
             FilterTag(
                 text = dateRangeText,
                 onRemoveFilterClick = {
-                    filtersVM.updateStartDate(null, context)
-                    filtersVM.updateEndDate(null, context)
+                    filtersVM.updateStartDate(null)
+                    filtersVM.updateEndDate(null)
                     onFilterRemoved()
                 }
             )

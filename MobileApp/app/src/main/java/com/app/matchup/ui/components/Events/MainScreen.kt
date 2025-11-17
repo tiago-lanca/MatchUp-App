@@ -81,6 +81,7 @@ import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.utilities.AppConstants.DEFAULT_ZOOM
 import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
 import com.app.matchup.services.UserSession
+import com.app.matchup.utilities.EventFilterSession
 import com.app.matchup.viewmodels.EventFiltersViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,6 +134,9 @@ fun MainScreen(
 
 
     LaunchedEffect(Unit) {
+        filtersVM.setFilters(EventFilterSession.filters)
+        eventsVM.loadFilteredEvents(filtersVM.filters.value, context)
+
         // On MainActivity starting, checks if there's any event created passed by CreateEventActivity
         // If there's any, then select it and move the camera to the address
         if (event != null) {
@@ -154,11 +158,12 @@ fun MainScreen(
                     cameraPositionState = cameraPositionState
                 )
             }
+
+            filtersVM.reset()
         }
         // Loads current user
         currentUser = UserSession.getUser(context)
-        filtersVM.setFilters(UserSession.getFilters(context))
-        eventsVM.loadFilteredEvents(UserSession.getFilters(context), context)
+
     }
 
     LaunchedEffect(selectedEvent) {

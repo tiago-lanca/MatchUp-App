@@ -60,22 +60,4 @@ object UserSession {
     fun logoutUser(context: Context) {
         getPrefs(context).edit { clear() }
     }
-
-    fun saveFilters(context: Context, filters: EventFilter) {
-        val prefs = context.getSharedPreferences("user_session", Context.MODE_PRIVATE)
-        val json = Gson().toJson(filters)
-
-        prefs.edit()
-            .putString("FILTER_OBJECT", json)
-            .apply()
-    }
-
-    fun getFilters(context: Context): EventFilter {
-        val prefs = context.getSharedPreferences("user_session", Context.MODE_PRIVATE)
-        val json = prefs.getString("FILTER_OBJECT", null)
-
-        return if (json != null) {
-            Gson().fromJson(json, EventFilter::class.java)
-        } else EventFilter()
-    }
 }

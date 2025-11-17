@@ -53,9 +53,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.MainActivity
 import com.app.matchup.R
 import com.app.matchup.models.Address
+import com.app.matchup.models.EventFilter
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.REGISTER_BUTTON_COLOR
+import com.app.matchup.utilities.EventFilterSession
 import com.app.matchup.viewmodels.CreateEventViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -237,6 +239,7 @@ fun CreateEventScreen(
                 confirmButton = {
                     TextButton(
                         onClick = {
+                            EventFilterSession.filters = EventFilter()
                             val intent = Intent(context, MainActivity::class.java)
                             if(goToNewEventChecked) intent.putExtra("createdEvent", event)
                             context.startActivity(intent)

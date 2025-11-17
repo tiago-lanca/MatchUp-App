@@ -59,6 +59,7 @@ import com.app.matchup.ui.components.DatePickerDial
 import com.app.matchup.ui.components.DateRangePickerDialog
 import com.app.matchup.ui.components.DropdownMenuGeneric
 import com.app.matchup.ui.theme.MatchUpTheme
+import com.app.matchup.utilities.EventFilterSession
 import com.app.matchup.utilities.Tools
 import com.app.matchup.viewmodels.EventFiltersViewModel
 import com.app.matchup.viewmodels.EventsViewModel
@@ -107,8 +108,8 @@ fun FilterEventBottomSheet(
         DateRangePickerDialog(
             onDismiss = { showDatePicker = false },
             onRangeSelected = { startSelected, endSelected ->
-                startSelected?.let { filtersVM.updateStartDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant()), context) }
-                endSelected?.let { filtersVM.updateEndDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant()), context) }
+                startSelected?.let { filtersVM.updateStartDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant())) }
+                endSelected?.let { filtersVM.updateEndDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant())) }
                 showDatePicker = false
             }
         )
@@ -181,7 +182,7 @@ fun FilterEventBottomSheet(
                     items = listOf("M", "F", "Mix", "Any"),
                     selectedItem = filters.gender ?: "Any",
                     leadingIcon = { Tools.GetGenderIcon(filters.gender ?: "Any") },
-                    onItemSelected = { filtersVM.updateGender(it, context) },
+                    onItemSelected = { filtersVM.updateGender(it) },
                     getName = { it },
                     composableIcon = { Tools.GetGenderIcon(it) },
                     modifier = Modifier.weight(1f),
@@ -220,7 +221,7 @@ fun FilterEventBottomSheet(
                             }
                         }
                     },
-                    onItemSelected = { filtersVM.updateSport(it, context) },
+                    onItemSelected = { filtersVM.updateSport(it) },
                     getName = { it.name },
                     intIcon = { it.icon },
                     modifier = Modifier.weight(1f),
@@ -242,7 +243,7 @@ fun FilterEventBottomSheet(
                 )
                 TextField(
                     value = filters.city ?: "",
-                    onValueChange = { filtersVM.updateCity(it, context) },
+                    onValueChange = { filtersVM.updateCity(it) },
                     placeholder = { Text("Enter city to filter...") },
                     singleLine = true,
                     leadingIcon = {
@@ -327,7 +328,7 @@ fun FilterEventBottomSheet(
                     Switch(
                         checked = filters.onlyMyEvents,
                         onCheckedChange = {
-                            filtersVM.updateOnlyMyEvents(it, context)
+                            filtersVM.updateOnlyMyEvents(it)
                         },
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -367,6 +368,7 @@ fun FilterEventBottomSheet(
 
                         // apply filters()
                         onApplyFilters(filters)
+                        EventFilterSession.filters = filters
 
                         println(filters)
                         scope.launch {

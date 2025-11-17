@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.app.matchup.models.EventFilter
 import com.app.matchup.models.Sport
 import com.app.matchup.services.UserSession
+import com.app.matchup.utilities.EventFilterSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -14,48 +15,51 @@ class EventFiltersViewModel : ViewModel() {
     private val _filters = MutableStateFlow(EventFilter())
     val filters: StateFlow<EventFilter> = _filters
 
-    fun updateSport(sport: Sport, context: Context) {
+    fun updateSport(sport: Sport) {
         _filters.update { it.copy(sport = sport) }
-        UserSession.saveFilters(context, _filters.value)
+        EventFilterSession.filters = _filters.value
     }
 
-    fun updateGender(gender: String, context: Context) {
+    fun updateGender(gender: String) {
         _filters.update { it.copy(gender = gender) }
-        UserSession.saveFilters(context, _filters.value)
+        EventFilterSession.filters = _filters.value
     }
 
-    fun updateCity(city: String?, context: Context) {
+    fun updateCity(city: String?) {
         _filters.update { it.copy(city = city) }
-        UserSession.saveFilters(context, _filters.value)
+        EventFilterSession.filters = _filters.value
     }
 
-    fun updateMaxMembers(maxMembers: Int, context: Context) {
+    fun updateMaxMembers(maxMembers: Int) {
         _filters.update { it.copy(maxMembers = maxMembers) }
-        UserSession.saveFilters(context, _filters.value)
+        EventFilterSession.filters = _filters.value
     }
 
-    fun updateOnlyMyEvents(onlyMyEvents: Boolean, context: Context) {
+    fun updateOnlyMyEvents(onlyMyEvents: Boolean) {
         _filters.update { it.copy(onlyMyEvents = onlyMyEvents) }
-        UserSession.saveFilters(context, _filters.value)
+        EventFilterSession.filters = _filters.value
     }
 
-    fun updateSingleDate(singleDate: Date?, context: Context){
+    fun updateSingleDate(singleDate: Date?){
         _filters.update { it.copy(singleDate = singleDate) }
-        UserSession.saveFilters(context, _filters.value)
+        EventFilterSession.filters = _filters.value
     }
 
-    fun updateStartDate(startDate: Date?, context: Context){
+    fun updateStartDate(startDate: Date?){
         _filters.update { it.copy(startDate = startDate) }
-        UserSession.saveFilters(context, _filters.value)
+        EventFilterSession.filters = _filters.value
     }
 
-    fun updateEndDate(endDate: Date?, context: Context){
+    fun updateEndDate(endDate: Date?){
         _filters.update { it.copy(endDate = endDate) }
-        UserSession.saveFilters(context, _filters.value)
+        EventFilterSession.filters = _filters.value
     }
 
     fun setFilters(filters: EventFilter) { _filters.value = filters }
 
-    fun reset() { _filters.value = EventFilter() }
+    fun reset() {
+        _filters.value = EventFilter()
+        EventFilterSession.filters = _filters.value
+    }
 
 }
