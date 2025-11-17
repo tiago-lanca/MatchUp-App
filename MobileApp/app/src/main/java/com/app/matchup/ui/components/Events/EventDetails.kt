@@ -29,6 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,11 +51,13 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
+import com.app.matchup.ui.components.FilterTag
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.ui.theme.RED_BUTTON
 import com.app.matchup.utilities.Tools
 import com.app.matchup.utilities.UserSession
 import com.app.matchup.viewmodels.EnrollmentsViewModel
+import com.app.matchup.viewmodels.EventFiltersViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -71,7 +75,7 @@ fun EventDetails(
     onDeleteEvent: (event: Event) -> Unit,
     enrollmentVM: EnrollmentsViewModel = viewModel(),
     joinSnackbar: (result: Boolean) -> Unit,
-    leaveEventSnackbar: (result: Boolean) -> Unit
+    leaveEventSnackbar: (result: Boolean) -> Unit,
 ){
     val dateFormatter = SimpleDateFormat(stringResource(R.string.date_time_pattern), Locale.getDefault())
 
@@ -118,7 +122,6 @@ fun EventDetails(
                     )
                 }
 
-
                 // Row of Location Icon and Address
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -139,7 +142,7 @@ fun EventDetails(
                         Text(
                             text = event.address!!.street,
                             color = Color.White,
-                            fontSize = 18.sp
+                            fontSize = if(event.address!!.street.length > 30) 15.sp else 18.sp
                         )
                         Text(
                             text = "${event.address!!.zipCode} ${event.address?.city}",

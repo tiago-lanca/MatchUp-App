@@ -81,13 +81,15 @@ import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.utilities.AppConstants.DEFAULT_ZOOM
 import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
 import com.app.matchup.utilities.UserSession
+import com.app.matchup.viewmodels.EventFiltersViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
     context: Context,
-    viewModel: EventsViewModel = viewModel(),
+    eventsVM: EventsViewModel = viewModel(),
+    filtersVM: EventFiltersViewModel = viewModel(),
     event: Event? = null
 ) {
 
@@ -97,10 +99,12 @@ fun MainScreen(
     var currentUser by remember { mutableStateOf<User?>(null) }
     val coroutineScope = rememberCoroutineScope()
     //val numberEvents = viewModel.events.collectAsState().value.size
-    val eventList by viewModel.events.collectAsState()
-    val selectedEvent by viewModel.selectedEvent.collectAsState()
-    val numberOfMembers by viewModel.numberOfMembers.collectAsState()
-    val isUserEnrolled by viewModel.isUserEnrolled.collectAsState()
+    val eventList by eventsVM.events.collectAsState()
+    val selectedEvent by eventsVM.selectedEvent.collectAsState()
+    val numberOfMembers by eventsVM.numberOfMembers.collectAsState()
+    val isUserEnrolled by eventsVM.isUserEnrolled.collectAsState()
+
+    val filters by filtersVM.filters.collectAsState()
     var showFilterEventSheet by remember { mutableStateOf(false) }
 
 
@@ -134,11 +138,11 @@ fun MainScreen(
         if (event != null) {
             // Adds the admin user to the event object
             val eventCreated = event.copy(admin = EventService.getEventAdmin(event.id))
-            viewModel.selectEvent(eventCreated)
-            viewModel.getNumberOfMembersEnrolledInCurrentEvent()
+            eventsVM.selectEvent(eventCreated)
+            eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
 
             if(currentUser != null) {
-                viewModel.isUserEnrolled(context, currentUser!!.id)
+                eventsVM.isUserEnrolled(context, currentUser!!.id)
             }
             eventCreated.address?.let { address ->
                 Tools.moveCameraTo(
@@ -156,10 +160,10 @@ fun MainScreen(
     }
 
     LaunchedEffect(selectedEvent) {
-        viewModel.getNumberOfMembersEnrolledInCurrentEvent()
+        eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
 
         if(currentUser != null) {
-            viewModel.isUserEnrolled(context, currentUser!!.id)
+            eventsVM.isUserEnrolled(context, currentUser!!.id)
         }
     }
 
@@ -188,6 +192,7 @@ fun MainScreen(
                 ) {
                     if (selectedEvent.isNull()) {
                         EventList(
+                            eventsVM = eventsVM,
                             eventList = eventList,
                             onClickEventItem = { event ->
                                 event.address?.let { address ->
@@ -201,14 +206,14 @@ fun MainScreen(
                                         cameraPositionState = cameraPositionState
                                     )
                                 }
-                                viewModel.selectEvent(event)
+                                eventsVM.selectEvent(event)
                             },
                             onEventMembersCount = { event ->
                                 EnrollmentService.getEnrollmentsByEventId(event.id)!!
                             },
                             onRefreshEventList = {
                                 coroutineScope.launch {
-                                    viewModel.loadAllEvents(){ success ->
+                                    eventsVM.loadAllEvents(){ success ->
                                         if(success){
                                             scope.launch {
                                                 snackbarHostState.showSnackbar(
@@ -222,6 +227,9 @@ fun MainScreen(
                             },
                             onFilterEventClicked = {
                                 showFilterEventSheet = true
+                            },
+                            onFilterRemoved = {
+                                eventsVM.loadFilteredEvents(filtersVM.filters.value, context)
                             }
                         )
                     } else {
@@ -241,18 +249,18 @@ fun MainScreen(
                                     coroutineScope = coroutineScope,
                                     cameraPositionState = cameraPositionState
                                 )
-                                viewModel.selectEvent(null)
+                                eventsVM.selectEvent(null)
                             },
                             onDeleteEvent = { event ->
-                                viewModel.deleteEvent { success ->
+                                eventsVM.deleteEvent { success ->
                                     if(success){
                                         scope.launch {
                                             snackbarHostState.showSnackbar(
                                                 context.getString(R.string.event_deleted_message)
                                             )
                                         }
-                                        viewModel.selectEvent(null)
-                                        viewModel.loadAllEvents()
+                                        eventsVM.selectEvent(null)
+                                        eventsVM.loadAllEvents()
                                     }
                                 }
                             },
@@ -263,8 +271,8 @@ fun MainScreen(
                                             context.getString(R.string.enrollment_created_message)
                                         )
                                     }
-                                    viewModel.setUserEnrolled(true)
-                                    viewModel.getNumberOfMembersEnrolledInCurrentEvent()
+                                    eventsVM.setUserEnrolled(true)
+                                    eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
                                 }
                             },
                             leaveEventSnackbar = { success ->
@@ -274,8 +282,8 @@ fun MainScreen(
                                             context.getString(R.string.user_left_event_message)
                                         )
                                     }
-                                    viewModel.setUserEnrolled(false)
-                                    viewModel.getNumberOfMembersEnrolledInCurrentEvent()
+                                    eventsVM.setUserEnrolled(false)
+                                    eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
                                 }
                             }
                         )
@@ -292,7 +300,7 @@ fun MainScreen(
                     eventList,
                     cameraPositionState,
                     onMarkerClick = { event ->
-                        viewModel.selectEvent(event)
+                        eventsVM.selectEvent(event)
 
                         Tools.moveCameraTo(
                             LatLng(
@@ -406,7 +414,7 @@ fun MainScreen(
                     context = context,
                     onDismiss = { showFilterEventSheet = false },
                     onApplyFilters = { filters ->
-                        viewModel.loadFilteredEvents(filters, context)
+                        eventsVM.loadFilteredEvents(filters, context)
                     }
                 )
             }

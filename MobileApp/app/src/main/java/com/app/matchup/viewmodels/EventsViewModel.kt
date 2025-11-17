@@ -11,6 +11,8 @@ import com.app.matchup.utilities.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 import java.util.UUID
 
 class EventsViewModel : ViewModel() {
@@ -45,13 +47,33 @@ class EventsViewModel : ViewModel() {
     }
 
     fun loadFilteredEvents(filter: EventFilter, context: Context, result: (Boolean) -> Unit = {}) {
+
         viewModelScope.launch {
             try {
+
                 val activeUser = UserSession.getUser(context)
-                _events.value = EventService.getEvents()
+                val allEvents = EventService.getEvents()
+                _events.value = allEvents
 
                 if (filter.onlyMyEvents) {
                     _events.value = _events.value.filter { it.admin?.id == activeUser?.id }
+                }
+
+                if(filter.sport?.name != "Any"){
+                    _events.value = _events.value.filter { it.sport?.name == filter.sport?.name }
+                }
+
+                if(filter.gender != "Any"){
+                    _events.value = _events.value.filter { it.gender == filter.gender }
+                }
+
+                if(!filter.city.isNullOrEmpty()){
+                    _events.value = _events.value.filter { it.address?.city?.lowercase() == filter.city.lowercase() }
+                }
+
+                if(filter.startDate != null){
+                    _events.value = _events.value.filter { it.date!! >= filter.startDate && it.date!! <= filter.endDate?.addDays(1) }
+
                 }
 
                 result(true)
@@ -61,6 +83,13 @@ class EventsViewModel : ViewModel() {
                 result(false)
             }
         }
+    }
+
+    private fun Date.addDays(days: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.time = this
+        calendar.add(Calendar.DAY_OF_MONTH, days)
+        return calendar.time
     }
 
     fun deleteEvent(result: (Boolean) -> Unit){
@@ -75,7 +104,7 @@ class EventsViewModel : ViewModel() {
         }
     }
 
-    fun getNumberOfMembersEnrolledInCurrentEvent(){
+    fun getNumberOfEnrollmentsOnSelectedEvent(){
         if(selectedEvent.value != null) {
             viewModelScope.launch {
                 val numberEnrollments =

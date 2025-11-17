@@ -20,7 +20,7 @@ class EventFiltersViewModel : ViewModel() {
         _filters.update { it.copy(gender = gender) }
     }
 
-    fun updateCity(city: String) {
+    fun updateCity(city: String?) {
         _filters.update { it.copy(city = city) }
     }
 
@@ -32,15 +32,15 @@ class EventFiltersViewModel : ViewModel() {
         _filters.update { it.copy(onlyMyEvents = onlyMyEvents) }
     }
 
-    fun updateSingleDate(singleDate: Date){
+    fun updateSingleDate(singleDate: Date?){
         _filters.update { it.copy(singleDate = singleDate) }
     }
 
-    fun updateStartDate(startDate: Date){
+    fun updateStartDate(startDate: Date?){
         _filters.update { it.copy(startDate = startDate) }
     }
 
-    fun updateEndDate(endDate: Date){
+    fun updateEndDate(endDate: Date?){
         _filters.update { it.copy(endDate = endDate) }
     }
 

@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,8 +41,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
 import com.app.matchup.models.Event
 import com.app.matchup.services.EnrollmentService
+import com.app.matchup.ui.components.FilterTag
+import com.app.matchup.ui.components.FilterTagsSection
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
 import com.app.matchup.viewmodels.EnrollmentsViewModel
+import com.app.matchup.viewmodels.EventFiltersViewModel
+import com.app.matchup.viewmodels.EventsViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
@@ -51,9 +58,15 @@ fun EventList(
     onClickEventItem: (Event) -> Unit,
     onRefreshEventList: () -> Unit,
     onFilterEventClicked: () -> Unit,
+    onFilterRemoved: () -> Unit,
     onEventMembersCount:suspend (Event) -> Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    filtersVM: EventFiltersViewModel = viewModel(),
+    eventsVM: EventsViewModel = viewModel(),
 ){
+
+    val filters by filtersVM.filters.collectAsState()
+    val context = LocalContext.current
 
     Box(
         modifier = modifier
@@ -74,7 +87,7 @@ fun EventList(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 30.dp),
+                    .padding(bottom = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -111,6 +124,18 @@ fun EventList(
                     )
                 }
             }
+
+            // Zone for filter tags if exists
+            FilterTagsSection(
+                filters,
+                filtersVM,
+                eventsVM,
+                context,
+                onFilterRemoved = {
+                    onFilterRemoved()
+                }
+            )
+
 
 
             LazyColumn(
