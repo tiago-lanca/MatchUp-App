@@ -7,7 +7,7 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.EventFilter
 import com.app.matchup.services.EnrollmentService
 import com.app.matchup.services.EventService
-import com.app.matchup.utilities.UserSession
+import com.app.matchup.services.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

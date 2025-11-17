@@ -13,7 +13,7 @@ import com.app.matchup.services.AddressService
 import com.app.matchup.services.EnrollmentService
 import com.app.matchup.services.EventService
 import com.app.matchup.ui.components.MainMenu.UserProfileSection
-import com.app.matchup.utilities.UserSession
+import com.app.matchup.services.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

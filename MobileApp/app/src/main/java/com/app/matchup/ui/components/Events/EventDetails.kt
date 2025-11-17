@@ -55,7 +55,7 @@ import com.app.matchup.ui.components.FilterTag
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.ui.theme.RED_BUTTON
 import com.app.matchup.utilities.Tools
-import com.app.matchup.utilities.UserSession
+import com.app.matchup.services.UserSession
 import com.app.matchup.viewmodels.EnrollmentsViewModel
 import com.app.matchup.viewmodels.EventFiltersViewModel
 import java.text.SimpleDateFormat

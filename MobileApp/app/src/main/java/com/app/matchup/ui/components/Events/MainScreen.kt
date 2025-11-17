@@ -80,7 +80,7 @@ import com.app.matchup.services.EnrollmentService
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.utilities.AppConstants.DEFAULT_ZOOM
 import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
-import com.app.matchup.utilities.UserSession
+import com.app.matchup.services.UserSession
 import com.app.matchup.viewmodels.EventFiltersViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -157,6 +157,8 @@ fun MainScreen(
         }
         // Loads current user
         currentUser = UserSession.getUser(context)
+        filtersVM.setFilters(UserSession.getFilters(context))
+        eventsVM.loadFilteredEvents(UserSession.getFilters(context), context)
     }
 
     LaunchedEffect(selectedEvent) {

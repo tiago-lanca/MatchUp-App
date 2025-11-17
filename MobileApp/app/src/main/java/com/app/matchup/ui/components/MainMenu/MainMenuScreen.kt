@@ -41,7 +41,7 @@ import com.app.matchup.models.User
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.utilities.Tools.navigateTo
-import com.app.matchup.utilities.UserSession
+import com.app.matchup.services.UserSession
 
 @Composable
 fun MainMenuScreen() {

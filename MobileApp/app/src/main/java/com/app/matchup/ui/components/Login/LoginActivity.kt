@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.app.matchup.MainActivity
 import com.app.matchup.ui.theme.MatchUpTheme
 import com.app.matchup.utilities.Tools.navigateTo
-import com.app.matchup.utilities.UserSession
+import com.app.matchup.services.UserSession
 import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity() {

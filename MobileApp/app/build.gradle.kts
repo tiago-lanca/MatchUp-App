@@ -72,6 +72,8 @@ dependencies {
     implementation(libs.maps.compose)
     implementation(libs.androidx.compose.animation.core)
     implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.foundation.layout)
+    implementation(libs.androidx.room.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.matchup.services.AuthService
 import com.app.matchup.utilities.PasswordEncryption
-import com.app.matchup.utilities.UserSession
+import com.app.matchup.services.UserSession
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

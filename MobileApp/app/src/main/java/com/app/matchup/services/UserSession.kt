@@ -1,12 +1,14 @@
-package com.app.matchup.utilities
+package com.app.matchup.services
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.app.matchup.models.User
-import com.app.matchup.services.UserService
-import com.google.gson.Gson
-import java.util.UUID
 import androidx.core.content.edit
+import com.app.matchup.models.EventFilter
+import com.app.matchup.models.Sport
+import com.app.matchup.models.User
+import com.google.gson.Gson
+import java.util.Date
+import java.util.UUID
 
 object UserSession {
 
@@ -15,6 +17,14 @@ object UserSession {
     private const val KEY_USER = "logged_user"
     private const val KEY_USER_ID = "userId"
     private const val KEY_EMAIL = "userEmail"
+
+    private const val FILTER_GENDER = "filter_gender"
+    private const val FILTER_SPORT = "filter_sport"
+    private const val FILTER_CITY = "filter_city"
+    private const val FILTER_ONLY_MY_EVENTS = "filter_my_events"
+    private const val FILTER_START_DATE = "filter_start_date"
+    private const val FILTER_END_DATE = "filter_end_date"
+
 
     private fun getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -51,5 +61,21 @@ object UserSession {
         getPrefs(context).edit { clear() }
     }
 
+    fun saveFilters(context: Context, filters: EventFilter) {
+        val prefs = context.getSharedPreferences("user_session", Context.MODE_PRIVATE)
+        val json = Gson().toJson(filters)
 
+        prefs.edit()
+            .putString("FILTER_OBJECT", json)
+            .apply()
+    }
+
+    fun getFilters(context: Context): EventFilter {
+        val prefs = context.getSharedPreferences("user_session", Context.MODE_PRIVATE)
+        val json = prefs.getString("FILTER_OBJECT", null)
+
+        return if (json != null) {
+            Gson().fromJson(json, EventFilter::class.java)
+        } else EventFilter()
+    }
 }

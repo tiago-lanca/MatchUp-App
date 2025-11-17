@@ -104,7 +104,8 @@ fun EventList(
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.padding(bottom = 10.dp)
                 ) {
                     // Refresh Icon
                     Icon(
@@ -148,7 +149,7 @@ fun EventList(
                             text = stringResource(R.string.empty_event_list_textLabel),
                             color = Color.White,
                             modifier = Modifier
-                                .padding(bottom = 10.dp)
+                                .padding(vertical = 20.dp)
                         )
                     }
                 } else {

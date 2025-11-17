@@ -107,8 +107,8 @@ fun FilterEventBottomSheet(
         DateRangePickerDialog(
             onDismiss = { showDatePicker = false },
             onRangeSelected = { startSelected, endSelected ->
-                startSelected?.let { filtersVM.updateStartDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant())) }
-                endSelected?.let { filtersVM.updateEndDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant())) }
+                startSelected?.let { filtersVM.updateStartDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant()), context) }
+                endSelected?.let { filtersVM.updateEndDate(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant()), context) }
                 showDatePicker = false
             }
         )
@@ -181,7 +181,7 @@ fun FilterEventBottomSheet(
                     items = listOf("M", "F", "Mix", "Any"),
                     selectedItem = filters.gender ?: "Any",
                     leadingIcon = { Tools.GetGenderIcon(filters.gender ?: "Any") },
-                    onItemSelected = { filtersVM.updateGender(it) },
+                    onItemSelected = { filtersVM.updateGender(it, context) },
                     getName = { it },
                     composableIcon = { Tools.GetGenderIcon(it) },
                     modifier = Modifier.weight(1f),
@@ -220,7 +220,7 @@ fun FilterEventBottomSheet(
                             }
                         }
                     },
-                    onItemSelected = { filtersVM.updateSport(it) },
+                    onItemSelected = { filtersVM.updateSport(it, context) },
                     getName = { it.name },
                     intIcon = { it.icon },
                     modifier = Modifier.weight(1f),
@@ -242,7 +242,7 @@ fun FilterEventBottomSheet(
                 )
                 TextField(
                     value = filters.city ?: "",
-                    onValueChange = { filtersVM.updateCity(it) },
+                    onValueChange = { filtersVM.updateCity(it, context) },
                     placeholder = { Text("Enter city to filter...") },
                     singleLine = true,
                     leadingIcon = {
@@ -327,7 +327,7 @@ fun FilterEventBottomSheet(
                     Switch(
                         checked = filters.onlyMyEvents,
                         onCheckedChange = {
-                            filtersVM.updateOnlyMyEvents(it)
+                            filtersVM.updateOnlyMyEvents(it, context)
                         },
                         modifier = Modifier.align(Alignment.Center)
                     )
