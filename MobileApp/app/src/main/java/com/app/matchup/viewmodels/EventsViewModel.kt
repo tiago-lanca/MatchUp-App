@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.matchup.models.Event
+import com.app.matchup.models.EventFilter
 import com.app.matchup.services.EnrollmentService
 import com.app.matchup.services.EventService
+import com.app.matchup.utilities.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,14 +27,33 @@ class EventsViewModel : ViewModel() {
 
 
     init{
-        loadEvents()
+        loadAllEvents()
     }
 
-    fun loadEvents(result: (Boolean) -> Unit = {}) {
+    fun loadAllEvents(result: (Boolean) -> Unit = {}) {
         viewModelScope.launch {
             try {
                 val eventList = EventService.getEvents()
                 _events.value = eventList
+                result(true)
+            }
+            catch (e: Exception){
+                e.printStackTrace()
+                result(false)
+            }
+        }
+    }
+
+    fun loadFilteredEvents(filter: EventFilter, context: Context, result: (Boolean) -> Unit = {}) {
+        viewModelScope.launch {
+            try {
+                val activeUser = UserSession.getUser(context)
+                _events.value = EventService.getEvents()
+
+                if (filter.onlyMyEvents) {
+                    _events.value = _events.value.filter { it.admin?.id == activeUser?.id }
+                }
+
                 result(true)
             }
             catch (e: Exception){

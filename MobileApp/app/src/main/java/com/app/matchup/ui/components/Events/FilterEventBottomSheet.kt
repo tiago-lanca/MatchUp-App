@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
+import com.app.matchup.models.EventFilter
 import com.app.matchup.models.Sport
 import com.app.matchup.services.SportService
 import com.app.matchup.ui.components.DatePickerDial
@@ -74,6 +75,7 @@ fun FilterEventBottomSheet(
     filtersVM: EventFiltersViewModel = viewModel(),
     context: Context,
     onDismiss: () -> Unit,
+    onApplyFilters: (filters: EventFilter) -> Unit,
     eventVM: EventsViewModel = viewModel()
 ){
     val labelFontSize = 17.sp
@@ -362,7 +364,11 @@ fun FilterEventBottomSheet(
                     ),
                     modifier = Modifier.weight(1f),
                     onClick = {
+
                         // apply filters()
+                        onApplyFilters(filters)
+
+                        println(filters)
                         scope.launch {
                             sheetState.hide()
                             onDismiss()
@@ -393,7 +399,8 @@ fun FilterEventBottomSheetPreview(){
         ) {
             FilterEventBottomSheet(
                 context = LocalContext.current,
-                onDismiss = {}
+                onDismiss = {},
+                onApplyFilters = {}
             )
         }
     }

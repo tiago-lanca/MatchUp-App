@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -54,30 +55,36 @@ fun MapScreen(
             zoomControlsEnabled = false
         )
     ) {
-        if(eventList.isNotEmpty()) {
-            eventList.forEach { event ->
-                MarkerComposable(
-                    onClick = {
-                        onMarkerClick(event)
-                        true
-                      },
-                    state = MarkerState(
-                        position = LatLng(
-                            event.address!!.latitude!!,
-                            event.address!!.longitude!!
-                        )
-                    ),
-                ){
-                    Icon(
-                        painterResource(event.sport?.getSportIcon()!!),
-                        modifier = Modifier.size(35.dp),
-                        contentDescription = stringResource(R.string.sport_icon_des),
-                        tint = Color.Unspecified
-                    )
+
+        // Forces re-render of the map, erasing all markers and re-writing, avoiding the hashcode, only mapping the id
+        key(eventList.map { it.id }) {
+
+            if (eventList.isNotEmpty()) {
+                eventList.forEach { event ->
+                    MarkerComposable(
+                        onClick = {
+                            onMarkerClick(event)
+                            true
+                        },
+                        state = MarkerState(
+                            position = LatLng(
+                                event.address!!.latitude!!,
+                                event.address!!.longitude!!
+                            )
+                        ),
+                    ) {
+                        event.sport?.getSportIcon()?.let { icon ->
+                            Icon(
+                                painterResource(icon),
+                                modifier = Modifier.size(35.dp),
+                                contentDescription = stringResource(R.string.sport_icon_des),
+                                tint = Color.Unspecified
+                            )
+                        }
+                    }
                 }
             }
         }
-
     }
 
 }

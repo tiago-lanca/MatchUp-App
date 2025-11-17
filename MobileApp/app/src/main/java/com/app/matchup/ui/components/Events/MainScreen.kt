@@ -208,7 +208,7 @@ fun MainScreen(
                             },
                             onRefreshEventList = {
                                 coroutineScope.launch {
-                                    viewModel.loadEvents(){ success ->
+                                    viewModel.loadAllEvents(){ success ->
                                         if(success){
                                             scope.launch {
                                                 snackbarHostState.showSnackbar(
@@ -252,7 +252,7 @@ fun MainScreen(
                                             )
                                         }
                                         viewModel.selectEvent(null)
-                                        viewModel.loadEvents()
+                                        viewModel.loadAllEvents()
                                     }
                                 }
                             },
@@ -404,7 +404,10 @@ fun MainScreen(
             if(showFilterEventSheet) {
                 FilterEventBottomSheet(
                     context = context,
-                    onDismiss = { showFilterEventSheet = false }
+                    onDismiss = { showFilterEventSheet = false },
+                    onApplyFilters = { filters ->
+                        viewModel.loadFilteredEvents(filters, context)
+                    }
                 )
             }
         }
