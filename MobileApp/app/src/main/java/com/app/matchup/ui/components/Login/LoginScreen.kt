@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
+import com.app.matchup.ui.components.LightFromAbove
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.SIGNIN_BUTTON_COLOR
 import com.app.matchup.viewmodels.LoginViewModel
@@ -192,21 +193,7 @@ fun LoginScreen(
         }
 
         // Little light above the logo
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .size(width = 300.dp, height = 250.dp)
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFFB0B0B0).copy(alpha = 0.12f),
-                            Color.Transparent
-                        ),
-                        start = Offset(300f, 0f),
-                        end = Offset(0f, 600f)
-                    )
-                )
-        )
+        LightFromAbove()
     }
 }
 

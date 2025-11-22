@@ -1,8 +1,13 @@
 package com.app.matchup.viewmodels
 
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.matchup.extensions.addDays
+import com.app.matchup.extensions.removePastEvents
 import com.app.matchup.models.Event
 import com.app.matchup.models.EventFilter
 import com.app.matchup.services.EnrollmentService
@@ -11,6 +16,7 @@ import com.app.matchup.services.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
@@ -36,7 +42,7 @@ class EventsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val eventList = EventService.getEvents()
-                _events.value = eventList
+                _events.value = eventList.removePastEvents()
                 result(true)
             }
             catch (e: Exception){
@@ -52,8 +58,18 @@ class EventsViewModel : ViewModel() {
             try {
 
                 val activeUser = UserSession.getUser(context)
-                val allEvents = EventService.getEvents()
-                _events.value = allEvents
+                var allEvents = EventService.getEvents()
+
+                val availableEvents = mutableListOf<Event>()
+
+                allEvents.forEach { event ->
+                    val isFull = EnrollmentService.getEnrollmentsByEventId(event.id) == event.maxMembers
+                    if (!isFull) {
+                        availableEvents.add(event)
+                    }
+                }
+
+                _events.value = availableEvents.removePastEvents()
 
                 if (filter.onlyMyEvents) {
                     _events.value = _events.value.filter { it.admin?.id == activeUser?.id }
@@ -85,12 +101,7 @@ class EventsViewModel : ViewModel() {
         }
     }
 
-    private fun Date.addDays(days: Int): Date {
-        val calendar = Calendar.getInstance()
-        calendar.time = this
-        calendar.add(Calendar.DAY_OF_MONTH, days)
-        return calendar.time
-    }
+
 
     fun deleteEvent(result: (Boolean) -> Unit){
         viewModelScope.launch {

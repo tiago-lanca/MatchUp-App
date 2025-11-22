@@ -163,7 +163,6 @@ fun MainScreen(
         }
         // Loads current user
         currentUser = UserSession.getUser(context)
-
     }
 
     LaunchedEffect(selectedEvent) {
@@ -280,6 +279,7 @@ fun MainScreen(
                                     }
                                     eventsVM.setUserEnrolled(true)
                                     eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
+                                    eventsVM.loadFilteredEvents(filters, context)
                                 }
                             },
                             leaveEventSnackbar = { success ->
@@ -291,6 +291,7 @@ fun MainScreen(
                                     }
                                     eventsVM.setUserEnrolled(false)
                                     eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
+                                    eventsVM.loadFilteredEvents(filters, context)
                                 }
                             }
                         )

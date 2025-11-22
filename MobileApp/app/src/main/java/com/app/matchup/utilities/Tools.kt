@@ -40,7 +40,7 @@ object Tools{
         }
     }
 
-    fun Activity.navigateTo(activity: Class<*>, closeCurrentActivity: Boolean){
+    fun Activity.navigateTo(activity: Class<*>, closeCurrentActivity: Boolean = false){
         val intent = Intent(this, activity)
         startActivity(intent)
         if(closeCurrentActivity) finish()

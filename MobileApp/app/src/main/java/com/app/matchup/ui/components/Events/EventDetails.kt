@@ -76,8 +76,10 @@ fun EventDetails(
     enrollmentVM: EnrollmentsViewModel = viewModel(),
     joinSnackbar: (result: Boolean) -> Unit,
     leaveEventSnackbar: (result: Boolean) -> Unit,
-){
-    val dateFormatter = SimpleDateFormat(stringResource(R.string.date_time_pattern), Locale.getDefault())
+) {
+    val dateFormatter =
+        SimpleDateFormat(stringResource(R.string.date_time_pattern), Locale.getDefault())
+    val isFull = numberOfMembers == event.maxMembers
 
     LaunchedEffect(Unit) {
         enrollmentVM.setSelectedEvent(event)
@@ -97,7 +99,7 @@ fun EventDetails(
                     color = Color(0xFF282828),
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
-                .padding(16.dp)
+                .padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
                 .navigationBarsPadding()
         ) {
             Column {
@@ -142,7 +144,7 @@ fun EventDetails(
                         Text(
                             text = event.address!!.street,
                             color = Color.White,
-                            fontSize = if(event.address!!.street.length > 30) 15.sp else 18.sp
+                            fontSize = 18.sp
                         )
                         Text(
                             text = "${event.address!!.zipCode} ${event.address?.city}",
@@ -170,7 +172,7 @@ fun EventDetails(
                     )
 
                     // Only shows if there's notes in that event
-                    if(!event.notes.isNullOrEmpty()) {
+                    if (!event.notes.isNullOrEmpty()) {
                         Image(
                             painter = painterResource(R.drawable.information_icon_blue),
                             contentDescription = "Information Icon",
@@ -235,7 +237,7 @@ fun EventDetails(
                                     style = SpanStyle(
                                         fontSize = 30.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.Green
+                                        color = if (isFull) Color.Red else Color.Green
                                     )
                                 ) {
                                     // Value of enrolled members
@@ -245,7 +247,7 @@ fun EventDetails(
                                     style = SpanStyle(
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.Normal,
-                                        color = Color.Green
+                                        color = if (isFull) Color.Red else Color.Green
                                     )
                                 ) {
                                     append(" / ${event.maxMembers}")
@@ -257,12 +259,15 @@ fun EventDetails(
                 }
 
                 // JOIN / LEAVE / DELETE Button
-                Row (
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally)
+                    horizontalArrangement = Arrangement.spacedBy(
+                        10.dp,
+                        Alignment.CenterHorizontally
+                    )
                 ) {
                     // JOIN Button
-                    if(!isUserEnrolled) {
+                    if (!isUserEnrolled) {
                         Button(
                             colors = ButtonColors(
                                 contentColor = Color.White,
@@ -278,14 +283,7 @@ fun EventDetails(
                                     enrollmentVM.joinEvent(user = currentUser!!) { result ->
                                         joinSnackbar(result)
 
-                                        /*Toast.makeText(
-                                            context,
-                                            "Enrollment created successfully!",
-                                            Toast.LENGTH_LONG
-                                       ).apply {
-                                            setGravity(Gravity.TOP,0,100)
-                                            show()
-                                       }*/
+
                                     }
                                 }
                             }
@@ -301,26 +299,25 @@ fun EventDetails(
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                    }
-                    else{
+                    } else {
                         // Leave Button
-                        if(currentUser?.id != event.admin?.id)
-                        Button(
-                            colors = ButtonColors(
-                                contentColor = Color.White,
-                                containerColor = RED_BUTTON,
-                                disabledContentColor = Color(0xFF31C848),
-                                disabledContainerColor = Color.White
-                            ),
-                            onClick = {
-                                if (!UserSession.isLoggedIn(context)) {
-                                    val intent = Intent(context, LoginActivity::class.java)
-                                    context.startActivity(intent)
-                                } else {
-                                    enrollmentVM.leaveEvent(user = currentUser!!) { result ->
-                                        leaveEventSnackbar(result)
+                        if (currentUser?.id != event.admin?.id) {
+                            Button(
+                                colors = ButtonColors(
+                                    contentColor = Color.White,
+                                    containerColor = RED_BUTTON,
+                                    disabledContentColor = Color(0xFF31C848),
+                                    disabledContainerColor = Color.White
+                                ),
+                                onClick = {
+                                    if (!UserSession.isLoggedIn(context)) {
+                                        val intent = Intent(context, LoginActivity::class.java)
+                                        context.startActivity(intent)
+                                    } else {
+                                        enrollmentVM.leaveEvent(user = currentUser!!) { result ->
+                                            leaveEventSnackbar(result)
 
-                                        /*Toast.makeText(
+                                            /*Toast.makeText(
                                             context,
                                             "Enrollment created successfully!",
                                             Toast.LENGTH_LONG
@@ -329,67 +326,65 @@ fun EventDetails(
                                             show()
                                        }*/
 
+                                        }
                                     }
                                 }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = stringResource(R.string.close_icon_desc),
+                                    tint = Color.White,
+                                    modifier = Modifier.padding(end = 5.dp)
+                                )
+                                Text(
+                                    text = stringResource(R.string.leave_event),
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = stringResource(R.string.close_icon_desc),
-                                tint = Color.White,
-                                modifier = Modifier.padding(end = 5.dp)
-                            )
-                            Text(
-                                text = stringResource(R.string.leave_event),
-                                fontWeight = FontWeight.Bold
-                            )
                         }
-                    }
 
-                    // Delete Button
-                    if(event.admin?.id != null && event.admin?.id == currentUser?.id){
-                        Button(
-                            colors = ButtonColors(
-                                contentColor = Color.White,
-                                containerColor = Color(0xFF880202),
-                                disabledContentColor = Color(0xFF880202),
-                                disabledContainerColor = Color.White
-                            ),
-                            onClick = {
-                                if(!UserSession.isLoggedIn(context)) {
-                                    val intent = Intent(context, LoginActivity::class.java)
-                                    context.startActivity(intent)
+                        // Delete Button
+                        if (event.admin?.id != null && event.admin?.id == currentUser?.id) {
+                            Button(
+                                colors = ButtonColors(
+                                    contentColor = Color.White,
+                                    containerColor = Color(0xFF880202),
+                                    disabledContentColor = Color(0xFF880202),
+                                    disabledContainerColor = Color.White
+                                ),
+                                onClick = {
+                                    if (!UserSession.isLoggedIn(context)) {
+                                        val intent = Intent(context, LoginActivity::class.java)
+                                        context.startActivity(intent)
+                                    } else {
+                                        onDeleteEvent(event)
+                                    }
                                 }
-                                else{
-                                    onDeleteEvent(event)
-                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.DeleteForever,
+                                    contentDescription = stringResource(R.string.delete_button_desc),
+                                    tint = Color.White,
+                                    modifier = Modifier.padding(end = 5.dp)
+                                )
+                                Text(
+                                    text = "DELETE",
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.DeleteForever,
-                                contentDescription = stringResource(R.string.delete_button_desc),
-                                tint = Color.White,
-                                modifier = Modifier.padding(end = 5.dp)
-                            )
-                            Text(
-                                text = "DELETE",
-                                fontWeight = FontWeight.Bold
-                            )
                         }
                     }
                 }
             }
         }
-
     }
-
 }
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun EventDetailsPreview(){
+fun EventDetailsPreview() {
     val user = User(
         id = UUID.randomUUID(),
         name = "Tiago Lança",
@@ -417,4 +412,5 @@ fun EventDetailsPreview(){
         notes = "This is a test event"
     )
     //EventDetails(event = event)
+
 }

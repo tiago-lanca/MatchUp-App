@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.MainActivity
+import com.app.matchup.MyEventsActivity
 import com.app.matchup.R
 import com.app.matchup.SelectLocationActivity
 import com.app.matchup.models.User
@@ -132,11 +133,11 @@ fun MainMenuScreen() {
                 MenuItems(
                     modifier = Modifier.padding(innerPadding),
                     isUserLoggedIn = user != null,
-                    onLoginClick = { (context as Activity).navigateTo(activity = LoginActivity::class.java, closeCurrentActivity = false) },
-                    onHomeClick = { (context as Activity).navigateTo(activity = MainActivity::class.java, closeCurrentActivity = false) },
-                    onMyEventsClick = { /*TODO*/ },
-                    onSearchEventsClick = { (context as Activity).navigateTo(activity = MainActivity::class.java, closeCurrentActivity = false) },
-                    onCreateNewEventClick = { (context as Activity).navigateTo(activity = SelectLocationActivity::class.java, closeCurrentActivity = false) },
+                    onLoginClick = { (context as Activity).navigateTo(activity = LoginActivity::class.java) },
+                    onHomeClick = { (context as Activity).navigateTo(activity = MainActivity::class.java) },
+                    onMyEventsClick = { (context as Activity).navigateTo(activity = MyEventsActivity::class.java) },
+                    onSearchEventsClick = { (context as Activity).navigateTo(activity = MainActivity::class.java) },
+                    onCreateNewEventClick = { (context as Activity).navigateTo(activity = SelectLocationActivity::class.java) },
                     onProfileClick = { /*TODO*/ },
                     onSignOutClick = {
                         UserSession.logoutUser(context)

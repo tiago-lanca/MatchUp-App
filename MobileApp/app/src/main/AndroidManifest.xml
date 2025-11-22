@@ -18,6 +18,16 @@
         android:theme="@style/Theme.MatchUp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".MyEventsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_my_events"
+            android:theme="@style/Theme.MatchUp" />
+        <activity
+            android:name=".ui.MyEventsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_my_events"
+            android:theme="@style/Theme.MatchUp" />
+        <activity
             android:name=".EventDetailsActivity"
             android:exported="false"
             android:label="@string/title_activity_event_details"
@@ -27,7 +37,6 @@
             android:exported="false"
             android:label="@string/title_activity_events_list"
             android:theme="@style/Theme.MatchUp" />
-
         <activity
             android:name=".ui.components.MainMenu.MainMenuActivity"
             android:exported="false"
@@ -53,7 +62,6 @@
             android:exported="false"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.MatchUp" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
