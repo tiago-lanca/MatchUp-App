@@ -2,7 +2,9 @@ package com.matchup.api.matchup_api.controllers;
 
 import com.matchup.api.matchup_api.dtos.EnrollmentDTO;
 import com.matchup.api.matchup_api.models.Enrollment;
+import com.matchup.api.matchup_api.models.Event;
 import com.matchup.api.matchup_api.repositories.EnrollmentRepository;
+import com.matchup.api.matchup_api.repositories.EventRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -21,6 +25,7 @@ import java.util.UUID;
 public class EnrollmentController {
     private Logger logger = LoggerFactory.getLogger(EnrollmentController.class);
     private EnrollmentRepository _enrollmentRepository;
+
 
     public EnrollmentController(EnrollmentRepository enrollmentRepository)
     {
@@ -37,12 +42,13 @@ public class EnrollmentController {
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public EnrollmentDTO getEnrollmentById(@PathVariable("id")UUID id) {
-        Enrollment enrollment = _enrollmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Enrollment not found with id: " + id));
+    public Enrollment getEnrollmentById(@PathVariable("id")UUID id) {
 
-        return EnrollmentDTO.fromEntity(enrollment);
+        return _enrollmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Enrollment not found with id: " + id));
     }
+
+
 
     @GetMapping(path = "/event/{id}/count-members")
     public int countMembersInEvent(@PathVariable("id") UUID eventId) {
@@ -55,7 +61,7 @@ public class EnrollmentController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<Enrollment> createEnrollment(@RequestBody Enrollment enrollment) {
+    public ResponseEntity<Enrollment> createEnrollment(@RequestBody Enrollment enrollment) {
         if(enrollment == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 

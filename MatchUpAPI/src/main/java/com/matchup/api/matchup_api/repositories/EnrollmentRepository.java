@@ -16,4 +16,5 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, UUID> {
 
     List<Enrollment> findByEventIdAndUserId(UUID eventId, UUID userId);
     List<Enrollment> findByEventId(UUID eventId);
+    List<Enrollment> findByUserId(UUID userId);
 }
