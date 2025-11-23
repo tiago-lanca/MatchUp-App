@@ -1,6 +1,7 @@
 package com.app.matchup.ui.components.MainMenu
 
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -135,7 +136,11 @@ fun MainMenuScreen() {
                     isUserLoggedIn = user != null,
                     onLoginClick = { (context as Activity).navigateTo(activity = LoginActivity::class.java) },
                     onHomeClick = { (context as Activity).navigateTo(activity = MainActivity::class.java) },
-                    onMyEventsClick = { (context as Activity).navigateTo(activity = MyEventsActivity::class.java) },
+                    onMyEventsClick = {
+                        val intent = Intent(context, MyEventsActivity::class.java)
+                        intent.putExtra("current_user", user)
+                        context.startActivity(intent)
+                    },
                     onSearchEventsClick = { (context as Activity).navigateTo(activity = MainActivity::class.java) },
                     onCreateNewEventClick = { (context as Activity).navigateTo(activity = SelectLocationActivity::class.java) },
                     onProfileClick = { /*TODO*/ },

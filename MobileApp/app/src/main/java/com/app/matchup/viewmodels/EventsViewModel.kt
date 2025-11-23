@@ -101,8 +101,6 @@ class EventsViewModel : ViewModel() {
         }
     }
 
-
-
     fun deleteEvent(result: (Boolean) -> Unit){
         viewModelScope.launch {
             try {
@@ -138,7 +136,6 @@ class EventsViewModel : ViewModel() {
         } else result(0)
     }
 
-
     fun isUserEnrolled(context: Context, userId: UUID){
         if(selectedEvent.value != null){
             viewModelScope.launch {
@@ -158,7 +155,6 @@ class EventsViewModel : ViewModel() {
     fun setUserEnrolled(value: Boolean){
         _isUserEnrolled.value = value
     }
-
 
     fun selectEvent(event: Event?){
         _selectedEvent.value = event

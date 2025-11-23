@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -54,6 +56,9 @@ fun EventListItem(
     event: Event,
     numberOfMembers: Int,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    arrowIcon: ImageVector = Icons.Filled.ChevronRight,
+    arrowTint: Color = Color.White
 ){
 
     val context = LocalContext.current
@@ -62,7 +67,7 @@ fun EventListItem(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(EVENT_BACKGROUND_COLOR)
             .padding(horizontal = 0.dp, vertical = 10.dp)
@@ -71,7 +76,7 @@ fun EventListItem(
         Image(
             painter = painterResource(event.sport?.getSportIcon()!!),
             contentDescription = stringResource(R.string.sport_icon_des),
-            modifier = Modifier
+            modifier = modifier
                 .padding(end = 15.dp)
                 .size(event.sport?.getSportIcon()!!.getSportIconSize()),
             contentScale = ContentScale.Fit
@@ -182,9 +187,9 @@ fun EventListItem(
             modifier = Modifier.size(24.dp)
         ) {
             Icon(
-                imageVector = Icons.Filled.ChevronRight,
+                imageVector = arrowIcon,
                 contentDescription = stringResource(R.string.go_to_event_details),
-                tint = Color.White,
+                tint = arrowTint,
                 modifier = Modifier
             )
         }

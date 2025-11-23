@@ -4,6 +4,7 @@ import com.app.matchup.enums.Status
 import com.app.matchup.dtos.EventDTO
 import com.app.matchup.models.Event
 import com.app.matchup.models.User
+import com.app.matchup.services.EnrollmentService.gson
 import com.app.matchup.utilities.AppConstants.SERVER_ROOT
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpDelete
@@ -51,6 +52,26 @@ object EventService {
         )
     }
 
+    suspend fun getEventsByEnrolledUserId(userId: UUID): List<Event>{
+        return try{
+            val (_,_, result) = "${SERVER_ROOT}/api/events/user/${userId}"
+                .httpGet()
+                .awaitStringResponseResult()
+
+            result.fold(
+                success = { responseBody ->
+                    gson.fromJson(responseBody, Array<Event>::class.java).toList()
+                },
+                failure = {
+                    emptyList()
+                }
+            )
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+            emptyList()
+        }
+    }
     suspend fun getEventAdmin(eventId: UUID): User?{
         val (_,_, result) = "${SERVER_ROOT}/api/events/${eventId}/admin"
             .httpGet()
@@ -97,7 +118,6 @@ object EventService {
             }
         )
     }
-
     suspend fun deleteEvent(eventId: UUID): Boolean {
         return try {
             val (_, _, result) = "${SERVER_ROOT}/api/events/${eventId}"

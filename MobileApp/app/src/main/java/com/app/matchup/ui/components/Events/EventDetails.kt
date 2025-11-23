@@ -316,16 +316,6 @@ fun EventDetails(
                                     } else {
                                         enrollmentVM.leaveEvent(user = currentUser!!) { result ->
                                             leaveEventSnackbar(result)
-
-                                            /*Toast.makeText(
-                                            context,
-                                            "Enrollment created successfully!",
-                                            Toast.LENGTH_LONG
-                                       ).apply {
-                                            setGravity(Gravity.TOP,0,100)
-                                            show()
-                                       }*/
-
                                         }
                                     }
                                 }
