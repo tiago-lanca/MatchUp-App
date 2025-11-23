@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -104,6 +105,7 @@ fun MainScreen(
     val selectedEvent by eventsVM.selectedEvent.collectAsState()
     val numberOfMembers by eventsVM.numberOfMembers.collectAsState()
     val isUserEnrolled by eventsVM.isUserEnrolled.collectAsState()
+    val isLoading by eventsVM.isLoading.collectAsState()
 
     val filters by filtersVM.filters.collectAsState()
     var showFilterEventSheet by remember { mutableStateOf(false) }
@@ -196,105 +198,117 @@ fun MainScreen(
                             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                         )
                 ) {
-                    if (selectedEvent.isNull()) {
-                        EventList(
-                            eventsVM = eventsVM,
-                            eventList = eventList,
-                            onClickEventItem = { event ->
-                                event.address?.let { address ->
+                    if(isLoading){
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                color = Color.White
+                            )
+                        }
+                    }
+                    else {
+                        if (selectedEvent.isNull()) {
+                            EventList(
+                                eventsVM = eventsVM,
+                                eventList = eventList,
+                                onClickEventItem = { event ->
+                                    event.address?.let { address ->
+                                        Tools.moveCameraTo(
+                                            latLng = LatLng(
+                                                address.latitude!! - MAP_DISPLAY_OFFSET / EVENT_ZOOMED,
+                                                address.longitude!!,
+                                            ),
+                                            zoom = EVENT_ZOOMED,
+                                            coroutineScope = coroutineScope,
+                                            cameraPositionState = cameraPositionState
+                                        )
+                                    }
+                                    eventsVM.selectEvent(event)
+                                },
+                                onEventMembersCount = { event ->
+                                    EnrollmentService.getEnrollmentsByEventId(event.id)!!
+                                },
+                                onRefreshEventList = {
+                                    coroutineScope.launch {
+                                        eventsVM.loadAllEvents() { success ->
+                                            if (success) {
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar(
+                                                        context.getString(R.string.refresh_event_list_message)
+                                                    )
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                },
+                                onFilterEventClicked = {
+                                    showFilterEventSheet = true
+                                },
+                                onFilterRemoved = {
+                                    eventsVM.loadFilteredEvents(filtersVM.filters.value, context)
+                                }
+                            )
+                        } else {
+                            EventDetails(
+                                context,
+                                event = selectedEvent!!,
+                                numberOfMembers = numberOfMembers,
+                                isUserEnrolled = isUserEnrolled,
+                                currentUser = currentUser,
+                                onClose = { event ->
                                     Tools.moveCameraTo(
                                         latLng = LatLng(
-                                            address.latitude!! - MAP_DISPLAY_OFFSET / EVENT_ZOOMED,
-                                            address.longitude!!,
+                                            event.address?.latitude!! - (MAP_DISPLAY_OFFSET / DEFAULT_ZOOM),
+                                            event.address?.longitude!!
                                         ),
-                                        zoom = EVENT_ZOOMED,
+                                        zoom = DEFAULT_ZOOM,
                                         coroutineScope = coroutineScope,
                                         cameraPositionState = cameraPositionState
                                     )
-                                }
-                                eventsVM.selectEvent(event)
-                            },
-                            onEventMembersCount = { event ->
-                                EnrollmentService.getEnrollmentsByEventId(event.id)!!
-                            },
-                            onRefreshEventList = {
-                                coroutineScope.launch {
-                                    eventsVM.loadAllEvents(){ success ->
-                                        if(success){
+                                    eventsVM.selectEvent(null)
+                                },
+                                onDeleteEvent = { event ->
+                                    eventsVM.deleteEvent { success ->
+                                        if (success) {
                                             scope.launch {
                                                 snackbarHostState.showSnackbar(
-                                                    context.getString(R.string.refresh_event_list_message)
+                                                    context.getString(R.string.event_deleted_message)
                                                 )
                                             }
+                                            eventsVM.selectEvent(null)
+                                            eventsVM.loadAllEvents()
                                         }
                                     }
-
-                                }
-                            },
-                            onFilterEventClicked = {
-                                showFilterEventSheet = true
-                            },
-                            onFilterRemoved = {
-                                eventsVM.loadFilteredEvents(filtersVM.filters.value, context)
-                            }
-                        )
-                    } else {
-                        EventDetails(
-                            context,
-                            event = selectedEvent!!,
-                            numberOfMembers = numberOfMembers,
-                            isUserEnrolled = isUserEnrolled,
-                            currentUser = currentUser,
-                            onClose = { event ->
-                                Tools.moveCameraTo(
-                                    latLng = LatLng(
-                                        event.address?.latitude!! - (MAP_DISPLAY_OFFSET / DEFAULT_ZOOM),
-                                        event.address?.longitude!!
-                                    ),
-                                    zoom = DEFAULT_ZOOM,
-                                    coroutineScope = coroutineScope,
-                                    cameraPositionState = cameraPositionState
-                                )
-                                eventsVM.selectEvent(null)
-                            },
-                            onDeleteEvent = { event ->
-                                eventsVM.deleteEvent { success ->
-                                    if(success){
+                                },
+                                joinSnackbar = { success ->
+                                    if (success) {
                                         scope.launch {
                                             snackbarHostState.showSnackbar(
-                                                context.getString(R.string.event_deleted_message)
+                                                context.getString(R.string.enrollment_created_message)
                                             )
                                         }
-                                        eventsVM.selectEvent(null)
-                                        eventsVM.loadAllEvents()
+                                        eventsVM.setUserEnrolled(true)
+                                        eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
+                                        eventsVM.loadFilteredEvents(filters, context)
+                                    }
+                                },
+                                leaveEventSnackbar = { success ->
+                                    if (success) {
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                context.getString(R.string.user_left_event_message)
+                                            )
+                                        }
+                                        eventsVM.setUserEnrolled(false)
+                                        eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
+                                        eventsVM.loadFilteredEvents(filters, context)
                                     }
                                 }
-                            },
-                            joinSnackbar = { success ->
-                                if(success){
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            context.getString(R.string.enrollment_created_message)
-                                        )
-                                    }
-                                    eventsVM.setUserEnrolled(true)
-                                    eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
-                                    eventsVM.loadFilteredEvents(filters, context)
-                                }
-                            },
-                            leaveEventSnackbar = { success ->
-                                if(success){
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            context.getString(R.string.user_left_event_message)
-                                        )
-                                    }
-                                    eventsVM.setUserEnrolled(false)
-                                    eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
-                                    eventsVM.loadFilteredEvents(filters, context)
-                                }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }

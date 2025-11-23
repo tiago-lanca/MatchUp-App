@@ -63,7 +63,7 @@ fun EventListItem(
 
     val context = LocalContext.current
     val dateFormatter = DateTimeFormatter.ofPattern(stringResource(R.string.date_pattern))
-
+    val isFull = numberOfMembers == event.maxMembers
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -150,7 +150,7 @@ fun EventListItem(
                                 style = SpanStyle(
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.Green
+                                    color = if(isFull) Color.Red else Color.Green
                                 )
                             ) {
                                 append(numberOfMembers.toString())
@@ -159,7 +159,7 @@ fun EventListItem(
                                 style = SpanStyle(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
-                                    color = Color.Green
+                                    color = if(isFull) Color.Red else Color.Green
                                 )
                             ) {
                                 append(" /${event.maxMembers}")

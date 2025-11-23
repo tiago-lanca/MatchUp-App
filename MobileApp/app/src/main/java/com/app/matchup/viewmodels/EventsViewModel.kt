@@ -1,9 +1,6 @@
 package com.app.matchup.viewmodels
 
 import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.matchup.extensions.addDays
@@ -16,9 +13,6 @@ import com.app.matchup.services.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.util.Calendar
-import java.util.Date
 import java.util.UUID
 
 class EventsViewModel : ViewModel() {
@@ -32,6 +26,9 @@ class EventsViewModel : ViewModel() {
 
     private val _isUserEnrolled = MutableStateFlow(false)
     val isUserEnrolled: StateFlow<Boolean> = _isUserEnrolled
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
 
     init{
@@ -56,20 +53,28 @@ class EventsViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
+                _isLoading.value = true
 
                 val activeUser = UserSession.getUser(context)
-                var allEvents = EventService.getEvents()
+                val allEvents = EventService.getEvents()
 
-                val availableEvents = mutableListOf<Event>()
+                val showableEvents = mutableListOf<Event>()
 
                 allEvents.forEach { event ->
                     val isFull = EnrollmentService.getEnrollmentsByEventId(event.id) == event.maxMembers
+                    val isUserEnrolledInEvent = EnrollmentService.isUserEnrolled(event.id, activeUser?.id!!)
+
+                    // Checks if the event is full and the user is already enrolled in it,
+                    // then adds the event to the showable events list
+                    if(isFull && isUserEnrolledInEvent)
+                        showableEvents.add(event)
+
                     if (!isFull) {
-                        availableEvents.add(event)
+                        showableEvents.add(event)
                     }
                 }
 
-                _events.value = availableEvents.removePastEvents()
+                _events.value = showableEvents.removePastEvents()
 
                 if (filter.onlyMyEvents) {
                     _events.value = _events.value.filter { it.admin?.id == activeUser?.id }
@@ -92,6 +97,7 @@ class EventsViewModel : ViewModel() {
 
                 }
 
+                _isLoading.value = false
                 result(true)
             }
             catch (e: Exception){

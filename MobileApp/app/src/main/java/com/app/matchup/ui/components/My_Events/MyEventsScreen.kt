@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
@@ -100,6 +102,7 @@ fun MyEventsScreen(
 ) {
     val myEvents by myEventsVM.myEventsList.collectAsState()
     val selectedEvent by myEventsVM.myEventSelected.collectAsState()
+    val isLoading by myEventsVM.isLoading.collectAsState()
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -142,12 +145,15 @@ fun MyEventsScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 navigationIcon = {
-
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.go_back_button_desc),
                         tint = Color.White,
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .clickable{
+                                (context as Activity).finish()
+                            }
                     )
 
                 },
@@ -167,6 +173,7 @@ fun MyEventsScreen(
     ) { innerPadding ->
 
         LaunchedEffect(selectedButton) {
+
             myEventsVM.loadMyEvents(selectedButton, current_user)
             myEventsVM.setSelectedEvent(null)
         }
@@ -219,9 +226,27 @@ fun MyEventsScreen(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
-                if (myEvents.isEmpty()) {
+                if(isLoading) {
                     item {
-                        Text("Event list is empty.")
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+
+                if (!isLoading && myEvents.isEmpty()) {
+                    item {
+                        Text(
+                            text = "Event list is empty.",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
                 } else {
                     itemsIndexed(myEvents, key = { _, event -> event.id }) { index, event ->

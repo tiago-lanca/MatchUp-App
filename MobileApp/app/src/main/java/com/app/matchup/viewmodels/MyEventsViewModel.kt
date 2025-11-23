@@ -7,6 +7,7 @@ import com.app.matchup.enums.Status
 import com.app.matchup.models.Event
 import com.app.matchup.models.User
 import com.app.matchup.services.EventService
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,6 +16,8 @@ import java.util.Date
 class MyEventsViewModel : ViewModel() {
     private val _myEventsList = MutableStateFlow<List<Event>>(emptyList())
     val myEventsList: StateFlow<List<Event>> = _myEventsList
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     private val _myEventSelected = MutableStateFlow<Event?>(null)
     val myEventSelected: StateFlow<Event?> = _myEventSelected
@@ -22,6 +25,9 @@ class MyEventsViewModel : ViewModel() {
     fun loadMyEvents(eventStatus: ShowMyEventsType, user: User){
         viewModelScope.launch {
             try {
+                _isLoading.value = true
+                delay(1000)
+
                 val userEvents = EventService.getEventsByEnrolledUserId(user.id)
 
                 val filteredEvents = when(eventStatus){
@@ -30,6 +36,7 @@ class MyEventsViewModel : ViewModel() {
                     ShowMyEventsType.ALL -> userEvents
                 }
                 _myEventsList.value = filteredEvents
+                _isLoading.value = false
             }
             catch (e: Exception){
                 e.printStackTrace()
