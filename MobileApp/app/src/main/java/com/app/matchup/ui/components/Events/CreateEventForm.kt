@@ -98,33 +98,33 @@ fun CreateEventForm(
         Row (
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Sports Field
-            DropdownMenuGeneric(
-                label = "Sport",
-                items = sports,
-                selectedItem = event.sport,
-                onItemSelected = { onSportChanged(it) },
-                backgroundColor = Color(0xFFE7E0EC),
-                leadingIcon = {
-                    event.sport?.icon?.let { sportIcon ->
-                        Box(
-                            modifier = Modifier.padding(start = 4.dp, end = 0.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(sportIcon),
-                                contentDescription = "Sport icon",
-                                modifier = Modifier.size(20.dp),
-                                tint = Color.Unspecified
-                            )
+                // Sports Field
+                DropdownMenuGeneric(
+                    label = "Sport",
+                    items = sports,
+                    selectedItem = event.sport,
+                    onItemSelected = { onSportChanged(it) },
+                    backgroundColor = Color(0xFFE7E0EC),
+                    leadingIcon = {
+                        event.sport?.icon?.let { sportIcon ->
+                            Box(
+                                modifier = Modifier.padding(start = 4.dp, end = 0.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(sportIcon),
+                                    contentDescription = "Sport icon",
+                                    modifier = Modifier.size(20.dp),
+                                    tint = Color.Unspecified
+                                )
+                            }
                         }
-                    }
-                },
-                isError = validationState.sportError != null,
-                getName = { it.name },
-                intIcon = { it.icon!! },
-                modifier = Modifier.weight(2f)
-            )
+                    },
+                    isError = validationState.sportError != null,
+                    getName = { it.name },
+                    intIcon = { it.icon!! },
+                    modifier = Modifier.weight(2f)
+                )
 
             // Max Members
             TextField(

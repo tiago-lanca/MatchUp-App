@@ -1,9 +1,11 @@
 package com.app.matchup.ui.components.Login
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,9 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
+import com.app.matchup.RegisterActivity
 import com.app.matchup.ui.components.LightFromAbove
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.SIGNIN_BUTTON_COLOR
+import com.app.matchup.utilities.Tools.navigateTo
 import com.app.matchup.viewmodels.LoginViewModel
 
 @Composable
@@ -182,11 +186,15 @@ fun LoginScreen(
                         fontSize = 16.sp
                     )
                     // "Sign Up"
-                    Text(text = stringResource(R.string.signup_text_2),
+                    Text(
+                        text = stringResource(R.string.signup_text_2),
                         color = Color(0xFF1565C0),
                         fontSize = 16.sp,
                         modifier = Modifier
                             .padding(start = 5.dp)
+                            .clickable {
+                                (context as Activity).navigateTo(RegisterActivity::class.java)
+                            }
                     )
                 }
             }

@@ -155,7 +155,6 @@ fun MyEventsScreen(
                                 (context as Activity).finish()
                             }
                     )
-
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = BACKGROUND_COLOR
@@ -238,136 +237,144 @@ fun MyEventsScreen(
                         }
                     }
                 }
+                else {
 
-                if (!isLoading && myEvents.isEmpty()) {
-                    item {
-                        Text(
-                            text = "Event list is empty.",
-                            color = Color.White,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                } else {
-                    itemsIndexed(myEvents, key = { _, event -> event.id }) { index, event ->
-                        var membersCount by remember { mutableStateOf(0) }
-
-                        LaunchedEffect(event.id) {
-                            membersCount = EnrollmentService.getEnrollmentsByEventId(event.id) ?: 0
+                    if (!isLoading && myEvents.isEmpty()) {
+                        item {
+                            Text(
+                                text = "Event list is empty.",
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
+                    } else {
+                        itemsIndexed(myEvents, key = { _, event -> event.id }) { index, event ->
+                            var membersCount by remember { mutableStateOf(0) }
 
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = EVENT_BACKGROUND_COLOR,
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    if (selectedEvent == event)
-                                        myEventsVM.setSelectedEvent(null)
-                                    else if(selectedEvent != event && event.status != Status.CLOSED)
-                                        myEventsVM.setSelectedEvent(event)
-                                }
-                        ) {
-                            Box(
+                            LaunchedEffect(event.id) {
+                                membersCount =
+                                    EnrollmentService.getEnrollmentsByEventId(event.id) ?: 0
+                            }
+
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = EVENT_BACKGROUND_COLOR,
+                                ),
                                 modifier = Modifier
-                                    .padding(horizontal = 16.dp, vertical = 0.dp)
-                            ) {
-                                EventListItem(
-                                    event,
-                                    numberOfMembers = membersCount,
-                                    onClick = {
+                                    .fillMaxWidth()
+                                    .clickable {
                                         if (selectedEvent == event)
                                             myEventsVM.setSelectedEvent(null)
-                                        else if(selectedEvent != event && event.status != Status.CLOSED)
+                                        else if (selectedEvent != event && event.status != Status.CLOSED)
                                             myEventsVM.setSelectedEvent(event)
-                                    },
-                                    arrowIcon =
-                                        if(event.status == Status.CLOSED){
-                                            Icons.Filled.Check
-                                        }
-                                        else {
-                                            if (selectedEvent == event) Icons.Filled.KeyboardArrowDown
-                                            else Icons.Filled.ChevronRight
-                                        },
-                                    arrowTint = if(event.status == Status.CLOSED) Color.Red else Color.White
-                                )
-
-                            }
-                            if (selectedEvent == event && event.status == Status.OPEN) {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(
-                                        5.dp,
-                                        Alignment.CenterHorizontally
-                                    ),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                ) {
-                                    if (current_user.id == event.admin?.id) {
-                                        // Delete Button
-                                        Button(
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = RED_BUTTON,
-                                                contentColor = Color.White
-                                            ),
-                                            onClick = {
-                                                eventsVM.deleteEvent { success ->
-                                                    if (success) {
-                                                        scope.launch {
-                                                            snackbarHostState.showSnackbar(
-                                                                context.getString(R.string.event_deleted_message)
-                                                            )
-                                                        }
-                                                        myEventsVM.loadMyEvents(selectedButton, current_user)
-                                                    }
-                                                }
-                                            }
-                                        ) {
-                                            Text("Delete")
-                                        }
-                                    } else {
-                                        // Leave Button
-                                        Button(
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = RED_BUTTON,
-                                                contentColor = Color.White
-                                            ),
-                                            onClick = {
-                                                // Assigns an event to the selected event in Enrollment view model
-                                                enrollmentVM.setSelectedEvent(event)
-                                                enrollmentVM.leaveEvent(current_user){ success ->
-                                                    if(success){
-                                                        scope.launch {
-                                                            snackbarHostState.showSnackbar(
-                                                                context.getString(R.string.user_left_event_message)
-                                                            )
-                                                        }
-                                                        eventsVM.setUserEnrolled(false)
-                                                        myEventsVM.loadMyEvents(selectedButton, current_user)
-                                                    }
-                                                }
-
-                                            }
-                                        ) {
-                                            Text(text = "Leave")
-                                        }
                                     }
-
-
-                                    // See in map button
-                                    Button(
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = SIGNIN_BUTTON_COLOR,
-                                            contentColor = Color.White
-                                        ),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp, vertical = 0.dp)
+                                ) {
+                                    EventListItem(
+                                        event,
+                                        numberOfMembers = membersCount,
                                         onClick = {
-                                            val intent =
-                                                Intent(context, MainActivity::class.java)
-                                            intent.putExtra("createdEvent", event)
-                                            context.startActivity(intent)
-                                        }
+                                            if (selectedEvent == event)
+                                                myEventsVM.setSelectedEvent(null)
+                                            else if (selectedEvent != event && event.status != Status.CLOSED)
+                                                myEventsVM.setSelectedEvent(event)
+                                        },
+                                        arrowIcon =
+                                            if (event.status == Status.CLOSED) {
+                                                Icons.Filled.Check
+                                            } else {
+                                                if (selectedEvent == event) Icons.Filled.KeyboardArrowDown
+                                                else Icons.Filled.ChevronRight
+                                            },
+                                        arrowTint = if (event.status == Status.CLOSED) Color.Red else Color.White
+                                    )
+
+                                }
+                                if (selectedEvent == event && event.status == Status.OPEN) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(
+                                            5.dp,
+                                            Alignment.CenterHorizontally
+                                        ),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
                                     ) {
-                                        Text(text = "See in map")
+                                        if (current_user.id == event.admin?.id) {
+                                            // Delete Button
+                                            Button(
+                                                colors = ButtonDefaults.buttonColors(
+                                                    containerColor = RED_BUTTON,
+                                                    contentColor = Color.White
+                                                ),
+                                                onClick = {
+                                                    eventsVM.deleteEvent { success ->
+                                                        if (success) {
+                                                            scope.launch {
+                                                                snackbarHostState.showSnackbar(
+                                                                    context.getString(R.string.event_deleted_message)
+                                                                )
+                                                            }
+                                                            myEventsVM.loadMyEvents(
+                                                                selectedButton,
+                                                                current_user
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            ) {
+                                                Text("Delete")
+                                            }
+                                        } else {
+                                            // Leave Button
+                                            Button(
+                                                colors = ButtonDefaults.buttonColors(
+                                                    containerColor = RED_BUTTON,
+                                                    contentColor = Color.White
+                                                ),
+                                                onClick = {
+                                                    // Assigns an event to the selected event in Enrollment view model
+                                                    enrollmentVM.setSelectedEvent(event)
+                                                    enrollmentVM.leaveEvent(current_user) { success ->
+                                                        if (success) {
+                                                            scope.launch {
+                                                                snackbarHostState.showSnackbar(
+                                                                    context.getString(R.string.user_left_event_message)
+                                                                )
+                                                            }
+                                                            eventsVM.setUserEnrolled(false)
+                                                            myEventsVM.loadMyEvents(
+                                                                selectedButton,
+                                                                current_user
+                                                            )
+                                                        }
+                                                    }
+
+                                                }
+                                            ) {
+                                                Text(text = "Leave")
+                                            }
+                                        }
+
+
+                                        // See in map button
+                                        Button(
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = SIGNIN_BUTTON_COLOR,
+                                                contentColor = Color.White
+                                            ),
+                                            onClick = {
+                                                val intent =
+                                                    Intent(context, MainActivity::class.java)
+                                                intent.putExtra("createdEvent", event)
+                                                context.startActivity(intent)
+                                            }
+                                        ) {
+                                            Text(text = "See in map")
+                                        }
                                     }
                                 }
                             }

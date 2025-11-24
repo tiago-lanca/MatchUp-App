@@ -62,12 +62,16 @@ class EventsViewModel : ViewModel() {
 
                 allEvents.forEach { event ->
                     val isFull = EnrollmentService.getEnrollmentsByEventId(event.id) == event.maxMembers
-                    val isUserEnrolledInEvent = EnrollmentService.isUserEnrolled(event.id, activeUser?.id!!)
 
-                    // Checks if the event is full and the user is already enrolled in it,
-                    // then adds the event to the showable events list
-                    if(isFull && isUserEnrolledInEvent)
-                        showableEvents.add(event)
+                    if(activeUser != null) {
+                        val isUserEnrolledInEvent =
+                            EnrollmentService.isUserEnrolled(event.id, activeUser?.id!!)
+
+                        // Checks if the event is full and the user is already enrolled in it,
+                        // then adds the event to the showable events list
+                        if (isFull && isUserEnrolledInEvent)
+                            showableEvents.add(event)
+                    }
 
                     if (!isFull) {
                         showableEvents.add(event)

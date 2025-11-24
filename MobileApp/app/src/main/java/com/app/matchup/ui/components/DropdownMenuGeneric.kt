@@ -36,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.app.matchup.ui.theme.RED_BUTTON
 
 @Composable
 fun <T>  DropdownMenuGeneric(
@@ -47,6 +49,7 @@ fun <T>  DropdownMenuGeneric(
     onItemSelected: (T) -> Unit,
     getName: (T) -> String,
     intIcon: ((T) -> Int?)? = null,
+    urlIcon: ((T) -> String?)? = null,
     composableIcon: (@Composable (T) -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
@@ -68,7 +71,7 @@ fun <T>  DropdownMenuGeneric(
                 Text(
                     text = label,
                     fontSize = 14.sp,
-                    color = if(isError) Color.Red else labelColor
+                    color = if(isError) RED_BUTTON else labelColor
                 )
             },
             readOnly = true,
@@ -129,7 +132,6 @@ fun <T>  DropdownMenuGeneric(
                                 }
                             }
 
-
                             Text(
                                 item.let { getName(item) },
                                 fontSize = 16.sp,
@@ -137,7 +139,6 @@ fun <T>  DropdownMenuGeneric(
                                     .padding(start = 5.dp)
                             )
                         }
-
                     },
                     onClick = {
                         onItemSelected(item)
@@ -150,7 +151,7 @@ fun <T>  DropdownMenuGeneric(
         if(isError && !errorText.isNullOrBlank()){
             Text(
                 text = errorText,
-                color = Color.Red,
+                color = RED_BUTTON,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)
             )
@@ -161,7 +162,7 @@ fun <T>  DropdownMenuGeneric(
 @Preview(showBackground = true)
 @Composable
 fun DropdownMenuGenericPreview(){
-    val countries = listOf(
+    /*val countries = listOf(
         Country("Portugal", "+351", R.drawable.football_icon),
         Country("Brazil", "+55", R.drawable.football_icon)
     )
@@ -188,5 +189,5 @@ fun DropdownMenuGenericPreview(){
             },
             modifier = Modifier
         )
-    }
+    }*/
 }

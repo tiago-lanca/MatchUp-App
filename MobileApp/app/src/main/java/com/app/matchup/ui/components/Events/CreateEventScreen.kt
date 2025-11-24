@@ -161,7 +161,6 @@ fun CreateEventScreen(
                 Box (
                     contentAlignment = Alignment.TopStart,
                 ) {
-
                     CreateEventForm(
                         event = event,
                         costInput = costInput,

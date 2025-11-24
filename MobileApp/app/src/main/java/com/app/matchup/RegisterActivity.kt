@@ -7,9 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.matchup.samples.EventSamples
 import com.app.matchup.ui.components.Events.MainScreen
+import com.app.matchup.ui.components.Register.RegisterScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 
 class RegisterActivity : ComponentActivity() {
@@ -19,7 +21,8 @@ class RegisterActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
-
+                val context = LocalContext.current
+                RegisterScreen(context)
             }
         }
     }
@@ -29,6 +32,6 @@ class RegisterActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     MatchUpTheme {
-
+        RegisterScreen(LocalContext.current)
     }
 }

@@ -74,6 +74,7 @@ object Tools{
                 tint = Color.Unspecified,
                 modifier = Modifier.size(24.dp)
             )
+            else -> null
         }
     }
 }

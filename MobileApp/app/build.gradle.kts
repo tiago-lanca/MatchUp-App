@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.fuel.coroutines)
     implementation(libs.gson)
     implementation(libs.fuel.android)
+    implementation(libs.coil.compose)
 
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
