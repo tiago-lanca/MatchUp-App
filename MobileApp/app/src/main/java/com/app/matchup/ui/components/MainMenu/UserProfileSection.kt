@@ -25,8 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.app.matchup.R
 import com.app.matchup.models.User
+import com.app.matchup.utilities.Tools
 import java.util.UUID
 
 @Composable
@@ -34,8 +36,6 @@ fun UserProfileSection(
     user: User,
     onProfileClick: () -> Unit
 ){
-
-    user.profilePicture = R.drawable.profile_picture.toString()
     Row (
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -45,8 +45,8 @@ fun UserProfileSection(
                 onClick = { onProfileClick() }
             )
     ) {
-        Image(
-            painter = painterResource(user.profilePicture!!.toInt()),
+        AsyncImage(
+            model = Tools.base64ToBitmap(user.profilePicture!!),
             contentDescription = stringResource(R.string.profile_picture_image_desc),
             contentScale = ContentScale.Crop,
             modifier = Modifier

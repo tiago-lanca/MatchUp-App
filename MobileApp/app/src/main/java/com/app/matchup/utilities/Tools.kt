@@ -1,7 +1,12 @@
 package com.app.matchup.utilities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Base64
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Female
@@ -75,6 +80,28 @@ object Tools{
                 modifier = Modifier.size(24.dp)
             )
             else -> null
+        }
+    }
+
+    fun base64ToBitmap(base64: String): Bitmap? {
+        val decodedBytes = Base64.decode(base64, Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+    }
+
+    fun uriToBase64(context: Context, uri: Uri): String?{
+        return try {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val bytes = inputStream?.readBytes()
+            inputStream?.close()
+
+            if(bytes != null){
+                Base64.encodeToString(bytes, Base64.DEFAULT)
+            }else{
+                null
+            }
+        }
+        catch (e: Exception){
+            null
         }
     }
 }
