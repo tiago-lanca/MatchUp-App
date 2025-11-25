@@ -1,7 +1,6 @@
 package com.app.matchup.services
 
 import android.util.Log
-import com.app.matchup.dtos.UserDTO
 import com.app.matchup.models.User
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
@@ -28,18 +27,6 @@ object AuthService {
                 Log.d("AuthService", "Login success: ${responseBody}")
                 gson.fromJson(responseBody, User::class.java)
 
-                /*User(
-                    id = userDto.id,
-                    name = userDto.name,
-                    email = userDto.email,
-                    country = userDto.country,
-                    city = userDto.city,
-                    mobilePhone = userDto.mobilePhone,
-                    passwordHash = userDto.passwordHash,
-                    gender = userDto.gender,
-                    profilePicture = userDto.profilePicture,
-                    favoriteSport = userDto.favoriteSport
-                )*/
             },
             failure = {
                 Log.d("AuthService:", "Login error: ${response}")

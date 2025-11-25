@@ -1,7 +1,5 @@
 package com.app.matchup.services
 
-import com.app.matchup.enums.Status
-import com.app.matchup.dtos.EventDTO
 import com.app.matchup.models.Event
 import com.app.matchup.models.User
 import com.app.matchup.services.EnrollmentService.gson

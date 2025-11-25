@@ -14,3 +14,14 @@ fun Int.getSportIconSize(): Dp {
         else -> 25.dp
     }
 }
+
+fun Int.getSportPaddingEnd(): Dp {
+    return when(this) {
+        R.drawable.football_icon -> 15.dp
+        R.drawable.padel_icon -> 5.dp
+        R.drawable.running_icon -> 5.dp
+        R.drawable.futsalball_icon -> 15.dp
+        R.drawable.basketball_icon -> 15.dp
+        else -> 15.dp
+    }
+}

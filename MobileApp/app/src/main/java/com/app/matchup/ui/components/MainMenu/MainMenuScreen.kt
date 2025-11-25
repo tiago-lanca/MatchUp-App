@@ -2,6 +2,8 @@ package com.app.matchup.ui.components.MainMenu
 
 import android.app.Activity
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,12 +18,14 @@ import androidx.compose.material.icons.filled.ReportGmailerrorred
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,19 +41,29 @@ import androidx.compose.ui.unit.sp
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.MainActivity
 import com.app.matchup.MyEventsActivity
+import com.app.matchup.ProfileActivity
 import com.app.matchup.R
+import com.app.matchup.RegisterActivity
 import com.app.matchup.SelectLocationActivity
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.TopFocusLight
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.utilities.Tools.navigateTo
 import com.app.matchup.services.UserSession
+import com.app.matchup.ui.components.LogoutBottomSheet
+import com.app.matchup.ui.components.Register.RegisterScreen
+import com.app.matchup.ui.components.SnackbarMessage
+import kotlinx.coroutines.launch
 
 @Composable
-fun MainMenuScreen() {
+fun MainMenuScreen(
 
+) {
     val context = LocalContext.current
     var user by remember { mutableStateOf<User?>(null) }
+    var showLogoutBottomSheet by remember {mutableStateOf(false)}
+
+
 
     LaunchedEffect(Unit) {
         user = UserSession.getUser(context)
@@ -57,7 +71,6 @@ fun MainMenuScreen() {
 
     Scaffold(
         containerColor = BACKGROUND_COLOR,
-
         bottomBar = {
             BottomAppBar(
                 containerColor = BACKGROUND_COLOR,
@@ -125,7 +138,16 @@ fun MainMenuScreen() {
                 Spacer(modifier = Modifier.height(40.dp))
 
                 if(user != null) {
-                    user?.let { UserProfileSection(user!!) }
+                    user?.let {
+                        UserProfileSection(
+                            user = user!!,
+                            onProfileClick = {
+                                val intent = Intent(context, ProfileActivity::class.java)
+                                intent.putExtra("current_user", user)
+                                context.startActivity(intent)
+                            }
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -135,6 +157,7 @@ fun MainMenuScreen() {
                     modifier = Modifier.padding(innerPadding),
                     isUserLoggedIn = user != null,
                     onLoginClick = { (context as Activity).navigateTo(activity = LoginActivity::class.java) },
+                    onRegisterClick = { (context as Activity).navigateTo(activity = RegisterActivity::class.java) },
                     onHomeClick = { (context as Activity).navigateTo(activity = MainActivity::class.java) },
                     onMyEventsClick = {
                         val intent = Intent(context, MyEventsActivity::class.java)
@@ -143,10 +166,15 @@ fun MainMenuScreen() {
                     },
                     onSearchEventsClick = { (context as Activity).navigateTo(activity = MainActivity::class.java) },
                     onCreateNewEventClick = { (context as Activity).navigateTo(activity = SelectLocationActivity::class.java) },
-                    onProfileClick = { /*TODO*/ },
+                    onProfileClick = {
+                        {
+                            val intent = Intent(context, ProfileActivity::class.java)
+                            intent.putExtra("current_user", user)
+                            context.startActivity(intent)
+                        }
+                    },
                     onSignOutClick = {
-                        UserSession.logoutUser(context)
-                        (context as Activity).navigateTo(activity = LoginActivity::class.java, closeCurrentActivity = true)
+                        showLogoutBottomSheet = true
                     }
                 )
             }
@@ -155,6 +183,16 @@ fun MainMenuScreen() {
 
     // Little light above the logo
     TopFocusLight()
+
+    if(showLogoutBottomSheet){
+        LogoutBottomSheet(
+            onDismiss = { showLogoutBottomSheet = false },
+            onLogout = {
+                UserSession.logoutUser(context)
+                (context as Activity).navigateTo(activity = LoginActivity::class.java, closeCurrentActivity = true)
+            }
+        )
+    }
 }
 
 @Preview

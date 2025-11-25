@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
@@ -23,7 +24,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,23 +33,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.app.matchup.R
 import com.app.matchup.models.Country
-import com.app.matchup.models.Gender
 import com.app.matchup.models.RegisterAccountValidation
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
-import com.app.matchup.services.CountryAPI_Response
+import com.app.matchup.services.CountryAPIResponse
 import com.app.matchup.services.SportService
 import com.app.matchup.ui.components.DropdownMenuGeneric
-import com.app.matchup.ui.theme.GENDER_MALE_COLOR
 import com.app.matchup.utilities.Tools
-import com.app.matchup.viewmodels.RegisterAccountViewModel
 
 @Composable
 fun RegisterForm(
@@ -77,7 +74,7 @@ fun RegisterForm(
 
     LaunchedEffect(Unit) {
         sports = SportService.getSports()
-        countries = CountryAPI_Response.getAllCountries()
+        countries = CountryAPIResponse.getAllCountries()
     }
 
     Card(
@@ -154,10 +151,13 @@ fun RegisterForm(
                     labelColor = Color.Gray,
                     items = countries,
                     selectedItem = user.country,
-                    onItemSelected = { onCountryChanged(it) },
+                    onItemSelected = {
+                        onCountryChanged(it)
+
+                    },
                     getName = { it.name },
                     leadingIcon = {
-                        user.country?.icon?.let { flagIcon ->
+                        user.country?.flagIcon?.let { flagIcon ->
                             AsyncImage(
                                 model = flagIcon,
                                 contentDescription = "Country flag",
@@ -168,7 +168,7 @@ fun RegisterForm(
                     },
                     composableIcon = {
                         AsyncImage(
-                            model = it.icon,
+                            model = it.flagIcon,
                             contentDescription = stringResource(R.string.country_flag_icon_desc),
                             modifier = Modifier.size(20.dp)
                         )
@@ -209,7 +209,11 @@ fun RegisterForm(
             // Mobile Phone Field
             OutlinedTextField(
                 value = user.mobilePhone,
-                onValueChange = { onMobilePhoneChanged(it) },
+                onValueChange = { newValue ->
+                    if (newValue.all { it.isDigit() || it == '+' } ) {
+                        onMobilePhoneChanged(newValue)
+                    }
+                },
                 label = { Text(stringResource(R.string.mobile_phone_label)) },
                 leadingIcon = {
                     Icon(
@@ -220,6 +224,7 @@ fun RegisterForm(
                 },
                 singleLine = true,
                 isError = validationState.mobilePhoneError != null,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 modifier = Modifier
                     .fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(

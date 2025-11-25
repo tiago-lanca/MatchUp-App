@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,16 +39,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
 import com.app.matchup.models.Event
-import com.app.matchup.services.EnrollmentService
-import com.app.matchup.ui.components.FilterTag
-import com.app.matchup.ui.components.FilterTagsSection
+import com.app.matchup.ui.components.Filters.FilterTagsSection
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
-import com.app.matchup.viewmodels.EnrollmentsViewModel
 import com.app.matchup.viewmodels.EventFiltersViewModel
 import com.app.matchup.viewmodels.EventsViewModel
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

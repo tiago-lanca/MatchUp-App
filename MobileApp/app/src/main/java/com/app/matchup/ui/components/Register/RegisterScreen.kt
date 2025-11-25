@@ -2,6 +2,7 @@ package com.app.matchup.ui.components.Register
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.text.style.UnderlineSpan
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,11 +30,14 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -55,11 +59,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
 import com.app.matchup.ui.components.LightFromAbove
+import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.ui.components.Login.LoginForm
+import com.app.matchup.ui.components.SnackbarMessage
 import com.app.matchup.ui.theme.BACKGROUND_COLOR
 import com.app.matchup.ui.theme.REGISTER_BUTTON_COLOR
 import com.app.matchup.ui.theme.SIGNIN_BUTTON_COLOR
+import com.app.matchup.utilities.Tools.navigateTo
 import com.app.matchup.viewmodels.RegisterAccountViewModel
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +80,9 @@ fun RegisterScreen(
     val user by registerVM.user.collectAsState()
     val validationState by registerVM.validationState.collectAsState()
     val confirmPassword by registerVM.confirmPasswordState.collectAsState()
+    val scope = rememberCoroutineScope()
 
+    val snackbarHostState = remember { SnackbarHostState() }
 
 
     Scaffold(
@@ -175,6 +185,7 @@ fun RegisterScreen(
                                 append(stringResource(R.string.log_in_label))
                             }
                         },
+                        modifier = Modifier.clickable{ (context as Activity).navigateTo(LoginActivity::class.java) }
                     )
                 }
 
@@ -205,21 +216,40 @@ fun RegisterScreen(
                         disabledContentColor = REGISTER_BUTTON_COLOR,
                         disabledContainerColor = Color.White
                     ),
-                    onClick = { registerVM.onRegisterNewAccount(context){ success ->
+                    onClick = {
+                        registerVM.onRegisterNewAccount(user, context) { success ->
+                            if(success) {
+                                val intent = Intent(context, LoginActivity::class.java)
+                                intent.putExtra("createdUser", user)
+                                context.startActivity(intent)
+                                (context as Activity).finish()
 
-                    } },
+                            }
+                            else
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = context.getString(R.string.register_account_error_message)
+                                    )
+                                }
+                        }
+                    },
                     modifier = Modifier
                         .width(250.dp)
                         .align(Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(stringResource(R.string.register_label))
+                    Text(
+                        text = stringResource(R.string.register_label),
+                        fontSize = 18.sp
+                    )
                 }
             }
         }
     }
     // Little light above the logo
     LightFromAbove()
+
+    SnackbarMessage(snackbarHostState)
 }
 
 @Preview(showBackground = true)

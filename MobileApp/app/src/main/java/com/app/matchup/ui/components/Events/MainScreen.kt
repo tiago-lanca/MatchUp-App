@@ -82,6 +82,7 @@ import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.utilities.AppConstants.DEFAULT_ZOOM
 import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
 import com.app.matchup.services.UserSession
+import com.app.matchup.ui.components.Filters.FilterEventBottomSheet
 import com.app.matchup.utilities.EventFilterSession
 import com.app.matchup.viewmodels.EventFiltersViewModel
 

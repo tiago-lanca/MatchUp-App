@@ -29,8 +29,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,13 +49,11 @@ import com.app.matchup.models.Event
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
-import com.app.matchup.ui.components.FilterTag
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.ui.theme.RED_BUTTON
 import com.app.matchup.utilities.Tools
 import com.app.matchup.services.UserSession
 import com.app.matchup.viewmodels.EnrollmentsViewModel
-import com.app.matchup.viewmodels.EventFiltersViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

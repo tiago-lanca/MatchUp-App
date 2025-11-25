@@ -1,7 +1,6 @@
 package com.app.matchup.services
 
 import com.app.matchup.models.Enrollment
-import com.app.matchup.dtos.EnrollmentDTO
 import com.app.matchup.models.Event
 import com.app.matchup.models.User
 import com.app.matchup.utilities.AppConstants.SERVER_ROOT
@@ -28,14 +27,6 @@ object EnrollmentService {
 
                 gson.fromJson(responseBody, Array<Enrollment>::class.java).toList()
 
-                /*enrollmentsDtoList.map { dto ->
-                    Enrollment(
-                        id = dto.id,
-                        user = UserService.GetUserById(dto.userId) ?: User.empty(),
-                        event = EventService.getEventById(dto.eventId) ?: Event.empty(),
-                        createdAt = dto.createdAt
-                    )
-                }*/
             },
             failure = {
                 emptyList<Enrollment>()
@@ -54,14 +45,6 @@ object EnrollmentService {
 
                     gson.fromJson(responseBody, Int::class.java)
 
-                    /*enrollmentsDtoList.map { dto ->
-                        Enrollment(
-                            id = dto.id,
-                            user = UserService.GetUserById(dto.userId) ?: User.empty(),
-                            event = EventService.getEventById(dto.eventId) ?: Event.empty(),
-                            createdAt = dto.createdAt
-                        )
-                    }*/
                 },
                 failure = {
                     null
@@ -94,12 +77,6 @@ object EnrollmentService {
                     println("Enrollment created successfuly!")
                     gson.fromJson(responseBody, Enrollment::class.java)
 
-                    /*Enrollment(
-                        id = enrollmentDto.id,
-                        user = UserService.GetUserById(enrollmentDto.userId) ?: User.empty(),
-                        event = EventService.getEventById(enrollmentDto.eventId) ?: Event.empty(),
-                        createdAt = enrollmentDto.createdAt
-                    )*/
                 },
                 failure = { error ->
                     println("Error creating new enrollment")

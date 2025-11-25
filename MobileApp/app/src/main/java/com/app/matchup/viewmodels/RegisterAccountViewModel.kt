@@ -6,11 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.matchup.extensions.isValidEmail
 import com.app.matchup.models.Country
 import com.app.matchup.models.Gender
 import com.app.matchup.models.RegisterAccountValidation
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
+import com.app.matchup.services.UserService
 import com.app.matchup.utilities.PasswordEncryption
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +40,7 @@ class RegisterAccountViewModel : ViewModel() {
     }
 
     fun onCountryChanged(newCountry: Country){
-        _user.value = _user.value.copy(country = newCountry)
+        _user.value = _user.value.copy(country = newCountry, mobilePhone = newCountry.phoneCode)
         _validationState.value = _validationState.value.copy(countryError = null)
     }
 
@@ -76,16 +78,19 @@ class RegisterAccountViewModel : ViewModel() {
     }
 
 
-    fun onRegisterNewAccount(context: Context, result: (Boolean) -> Unit) {
-            val errors = GetValidationErrors()
-            if (errors != null) {
-                _validationState.value = errors
-                println(_user.value)
-                return
-            }
+    fun onRegisterNewAccount(newUser: User, context: Context, result: (Boolean) -> Unit) {
+        val errors = GetValidationErrors()
+        if (errors != null) {
+            _validationState.value = errors
+            return
+        }
 
-            println(_user.value)
 
+        viewModelScope.launch {
+            newUser.passwordHash = PasswordEncryption.hashPassword(newUser.passwordHash)
+            val success = UserService.CreateUser(newUser)
+            result(success)
+        }
     }
 
     private fun GetValidationErrors(): RegisterAccountValidation? {
@@ -93,7 +98,7 @@ class RegisterAccountViewModel : ViewModel() {
 
         val errors = RegisterAccountValidation(
             nameError = if (newUser.name.isBlank()) "Name is required." else null,
-            emailError = if (newUser.email.isBlank()) "Email is required." else null,
+            emailError = if (newUser.email.isBlank() || !newUser.email.isValidEmail()) "Email is required." else null,
             countryError = if (newUser.country == null) "Country is required." else null,
             cityError = if (newUser.city.isBlank()) "City is required." else null,
             mobilePhoneError = if (newUser.mobilePhone.isBlank()) "Mobile phone is required." else null,
@@ -101,7 +106,6 @@ class RegisterAccountViewModel : ViewModel() {
             confirmPasswordError = if (_confirmPassword.value.isBlank()) "Confirm password is required." else null,
             passwordMatchError = if (!passwordMatch(_user.value.passwordHash, _confirmPassword.value)) "Passwords don't match." else null,
             genderError = if (newUser.gender.isBlank()) "Gender is required." else null,
-            favSportError = if (newUser.favoriteSport == null) "Favorite sport is required." else null
         )
 
         return if(errors == RegisterAccountValidation()) null else errors

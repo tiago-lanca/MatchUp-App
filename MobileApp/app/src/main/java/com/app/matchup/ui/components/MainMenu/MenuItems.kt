@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonAddAlt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ fun MenuItems(
     isUserLoggedIn: Boolean = false,
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
+    onRegisterClick: () -> Unit,
     onHomeClick: () -> Unit,
     onMyEventsClick: () -> Unit,
     onSearchEventsClick: () -> Unit,
@@ -40,6 +42,13 @@ fun MenuItems(
                 iconDescription = stringResource(R.string.login_icon_desc),
                 text = stringResource(R.string.login_label),
                 onMenuItemClick = { onLoginClick() }
+            )
+            // Register Item
+            MenuItem(
+                icon = Icons.Default.PersonAddAlt,
+                iconDescription = stringResource(R.string.register_account_desc),
+                text = stringResource(R.string.register_label),
+                onMenuItemClick = { onRegisterClick() }
             )
 
             // Home Item
@@ -109,6 +118,7 @@ fun MenuItemsPreview(){
     MenuItems(
         onHomeClick = {},
         onLoginClick = {},
+        onRegisterClick = {},
         onMyEventsClick = {},
         onSearchEventsClick = {},
         onCreateNewEventClick = {},

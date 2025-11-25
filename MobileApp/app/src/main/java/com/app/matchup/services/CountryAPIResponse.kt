@@ -1,13 +1,12 @@
 package com.app.matchup.services
 
-import androidx.room.util.findColumnIndexBySuffix
 import com.app.matchup.models.CountriesJson.CountryJsonResponse
 import com.app.matchup.models.Country
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpGet
 import com.google.gson.GsonBuilder
 
-object CountryAPI_Response {
+object CountryAPIResponse {
 
     suspend fun getAllCountries(): List<Country>{
         val countries = mutableListOf<Country>()
@@ -32,7 +31,7 @@ object CountryAPI_Response {
                         Country(
                             name = countryJson.name.common,
                             phoneCode = code,
-                            icon = countryJson.flags.png
+                            flagIcon = countryJson.flags.png
                         )
                     )
                 }

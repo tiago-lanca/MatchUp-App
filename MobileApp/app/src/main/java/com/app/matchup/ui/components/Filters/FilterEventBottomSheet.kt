@@ -1,11 +1,10 @@
-package com.app.matchup.ui.components.Events
+package com.app.matchup.ui.components.Filters
 
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,7 +53,6 @@ import com.app.matchup.R
 import com.app.matchup.models.EventFilter
 import com.app.matchup.models.Sport
 import com.app.matchup.services.SportService
-import com.app.matchup.ui.components.DatePickerDial
 import com.app.matchup.ui.components.DateRangePickerDialog
 import com.app.matchup.ui.components.DropdownMenuGeneric
 import com.app.matchup.ui.theme.MatchUpTheme

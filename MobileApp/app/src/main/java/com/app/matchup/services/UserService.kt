@@ -1,10 +1,10 @@
 package com.app.matchup.services
 
-import com.app.matchup.dtos.UserDTO
 import com.app.matchup.models.User
 import com.app.matchup.utilities.AppConstants.SERVER_ROOT
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPost
 import com.google.gson.GsonBuilder
 import java.util.UUID
 
@@ -22,21 +22,6 @@ object UserService {
                     val gson = GsonBuilder().create()
                     gson.fromJson(responseBody, Array<User>::class.java).toList()
 
-
-                    /*userDtoList.map { dto ->
-                        User(
-                            id = dto.id,
-                            name = dto.name,
-                            email = dto.email,
-                            country = dto.country,
-                            city = dto.city,
-                            mobilePhone = dto.mobilePhone,
-                            passwordHash = dto.passwordHash,
-                            gender = dto.gender,
-                            profilePicture = dto.profilePicture,
-                            favoriteSport = dto.favoriteSport
-                        )
-                    }*/
                 },
                 failure = { error ->
                     println("Error fetching users: ${error.message}")
@@ -61,18 +46,6 @@ object UserService {
                     val gson = GsonBuilder().create()
                     gson.fromJson(responseBody, User::class.java)
 
-                    /*User(
-                        id = userDto.id,
-                        name = userDto.name,
-                        email = userDto.email,
-                        country = userDto.country,
-                        city = userDto.city,
-                        mobilePhone = userDto.mobilePhone,
-                        passwordHash = userDto.passwordHash,
-                        gender = userDto.gender,
-                        profilePicture = userDto.profilePicture,
-                        favoriteSport = userDto.favoriteSport
-                    )*/
                 },
                 failure = { error ->
                     println("Error fetching user: ${error.message}")
@@ -83,6 +56,33 @@ object UserService {
         catch (e: Exception){
             e.printStackTrace()
             null
+        }
+    }
+
+    suspend fun CreateUser(newUser: User): Boolean{
+        val bodyJson = GsonBuilder().create().toJson(newUser)
+
+        return try{
+            val (_,_, result) = "${SERVER_ROOT}/api/users"
+                .httpPost()
+                .header("Content-Type" to "application/json")
+                .body(bodyJson)
+                .awaitStringResponseResult()
+
+            result.fold(
+                success = { responseBody ->
+                    println("User created successfully!")
+                    true
+                },
+                failure = {
+                    println("Error creating user: ${it.message}")
+                    false
+                }
+            )
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+            false
         }
     }
 }

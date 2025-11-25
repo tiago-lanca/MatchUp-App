@@ -43,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.R
 import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.extensions.getSportIconSize
+import com.app.matchup.extensions.getSportPaddingEnd
 import com.app.matchup.models.Event
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
 import com.app.matchup.viewmodels.EventsViewModel
@@ -77,9 +78,10 @@ fun EventListItem(
             painter = painterResource(event.sport?.getSportIcon()!!),
             contentDescription = stringResource(R.string.sport_icon_des),
             modifier = modifier
-                .padding(end = 15.dp)
+                .padding(end = event.sport?.getSportIcon()!!.getSportPaddingEnd())
                 .size(event.sport?.getSportIcon()!!.getSportIconSize()),
             contentScale = ContentScale.Fit
+
         )
 
         Column(

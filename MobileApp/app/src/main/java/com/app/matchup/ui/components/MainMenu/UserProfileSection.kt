@@ -30,7 +30,10 @@ import com.app.matchup.models.User
 import java.util.UUID
 
 @Composable
-fun UserProfileSection(user: User){
+fun UserProfileSection(
+    user: User,
+    onProfileClick: () -> Unit
+){
 
     user.profilePicture = R.drawable.profile_picture.toString()
     Row (
@@ -39,7 +42,7 @@ fun UserProfileSection(user: User){
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
-                onClick = { }
+                onClick = { onProfileClick() }
             )
     ) {
         Image(
@@ -81,5 +84,5 @@ fun UserProfileSection(user: User){
 @Preview
 @Composable
 fun UserProfileSectionPreview(){
-    UserProfileSection(user = User())
+    UserProfileSection(user = User(), onProfileClick = {})
 }
