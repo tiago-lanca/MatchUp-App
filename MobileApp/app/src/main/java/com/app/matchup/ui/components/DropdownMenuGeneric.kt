@@ -32,6 +32,8 @@ import com.app.matchup.models.Country
 import com.app.matchup.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -53,6 +55,7 @@ fun <T>  DropdownMenuGeneric(
     composableIcon: (@Composable (T) -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
+    showLabel: Boolean = true,
     errorText: String? = null,
     roundedCornerShapeDp: Dp = 5.dp,
     modifier: Modifier = Modifier
@@ -67,13 +70,9 @@ fun <T>  DropdownMenuGeneric(
         OutlinedTextField(
             value = selectedItem?.let(getName) ?: "",
             onValueChange = { },
-            label = {
-                Text(
-                    text = label,
-                    fontSize = 14.sp,
-                    color = if(isError) RED_BUTTON else labelColor
-                )
-            },
+            label = if(showLabel){
+                { Text(label, color = labelColor) }
+            } else { null },
             readOnly = true,
             singleLine = true,
             leadingIcon = leadingIcon,
@@ -85,9 +84,9 @@ fun <T>  DropdownMenuGeneric(
                     )
                 }
             },
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
-                .height(57.dp),
+                .height(55.dp),
             shape = RoundedCornerShape(roundedCornerShapeDp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = if(isError) Color.Red else Color(0xFF2C85FF),

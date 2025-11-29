@@ -306,6 +306,7 @@ fun RegisterForm(
             DropdownMenuGeneric(
                 label = stringResource(R.string.gender_label),
                 items = genders,
+                labelColor = Color.Gray,
                 selectedItem = user.gender,
                 onItemSelected = { onGenderChanged(it) },
                 leadingIcon = { Tools.GetGenderIcon(user.gender) },
@@ -317,6 +318,7 @@ fun RegisterForm(
             // Favorite Sport Field
             DropdownMenuGeneric(
                 label = "Sport",
+                labelColor = Color.Gray,
                 items = sports,
                 selectedItem = user.favoriteSport,
                 onItemSelected = { onSportChanged(it) },

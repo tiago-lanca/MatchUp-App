@@ -5,6 +5,7 @@ import com.app.matchup.utilities.AppConstants.SERVER_ROOT
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.fuel.httpPut
 import com.google.gson.GsonBuilder
 import java.util.UUID
 
@@ -85,4 +86,47 @@ object UserService {
             false
         }
     }
+
+    suspend fun UpdateUserProfilePicture(userId: UUID, newProfilePicture: String): Boolean{
+        return try{
+            val (_,_, result) = "${SERVER_ROOT}/api/users/${userId}/update-image"
+                .httpPut()
+                .body(newProfilePicture)
+                .header("Content-Type" to "application/json")
+                .awaitStringResponseResult()
+
+            result.fold(
+                success = { true },
+                failure = { false }
+            )
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun UpdateUser(userId: UUID, newUser: User): Boolean{
+        val bodyJson = GsonBuilder().create().toJson(newUser)
+
+        return try{
+            val (_,_, result) = "${SERVER_ROOT}/api/users/${userId}/update"
+                .httpPut()
+                .body(bodyJson)
+                .header("Content-Type" to "application/json")
+                .awaitStringResponseResult()
+
+            result.fold(
+                success = { true },
+                failure = { false }
+            )
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+            false
+        }
+    }
+
 }

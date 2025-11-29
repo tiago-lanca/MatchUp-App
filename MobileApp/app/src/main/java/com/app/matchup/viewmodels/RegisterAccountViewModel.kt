@@ -40,7 +40,10 @@ class RegisterAccountViewModel : ViewModel() {
     }
 
     fun onCountryChanged(newCountry: Country){
-        _user.value = _user.value.copy(country = newCountry, mobilePhone = newCountry.phoneCode)
+        _user.value = _user.value.copy(
+            country = newCountry,
+            mobilePhone = "${newCountry.phoneCode} "
+        )
         _validationState.value = _validationState.value.copy(countryError = null)
     }
 

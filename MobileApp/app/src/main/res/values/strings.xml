@@ -27,7 +27,7 @@
     <string name="open_menu_icon_desc">Open menu icon</string>
     <string name="duration_minutes_label">Duration (min)</string>
     <string name="cost_label_create_event_form">€/p</string>
-    <string name="app_name_and_version">MatchUp - v.1.0.0</string>
+    <string name="app_name_and_version">MatchUp - v1.0.0</string>
     <string name="go_back_button_desc">Go back button</string>
     <string name="matchup_logo_desc">MatchUp Logo</string>
     <string name="create_new_event_label">Create New Event</string>

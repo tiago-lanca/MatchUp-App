@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.MainActivity
 import com.app.matchup.MyEventsActivity
@@ -53,16 +58,35 @@ import com.app.matchup.services.UserSession
 import com.app.matchup.ui.components.LogoutBottomSheet
 import com.app.matchup.ui.components.Register.RegisterScreen
 import com.app.matchup.ui.components.SnackbarMessage
+import com.app.matchup.viewmodels.UserProfileViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainMenuScreen(
-
+    userProfileVM: UserProfileViewModel = viewModel()
 ) {
     val context = LocalContext.current
     var user by remember { mutableStateOf<User?>(null) }
     var showLogoutBottomSheet by remember {mutableStateOf(false)}
+    val scope = rememberCoroutineScope()
 
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                scope.launch {
+                    user = UserSession.getUser(context)
+                }
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
 
     LaunchedEffect(Unit) {

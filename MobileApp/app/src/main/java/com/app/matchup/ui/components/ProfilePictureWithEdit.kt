@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.app.matchup.R
+import com.app.matchup.ui.theme.SIGNIN_BUTTON_COLOR
 import com.app.matchup.utilities.Tools
 
 @Composable
@@ -42,7 +43,7 @@ fun ProfilePictureWithEdit(
             modifier = Modifier
                 .size(32.dp)
                 .clip(CircleShape)
-                .background(Color.Blue)
+                .background(SIGNIN_BUTTON_COLOR)
                 .clickable{ onEditClick() },
             contentAlignment = Alignment.Center
         ){
