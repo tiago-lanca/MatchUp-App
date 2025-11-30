@@ -115,7 +115,6 @@ fun RegisterScreen(
                 }
             )
         },
-
         bottomBar = {
             BottomAppBar(
                 containerColor = BACKGROUND_COLOR,

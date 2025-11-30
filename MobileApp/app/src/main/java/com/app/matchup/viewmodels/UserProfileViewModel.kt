@@ -1,12 +1,10 @@
 package com.app.matchup.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.matchup.extensions.isValidEmail
 import com.app.matchup.models.Country
-import com.app.matchup.models.RegisterAccountValidation
+import com.app.matchup.models.AccountValidation
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.services.UserService
@@ -23,8 +21,8 @@ class UserProfileViewModel : ViewModel() {
     val newPassword: StateFlow<String?> = _newPassword
     private val _currentPassword = MutableStateFlow<String?>(null)
     val currentPassword: StateFlow<String?> = _currentPassword
-    private val _validationState = MutableStateFlow(RegisterAccountValidation())
-    val validationState: StateFlow<RegisterAccountValidation> = _validationState
+    private val _validationState = MutableStateFlow(AccountValidation())
+    val validationState: StateFlow<AccountValidation> = _validationState
 
     private val _passwordChangeState = MutableStateFlow(false)
     val passwordChangeState: StateFlow<Boolean> = _passwordChangeState
@@ -127,12 +125,12 @@ class UserProfileViewModel : ViewModel() {
         }
     }
 
-    private fun GetValidationErrors(): RegisterAccountValidation? {
+    private fun GetValidationErrors(): AccountValidation? {
         var newUser = _user.value
         newUser = newUser.copy(passwordHash = PasswordEncryption.hashPassword(currentPassword.value ?: ""))
 
 
-        val errors = RegisterAccountValidation(
+        val errors = AccountValidation(
             nameError = if (newUser.name.isBlank()) "Name is required." else null,
             emailError = if (newUser.email.isBlank() || !newUser.email.isValidEmail()) "Email is required." else null,
             countryError = if (newUser.country == null) "Country is required." else null,
@@ -159,7 +157,7 @@ class UserProfileViewModel : ViewModel() {
             genderError = if (newUser.gender.isBlank()) "Gender is required." else null,
         )
 
-        return if(errors == RegisterAccountValidation()) null else errors
+        return if(errors == AccountValidation()) null else errors
     }
 
     private fun passwordMatch(password: String?, confirmPassword: String?): Boolean {

@@ -1,6 +1,6 @@
 package com.app.matchup.models
 
-data class RegisterAccountValidation(
+data class AccountValidation(
     val nameError: String? = null,
     val emailError: String? = null,
     val countryError: String? = null,

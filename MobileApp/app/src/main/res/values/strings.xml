@@ -109,4 +109,7 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="my_profile_text">Profile</string>
     <string name="edit_icon_desc">Edit icon</string>
+    <string name="title_activity_report">ReportActivity</string>
+    <string name="submit_label">Submit</string>
+    <string name="report_success_message">Report created successfully!</string>
 </resources>

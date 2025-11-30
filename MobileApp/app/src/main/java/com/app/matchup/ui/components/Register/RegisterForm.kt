@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
@@ -40,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.app.matchup.R
 import com.app.matchup.models.Country
-import com.app.matchup.models.RegisterAccountValidation
+import com.app.matchup.models.AccountValidation
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.services.CountryAPIResponse
@@ -61,7 +60,7 @@ fun RegisterForm(
     confirmPassword: String,
     onGenderChanged: (String) -> Unit,
     onSportChanged: (Sport) -> Unit,
-    validationState: RegisterAccountValidation
+    validationState: AccountValidation
 ){
     var countries by remember { mutableStateOf<List<Country>>(emptyList()) }
 

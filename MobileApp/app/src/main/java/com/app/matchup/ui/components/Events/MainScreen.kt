@@ -54,7 +54,7 @@ import com.app.matchup.extensions.toMapDisplay
 import com.app.matchup.models.Event
 import com.app.matchup.services.EventService
 import com.app.matchup.ui.components.FloatingButtonsMainScreen
-import com.app.matchup.ui.components.MainMenu.MainMenuActivity
+import com.app.matchup.MainMenuActivity
 import com.app.matchup.ui.components.MapScreen
 import com.app.matchup.ui.theme.EVENT_BACKGROUND_COLOR
 import com.app.matchup.utilities.AppConstants

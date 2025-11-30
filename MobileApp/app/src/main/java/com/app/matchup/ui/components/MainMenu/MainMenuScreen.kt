@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,6 +50,7 @@ import com.app.matchup.MyEventsActivity
 import com.app.matchup.ProfileActivity
 import com.app.matchup.R
 import com.app.matchup.RegisterActivity
+import com.app.matchup.ReportActivity
 import com.app.matchup.SelectLocationActivity
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.TopFocusLight
@@ -108,7 +110,13 @@ fun MainMenuScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row (
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clickable{
+                                val intent = Intent(context, ReportActivity::class.java)
+                                intent.putExtra("current_user", user)
+                                context.startActivity(intent)
+                            }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ReportGmailerrorred,
