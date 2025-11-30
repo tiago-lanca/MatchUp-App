@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -86,7 +87,7 @@ fun <T>  DropdownMenuGeneric(
             },
             modifier = modifier
                 .fillMaxWidth()
-                .height(55.dp),
+                .height(56.dp),
             shape = RoundedCornerShape(roundedCornerShapeDp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = if(isError) Color.Red else Color(0xFF2C85FF),
@@ -99,7 +100,7 @@ fun <T>  DropdownMenuGeneric(
             isError = isError,
             textStyle = LocalTextStyle.current.copy(
                 fontSize = 16.sp,
-                lineHeight = 2.sp
+                lineHeight = 2.sp,
             ),
         )
 

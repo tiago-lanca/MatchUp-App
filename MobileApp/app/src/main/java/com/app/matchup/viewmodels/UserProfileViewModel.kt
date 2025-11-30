@@ -75,16 +75,10 @@ class UserProfileViewModel : ViewModel() {
 
     fun onPasswordChange(newPassword: String) {
         _currentPassword.value = newPassword
-
-        if (passwordMatch(_currentPassword.value, _newPassword.value))
-            _validationState.value = _validationState.value.copy(passwordMatchError = null)
     }
 
     fun onNewPasswordChange(newConfirmPassword: String) {
         _newPassword.value = newConfirmPassword
-
-        if (passwordMatch(_currentPassword.value, _newPassword.value))
-            _validationState.value = _validationState.value.copy(passwordMatchError = null)
     }
 
     fun onUpdateProfileClick(result: (Boolean) -> Unit){
@@ -97,7 +91,7 @@ class UserProfileViewModel : ViewModel() {
         viewModelScope.launch {
             // Checks if password is being changed, if so then updates the password hash of the user
             if(_passwordChangeState.value) {
-                _user.value = _user.value.copy(passwordHash = PasswordEncryption.hashPassword(_currentPassword.value!!))
+                _user.value = _user.value.copy(passwordHash = PasswordEncryption.hashPassword(_newPassword.value!!))
             }
 
             try{
@@ -138,20 +132,14 @@ class UserProfileViewModel : ViewModel() {
             mobilePhoneError = if (newUser.mobilePhone.isBlank()) "Mobile phone is required." else null,
             passwordError =
                 if(_passwordChangeState.value) {
-                    if (oldPassword == newUser.passwordHash || newUser.passwordHash.isBlank()) {
-                        "Password is required."
-                    } else null
+                    if (oldPassword != newUser.passwordHash) "Password is incorrect."
+                    else if(newUser.passwordHash.isBlank()) "Password is required."
+                    else null
                 } else null,
             confirmPasswordError =
                 if(_passwordChangeState.value) {
                     if (_newPassword.value.isNullOrBlank())
                         "Confirm password is required."
-                    else null
-                } else null,
-            passwordMatchError =
-                if(_passwordChangeState.value) {
-                    if (!passwordMatch(newUser.passwordHash, PasswordEncryption.hashPassword(_newPassword.value ?: "")))
-                        "Passwords don't match."
                     else null
                 } else null,
             genderError = if (newUser.gender.isBlank()) "Gender is required." else null,

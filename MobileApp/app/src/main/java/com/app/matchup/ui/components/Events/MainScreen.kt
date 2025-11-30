@@ -70,7 +70,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -78,6 +81,7 @@ import com.app.matchup.R
 import com.app.matchup.extensions.isNull
 import com.app.matchup.models.User
 import com.app.matchup.services.EnrollmentService
+import com.app.matchup.services.UserService
 import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.utilities.AppConstants.DEFAULT_ZOOM
 import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
@@ -111,7 +115,6 @@ fun MainScreen(
     val filters by filtersVM.filters.collectAsState()
     var showFilterEventSheet by remember { mutableStateOf(false) }
 
-
     val cameraPositionState = rememberCameraPositionState()
 
     val scope = rememberCoroutineScope()
@@ -122,10 +125,9 @@ fun MainScreen(
             initialValue = SheetValue.Expanded
         )
     )
-
     val sheetState = scaffoldState.bottomSheetState
 
-    val fabPadding by animateDpAsState(
+    /*val fabPadding by animateDpAsState(
         when (sheetState.currentValue) {
             SheetValue.Expanded ->
                 if (selectedEvent.isNull()) 240.dp else 290.dp
@@ -133,14 +135,25 @@ fun MainScreen(
             SheetValue.PartiallyExpanded -> 10.dp
             else -> 180.dp
         }
-    )
+    )*/
 
+    val density = LocalDensity.current
+    var sheetOffsetDp by remember { mutableStateOf(0.dp) }
+
+    LaunchedEffect(sheetState) {
+        snapshotFlow { sheetState.requireOffset() }
+            .collect { offsetPx ->
+                sheetOffsetDp = with(density) { offsetPx.toDp() }
+            }
+    }
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val sheetVisibleHeight = screenHeight - sheetOffsetDp
 
     LaunchedEffect(Unit) {
         filtersVM.setFilters(EventFilterSession.filters)
         eventsVM.loadFilteredEvents(filtersVM.filters.value, context)
 
-        // On MainActivity starting, checks if there's any event created passed by CreateEventActivity
+        // On MainActivity starting, checks if there's any event created passed by CreateEventActivity or MyEventsActivity
         // If there's any, then select it and move the camera to the address
         if (event != null) {
             // Adds the admin user to the event object
@@ -148,9 +161,9 @@ fun MainScreen(
             eventsVM.selectEvent(eventCreated)
             eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
 
-            if(currentUser != null) {
-                eventsVM.isUserEnrolled(context, currentUser!!.id)
-            }
+            currentUser = UserSession.getUser(context)
+            eventsVM.isUserEnrolled(context, currentUser!!.id)
+
             eventCreated.address?.let { address ->
                 Tools.moveCameraTo(
                     latLng = LatLng(
@@ -164,8 +177,11 @@ fun MainScreen(
 
             filtersVM.reset()
         }
+
         // Loads current user
-        currentUser = UserSession.getUser(context)
+        if(currentUser == null) {
+            currentUser = UserSession.getUser(context)
+        }
     }
 
     LaunchedEffect(selectedEvent) {
@@ -175,6 +191,8 @@ fun MainScreen(
             eventsVM.isUserEnrolled(context, currentUser!!.id)
         }
     }
+
+
 
     Box(
         modifier = Modifier
@@ -204,9 +222,7 @@ fun MainScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            CircularProgressIndicator(
-                                color = Color.White
-                            )
+                            CircularProgressIndicator(color = Color.White)
                         }
                     }
                     else {
@@ -233,7 +249,7 @@ fun MainScreen(
                                 },
                                 onRefreshEventList = {
                                     coroutineScope.launch {
-                                        eventsVM.loadAllEvents() { success ->
+                                        eventsVM.loadFilteredEvents(filters, context) { success ->
                                             if (success) {
                                                 scope.launch {
                                                     snackbarHostState.showSnackbar(
@@ -242,7 +258,6 @@ fun MainScreen(
                                                 }
                                             }
                                         }
-
                                     }
                                 },
                                 onFilterEventClicked = {
@@ -280,7 +295,7 @@ fun MainScreen(
                                                 )
                                             }
                                             eventsVM.selectEvent(null)
-                                            eventsVM.loadAllEvents()
+                                            eventsVM.loadFilteredEvents(filters, context)
                                         }
                                     }
                                 },
@@ -385,7 +400,7 @@ fun MainScreen(
                     },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(end = 10.dp, bottom = fabPadding)
+                        .padding(end = 10.dp, bottom = sheetVisibleHeight - 170.dp)
                 )
 
             }

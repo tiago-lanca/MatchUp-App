@@ -209,9 +209,7 @@ fun RegisterForm(
             OutlinedTextField(
                 value = user.mobilePhone,
                 onValueChange = { newValue ->
-                    if (newValue.all { it.isDigit() || it == '+' } ) {
                         onMobilePhoneChanged(newValue)
-                    }
                 },
                 label = { Text(stringResource(R.string.mobile_phone_label)) },
                 leadingIcon = {

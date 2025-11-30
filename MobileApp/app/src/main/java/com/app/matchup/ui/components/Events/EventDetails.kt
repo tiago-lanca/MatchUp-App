@@ -278,8 +278,6 @@ fun EventDetails(
                                 } else {
                                     enrollmentVM.joinEvent(user = currentUser!!) { result ->
                                         joinSnackbar(result)
-
-
                                     }
                                 }
                             }
