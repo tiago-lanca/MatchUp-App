@@ -9,18 +9,47 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.app.matchup.models.Event
+import com.app.matchup.ui.SplashScreen
 import com.app.matchup.ui.components.Events.MainScreen
 import com.app.matchup.ui.theme.MatchUpTheme
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
         setContent {
             MatchUpTheme {
+
+                /*val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "splashScreen"
+                ){
+                    composable("splashScreen") {
+                        SplashScreen(
+                            onFinish = {
+                                navController.navigate("mainScreen") {
+                                    popUpTo("splashScreen") { inclusive = true }
+                                }
+                            }
+                        )
+                    }
+
+                    composable("mainScreen"){
+
+                    }
+                }*/
 
                 val context = LocalContext.current
 
@@ -32,26 +61,7 @@ class MainActivity : ComponentActivity() {
                     intent.getParcelableExtra<Event>("createdEvent")
                 }
 
-                /*LaunchedEffect(eventCreated) {
-                    eventCreated?.copy(admin = EventService.getEventAdmin(eventCreated.id))
-                }*/
-
                 MainScreen(context, event = eventCreated)
-
-
-                //val eventList = EventSamples.createSampleListEvents()
-                //CreateEventScreen()
-                //RegisterScreen()
-                //LoginScreen()
-                //MapScreen()
-
-                /*SelectLocationScreen(
-                    onLocationSelected = { positionSelected ->
-                        print("Location selected: ${positionSelected.latitude}, ${positionSelected.longitude}")
-                    }
-                )*/
-
-                //MainMenuScreen()
             }
         }
     }

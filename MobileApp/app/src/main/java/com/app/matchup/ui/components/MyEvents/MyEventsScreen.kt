@@ -299,6 +299,7 @@ fun MyEventsScreen(
                                                     contentColor = Color.White
                                                 ),
                                                 onClick = {
+                                                    eventsVM.selectEvent(event)
                                                     eventsVM.deleteEvent { success ->
                                                         if (success) {
                                                             scope.launch {

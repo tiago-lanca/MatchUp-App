@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.fuel.android)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.core.splashscreen.v101)
 
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
@@ -75,6 +76,8 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.foundation.layout)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.play.services.location)
+    implementation(libs.androidx.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

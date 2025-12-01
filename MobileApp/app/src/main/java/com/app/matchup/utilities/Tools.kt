@@ -1,12 +1,16 @@
 package com.app.matchup.utilities
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Looper
 import android.util.Base64
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Female
@@ -21,6 +25,11 @@ import com.app.matchup.R
 import com.app.matchup.ui.theme.GENDER_FEMALE_COLOR
 import com.app.matchup.ui.theme.GENDER_MALE_COLOR
 import com.app.matchup.ui.theme.GENDER_MIX_COLOR
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -103,5 +112,41 @@ object Tools{
         catch (e: Exception){
             null
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getCurrentLocation(
+        context: Context,
+        onLocationResult: (LatLng?) -> Unit
+    ){
+        val fused = LocationServices.getFusedLocationProviderClient(context)
+
+        fused.lastLocation.addOnSuccessListener { location ->
+            if (location != null){
+                onLocationResult(
+                    LatLng(location.latitude, location.longitude)
+                )
+            }
+            else{
+                val request = LocationRequest.Builder(
+                    Priority.PRIORITY_HIGH_ACCURACY, 1000
+                ).setMaxUpdates(1).build()
+
+                fused.requestLocationUpdates(
+                    request,
+                    object : LocationCallback() {
+                        override fun onLocationResult(result: LocationResult) {
+                            fused.removeLocationUpdates(this)
+                            val last = result.lastLocation
+                            onLocationResult(
+                                last?.let { LatLng(it.latitude, it.longitude) }
+                            )
+                        }
+                    },
+                    Looper.getMainLooper()
+                )
+            }
+        }
+            .addOnFailureListener { onLocationResult(null) }
     }
 }

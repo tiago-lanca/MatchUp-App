@@ -75,6 +75,10 @@ class UserProfileViewModel : ViewModel() {
 
     fun onPasswordChange(newPassword: String) {
         _currentPassword.value = newPassword
+
+        if(PasswordEncryption.hashPassword(newPassword) == oldPassword){
+            _validationState.value = _validationState.value.copy(passwordError = null)
+        }
     }
 
     fun onNewPasswordChange(newConfirmPassword: String) {

@@ -82,7 +82,6 @@ fun MainMenuScreen(
                 }
             }
         }
-
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose {
@@ -90,6 +89,8 @@ fun MainMenuScreen(
         }
     }
 
+    // Verificar mudança de eventos dentro do eventdetails, está a associar mesmo ID do evento
+    // Colocar um marker azul no mylocation
 
     LaunchedEffect(Unit) {
         user = UserSession.getUser(context)

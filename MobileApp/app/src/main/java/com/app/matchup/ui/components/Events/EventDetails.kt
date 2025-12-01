@@ -1,5 +1,6 @@
 package com.app.matchup.ui.components.Events
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -23,12 +24,18 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,15 +44,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.matchup.MainActivity
 import com.app.matchup.R
 import com.app.matchup.extensions.getSportIcon
 import com.app.matchup.models.Address
 import com.app.matchup.models.Event
+import com.app.matchup.models.EventFilter
 import com.app.matchup.models.Sport
 import com.app.matchup.models.User
 import com.app.matchup.ui.components.ColumnWithLabel
@@ -53,6 +63,7 @@ import com.app.matchup.ui.components.Login.LoginActivity
 import com.app.matchup.ui.theme.RED_BUTTON
 import com.app.matchup.utilities.Tools
 import com.app.matchup.services.UserSession
+import com.app.matchup.utilities.EventFilterSession
 import com.app.matchup.viewmodels.EnrollmentsViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -76,8 +87,9 @@ fun EventDetails(
     val dateFormatter =
         SimpleDateFormat(stringResource(R.string.date_time_pattern), Locale.getDefault())
     val isFull = numberOfMembers == event.maxMembers
+    var showEventNotesDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(event) {
         enrollmentVM.setSelectedEvent(event)
     }
 
@@ -175,7 +187,7 @@ fun EventDetails(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .size(30.dp)
-                                .clickable { }
+                                .clickable { showEventNotesDialog = true }
                         )
                     }
                 }
@@ -272,11 +284,11 @@ fun EventDetails(
                                 disabledContainerColor = Color.White
                             ),
                             onClick = {
-                                if (!UserSession.isLoggedIn(context)) {
+                                if (currentUser == null) {
                                     val intent = Intent(context, LoginActivity::class.java)
                                     context.startActivity(intent)
                                 } else {
-                                    enrollmentVM.joinEvent(user = currentUser!!) { result ->
+                                    enrollmentVM.joinEvent(user = currentUser) { result ->
                                         joinSnackbar(result)
                                     }
                                 }
@@ -361,6 +373,35 @@ fun EventDetails(
                 }
             }
         }
+    }
+    if(showEventNotesDialog) {
+        AlertDialog(
+            onDismissRequest = { showEventNotesDialog = false },
+            icon = {
+                Image(
+                    painter = painterResource(R.drawable.information_icon_blue),
+                    contentDescription = "Information Icon",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(30.dp)
+                )
+            },
+            title = { Text(stringResource(R.string.event_notes_title)) },
+            text = {
+                Text(
+                    text = event.notes!!,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { showEventNotesDialog = false }
+                ) {
+                    Text(stringResource(R.string.ok_button_label), color = Color(0xFF4CAF50))
+                }
+            }
+        )
     }
 }
 

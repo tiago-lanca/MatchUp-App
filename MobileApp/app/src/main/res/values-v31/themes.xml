@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MatchUp" parent="android:Theme.Material.Light.NoActionBar" />
-
     <style name="Theme.MatchUp.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/matchup_white_splash</item>
         <item name="windowSplashScreenBackground">@color/backgroundappcolor</item>

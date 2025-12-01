@@ -1,9 +1,13 @@
 package com.app.matchup.ui.components.Events
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -77,6 +81,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.app.matchup.R
 import com.app.matchup.extensions.isNull
 import com.app.matchup.models.User
@@ -88,7 +93,9 @@ import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
 import com.app.matchup.services.UserSession
 import com.app.matchup.ui.components.Filters.FilterEventBottomSheet
 import com.app.matchup.utilities.EventFilterSession
+import com.app.matchup.utilities.Tools.getCurrentLocation
 import com.app.matchup.viewmodels.EventFiltersViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -99,13 +106,10 @@ fun MainScreen(
     filtersVM: EventFiltersViewModel = viewModel(),
     event: Event? = null
 ) {
-
-    //val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-
+    val useRealLocation = false
     val context = LocalContext.current
     var currentUser by remember { mutableStateOf<User?>(null) }
     val coroutineScope = rememberCoroutineScope()
-    //val numberEvents = viewModel.events.collectAsState().value.size
     val eventList by eventsVM.events.collectAsState()
     val selectedEvent by eventsVM.selectedEvent.collectAsState()
     val numberOfMembers by eventsVM.numberOfMembers.collectAsState()
@@ -126,19 +130,50 @@ fun MainScreen(
         )
     )
     val sheetState = scaffoldState.bottomSheetState
-
-    /*val fabPadding by animateDpAsState(
-        when (sheetState.currentValue) {
-            SheetValue.Expanded ->
-                if (selectedEvent.isNull()) 240.dp else 290.dp
-
-            SheetValue.PartiallyExpanded -> 10.dp
-            else -> 180.dp
-        }
-    )*/
-
     val density = LocalDensity.current
     var sheetOffsetDp by remember { mutableStateOf(0.dp) }
+
+    var myLocation by remember { mutableStateOf<LatLng?>(null) }
+    var hasPermission by remember { mutableStateOf(false) }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        hasPermission =
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                    permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+    }
+
+    LaunchedEffect("permissions") {
+        val fineGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val coarseGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        hasPermission = fineGranted || coarseGranted
+
+        if(!hasPermission){
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    LaunchedEffect(hasPermission) {
+        if(hasPermission){
+            getCurrentLocation(context){ latLng ->
+                myLocation = if(useRealLocation) latLng else SeixalCoords
+            }
+        }
+    }
 
     LaunchedEffect(sheetState) {
         snapshotFlow { sheetState.requireOffset() }
@@ -191,8 +226,6 @@ fun MainScreen(
             eventsVM.isUserEnrolled(context, currentUser!!.id)
         }
     }
-
-
 
     Box(
         modifier = Modifier
@@ -335,8 +368,9 @@ fun MainScreen(
                     .padding(innerPadding)
             ) {
                 MapScreen(
-                    eventList,
-                    cameraPositionState,
+                    myLocation = myLocation,
+                    eventList = eventList,
+                    cameraPositionState = cameraPositionState,
                     onMarkerClick = { event ->
                         eventsVM.selectEvent(event)
 
@@ -376,18 +410,33 @@ fun MainScreen(
                 }
 
 
-                // Create New Event button
+                // Create New Event button and MyLocation button
                 FloatingButtonsMainScreen(
                     onMyLocationButtonClick = {
-                        Tools.moveCameraTo(
-                            SeixalCoords.toMapDisplay(),
-                            AppConstants.DEFAULT_ZOOM,
-                            coroutineScope,
-                            cameraPositionState
-                        )
+                        if (!hasPermission) {
+                            permissionLauncher.launch(
+                                arrayOf(
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION
+                                )
+                            )
+                        } else {
+                            getCurrentLocation(context) { latLng ->
+                                if (latLng != null) {
+                                    myLocation = if(useRealLocation) latLng else SeixalCoords
+
+                                    Tools.moveCameraTo(
+                                        latLng = if(useRealLocation) latLng else SeixalCoords,
+                                        zoom = AppConstants.DEFAULT_ZOOM,
+                                        coroutineScope,
+                                        cameraPositionState
+                                    )
+                                }
+                            }
+                        }
                     },
                     onCreateNewEventButtonClick = {
-                        if(UserSession.isLoggedIn(context)) {
+                        if(currentUser != null) {
                             (context as Activity).navigateTo(
                                 activity = SelectLocationActivity::class.java,
                                 closeCurrentActivity = false

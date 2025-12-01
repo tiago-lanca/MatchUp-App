@@ -11,9 +11,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/matchup_icon_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/matchup_icon_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MatchUp"
         android:usesCleartextTraffic="true">
@@ -28,17 +28,7 @@
             android:label="@string/title_activity_profile"
             android:theme="@style/Theme.MatchUp" />
         <activity
-            android:name=".ui.ProfileActivity"
-            android:exported="false"
-            android:label="@string/title_activity_profile"
-            android:theme="@style/Theme.MatchUp" />
-        <activity
             android:name=".MyEventsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_my_events"
-            android:theme="@style/Theme.MatchUp" />
-        <activity
-            android:name=".ui.MyEventsActivity"
             android:exported="false"
             android:label="@string/title_activity_my_events"
             android:theme="@style/Theme.MatchUp" />
@@ -81,7 +71,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MatchUp">
+            android:theme="@style/Theme.MatchUp.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

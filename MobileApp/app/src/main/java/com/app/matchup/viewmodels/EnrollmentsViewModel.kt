@@ -16,6 +16,8 @@ class EnrollmentsViewModel : ViewModel()  {
 
     fun setSelectedEvent(event: Event) {
         _event.value = event
+        println("ID: ${_event.value?.id}")
+        println("Name: ${_event.value?.name}")
     }
 
     fun joinEvent(user: User, result: (Boolean) -> Unit){

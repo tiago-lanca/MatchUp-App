@@ -114,4 +114,5 @@
     <string name="report_success_message">Report created successfully!</string>
     <string name="hide_password_desc">Hide password</string>
     <string name="show_password_desc">Show password</string>
+    <string name="event_notes_title">Notes</string>
 </resources>
