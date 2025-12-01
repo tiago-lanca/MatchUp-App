@@ -79,6 +79,7 @@ class UserProfileViewModel : ViewModel() {
 
     fun onNewPasswordChange(newConfirmPassword: String) {
         _newPassword.value = newConfirmPassword
+        _validationState.value = _validationState.value.copy(confirmPasswordError = null)
     }
 
     fun onUpdateProfileClick(result: (Boolean) -> Unit){

@@ -45,6 +45,7 @@ import com.app.matchup.models.User
 import com.app.matchup.services.CountryAPIResponse
 import com.app.matchup.services.SportService
 import com.app.matchup.ui.components.DropdownMenuGeneric
+import com.app.matchup.ui.components.PasswordTextField
 import com.app.matchup.utilities.Tools
 
 @Composable
@@ -236,7 +237,7 @@ fun RegisterForm(
             )
 
             // Password Field
-            OutlinedTextField(
+            PasswordTextField(
                 value = user.passwordHash,
                 onValueChange = { onPasswordChanged(it) },
                 label = {
@@ -244,31 +245,13 @@ fun RegisterForm(
                         text = stringResource(R.string.password_label)
                     )
                 },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Lock,
-                        contentDescription = stringResource(R.string.password_icon_desc),
-                        tint = Color(0xFF1565C0)
-                    )
-                },
-                singleLine = true,
-                isError = validationState.passwordError != null || validationState.passwordMatchError != null,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = Color.Transparent,
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color.Gray
-                ),
-                visualTransformation = PasswordVisualTransformation()
+                isError = if(validationState.passwordError != null) validationState.passwordError
+                        else if (validationState.passwordMatchError != null) validationState.passwordMatchError
+                        else null
             )
 
             // Confirm Password Field
-            OutlinedTextField(
+            PasswordTextField(
                 value = confirmPassword,
                 onValueChange = { onConfirmPasswordChanged(it) },
                 label = {
@@ -276,27 +259,9 @@ fun RegisterForm(
                         text = stringResource(R.string.confirm_password_label)
                     )
                 },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Lock,
-                        contentDescription = stringResource(R.string.password_icon_desc),
-                        tint = Color(0xFF1565C0)
-                    )
-                },
-                singleLine = true,
-                isError = validationState.confirmPasswordError != null || validationState.passwordMatchError != null,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedBorderColor = Color.Transparent,
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color.Gray
-                ),
-                visualTransformation = PasswordVisualTransformation()
+                isError = if(validationState.confirmPasswordError != null) validationState.confirmPasswordError
+                        else if (validationState.passwordMatchError != null) validationState.passwordMatchError
+                        else null
             )
 
             // Gender Field

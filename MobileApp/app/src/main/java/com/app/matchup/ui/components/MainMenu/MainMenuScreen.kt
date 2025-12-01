@@ -199,11 +199,9 @@ fun MainMenuScreen(
                     onSearchEventsClick = { (context as Activity).navigateTo(activity = MainActivity::class.java) },
                     onCreateNewEventClick = { (context as Activity).navigateTo(activity = SelectLocationActivity::class.java) },
                     onProfileClick = {
-                        {
-                            val intent = Intent(context, ProfileActivity::class.java)
-                            intent.putExtra("current_user", user)
-                            context.startActivity(intent)
-                        }
+                        val intent = Intent(context, ProfileActivity::class.java)
+                        intent.putExtra("current_user", user)
+                        context.startActivity(intent)
                     },
                     onSignOutClick = {
                         showLogoutBottomSheet = true

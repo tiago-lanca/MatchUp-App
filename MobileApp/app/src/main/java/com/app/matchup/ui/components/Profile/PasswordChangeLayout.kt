@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,8 +29,8 @@ fun PasswordChangeLayout(
     onCurrentPasswordChanged: (String) -> Unit,
     onNewPasswordChanged: (String) -> Unit,
     onCancel: () -> Unit,
-    currentPasswordError: Boolean = false,
-    newPasswordError: Boolean = false
+    currentPasswordError: String? = null,
+    newPasswordError: String? = null
 ){
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -45,8 +46,13 @@ fun PasswordChangeLayout(
                 labelSize = 17.sp,
                 value = currentPassword,
                 onValueChanged = { onCurrentPasswordChanged(it) },
-                isError = currentPasswordError,
+                isError = currentPasswordError != null,
                 isPasswordType = true
+            )
+            Text(
+                text = currentPasswordError ?: "",
+                color = Color.Red,
+                fontSize = 12.sp
             )
         }
         // New password
@@ -59,8 +65,13 @@ fun PasswordChangeLayout(
                 labelSize = 17.sp,
                 value = newPassword,
                 onValueChanged = { onNewPasswordChanged(it) },
-                isError = newPasswordError,
+                isError = newPasswordError != null,
                 isPasswordType = true
+            )
+            Text(
+                text = newPasswordError ?: "",
+                color = Color.Red,
+                fontSize = 12.sp
             )
 
             Box(

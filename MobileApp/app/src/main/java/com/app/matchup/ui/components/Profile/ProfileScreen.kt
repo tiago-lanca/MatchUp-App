@@ -275,8 +275,8 @@ fun ProfileScreen(
                             userProfileVM.setPasswordState(false)
                             userProfileVM.clearPasswords()
                         },
-                        currentPasswordError = validateState.passwordError != null,
-                        newPasswordError = validateState.confirmPasswordError != null
+                        currentPasswordError = validateState.passwordError,
+                        newPasswordError = validateState.confirmPasswordError
                     )
                 }
 
