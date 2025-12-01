@@ -18,5 +18,5 @@ public class Sport {
     @Column(name = "spo_name")
     private String name;
     @Column(name = "spo_icon")
-    private byte[] icon = null;
+    private String icon = null;
 }

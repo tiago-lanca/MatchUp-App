@@ -30,7 +30,7 @@ public class User {
     @Column(name = "user_gender")
     private String gender;
     @Column(name = "user_profilePicture")
-    private byte[] profilePicture;
+    private String profilePicture;
     @Column(name = "user_created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 

@@ -1,6 +1,5 @@
 package com.matchup.api.matchup_api.controllers;
 
-import com.matchup.api.matchup_api.dtos.UserDTO;
 import com.matchup.api.matchup_api.models.User;
 import com.matchup.api.matchup_api.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -9,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Optional;
 
 @RestController

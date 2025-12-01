@@ -1,6 +1,5 @@
 package com.matchup.api.matchup_api.controllers;
 
-import com.matchup.api.matchup_api.dtos.EventDTO;
 import com.matchup.api.matchup_api.enums.Status;
 import com.matchup.api.matchup_api.models.Enrollment;
 import com.matchup.api.matchup_api.models.Event;

@@ -1,6 +1,5 @@
 package com.matchup.api.matchup_api.controllers;
 
-import com.matchup.api.matchup_api.dtos.EnrollmentDTO;
 import com.matchup.api.matchup_api.models.Enrollment;
 import com.matchup.api.matchup_api.models.Event;
 import com.matchup.api.matchup_api.repositories.EnrollmentRepository;
@@ -33,12 +32,9 @@ public class EnrollmentController {
     }
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<EnrollmentDTO> getEnrollments() {
+    public List<Enrollment> getEnrollments() {
 
-        return _enrollmentRepository.findAll()
-                .stream()
-                .map(EnrollmentDTO::fromEntity)
-                .toList();
+        return _enrollmentRepository.findAll();
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
