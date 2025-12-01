@@ -14,6 +14,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -22,6 +23,7 @@ import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +54,15 @@ fun DateTimePicker(
     val openTimePicker = remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = Instant.now().toEpochMilli()
+        initialSelectedDateMillis = Instant.now().toEpochMilli(),
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= LocalDate.now()
+                    .atStartOfDay(ZoneId.systemDefault())
+                    .toInstant()
+                    .toEpochMilli()
+            }
+        }
     )
     val timePickerState = rememberTimePickerState()
 
@@ -109,14 +119,15 @@ fun DateTimePicker(
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            datePickerState.selectedDateMillis?.let { millis ->
+                            val millis = datePickerState.selectedDateMillis
+                            if(millis != null){
                                 selectedDate = Instant.ofEpochMilli(millis)
                                     .atZone(ZoneId.systemDefault())
                                     .toLocalDate()
+
+                                // Close date picker and open time picker
                                 openDatePicker.value = false
                                 openTimePicker.value = true
-                            } ?: run {
-                                openDatePicker.value = false
                             }
                         }
                     ) { Text("OK") }
@@ -154,6 +165,25 @@ fun DateTimePicker(
                     }
                 }
             ) {
+                val nowTime = LocalTime.now()
+
+                LaunchedEffect(
+                    timePickerState.hour,
+                    timePickerState.minute,
+                    selectedDate
+                ) {
+                    // Checks if the selectedDate equals today's date,
+                    // then if the selected time is before the current time blocks past hours
+                    // and blocks past minutes if the hour is the same as the current hour
+                    if(selectedDate == LocalDate.now()){
+                        if(timePickerState.hour < nowTime.hour){
+                            timePickerState.hour = nowTime.hour
+                        }
+                        if(timePickerState.hour == nowTime.hour && timePickerState.minute < nowTime.minute){
+                            timePickerState.minute = nowTime.minute
+                        }
+                    }
+                }
                 TimePicker(state = timePickerState)
             }
         }
