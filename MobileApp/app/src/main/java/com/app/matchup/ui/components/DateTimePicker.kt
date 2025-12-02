@@ -18,6 +18,7 @@ import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.rememberDatePickerState
@@ -83,6 +84,10 @@ fun DateTimePicker(
                 onValueChange = {},
                 readOnly = true,
                 isError = error != null,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
                 modifier = Modifier.weight(1f)
             )
             TextField(
@@ -91,6 +96,10 @@ fun DateTimePicker(
                 onValueChange = {},
                 isError = error != null,
                 readOnly = true,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 10.dp)

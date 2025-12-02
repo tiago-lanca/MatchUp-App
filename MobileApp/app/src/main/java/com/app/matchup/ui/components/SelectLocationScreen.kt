@@ -71,7 +71,9 @@ import java.util.Locale
 
 
 @Composable
-fun SelectLocationScreen() {
+fun SelectLocationScreen(
+    myLocation: LatLng
+) {
     val seixalCoords = LatLng(38.621759, -9.105657)
     val defaultZoom = 15f
 
@@ -212,7 +214,7 @@ fun SelectLocationScreen() {
                                         coroutineScope.launch {
                                             cameraPositionState.animate(
                                                 update = CameraUpdateFactory.newLatLngZoom(
-                                                    seixalCoords,
+                                                    myLocation,
                                                     defaultZoom
                                                 ),
                                                 durationMs = 1000
@@ -363,7 +365,7 @@ fun SelectLocationScreen() {
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth(0.7f)
-                    .padding(bottom = 24.dp)
+                    .padding(bottom = 66.dp)
             ) {
                 Text(
                     text = stringResource(R.string.confirm_uppercase_label),

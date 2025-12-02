@@ -14,10 +14,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.onConsumedWindowInsetsChanged
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -35,6 +43,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -80,6 +89,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.app.matchup.R
@@ -202,7 +212,7 @@ fun MainScreen(
             eventCreated.address?.let { address ->
                 Tools.moveCameraTo(
                     latLng = LatLng(
-                        address.latitude!! - MAP_DISPLAY_OFFSET,
+                        address.latitude!!,
                         address.longitude!!
                     ),
                     coroutineScope = coroutineScope,
@@ -227,283 +237,291 @@ fun MainScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFB0BEC5))
-    ) {
+    Scaffold { innerPadding ->
 
-        // Near Events Section
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            sheetPeekHeight = 180.dp,
-            sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-            sheetContainerColor = EVENT_BACKGROUND_COLOR,
-            sheetDragHandle = { BottomSheetDefaults.DragHandle() },
-            sheetContent = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 180.dp, max = 410.dp)
-                        .background(
-                            color = EVENT_BACKGROUND_COLOR,
-                            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-                        )
-                ) {
-                    if(isLoading){
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(color = Color.White)
-                        }
-                    }
-                    else {
-                        if (selectedEvent.isNull()) {
-                            EventList(
-                                eventsVM = eventsVM,
-                                eventList = eventList,
-                                onClickEventItem = { event ->
-                                    event.address?.let { address ->
-                                        Tools.moveCameraTo(
-                                            latLng = LatLng(
-                                                address.latitude!! - MAP_DISPLAY_OFFSET / EVENT_ZOOMED,
-                                                address.longitude!!,
-                                            ),
-                                            zoom = EVENT_ZOOMED,
-                                            coroutineScope = coroutineScope,
-                                            cameraPositionState = cameraPositionState
-                                        )
-                                    }
-                                    eventsVM.selectEvent(event)
-                                },
-                                onEventMembersCount = { event ->
-                                    EnrollmentService.getEnrollmentsByEventId(event.id)!!
-                                },
-                                onRefreshEventList = {
-                                    coroutineScope.launch {
-                                        eventsVM.loadFilteredEvents(filters, context) { success ->
-                                            if (success) {
-                                                scope.launch {
-                                                    snackbarHostState.showSnackbar(
-                                                        context.getString(R.string.refresh_event_list_message)
-                                                    )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFB0BEC5))
+        ) {
+
+            // Near Events Section
+            BottomSheetScaffold(
+                scaffoldState = scaffoldState,
+                sheetPeekHeight = 220.dp,
+                sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                sheetContainerColor = EVENT_BACKGROUND_COLOR,
+                sheetDragHandle = { BottomSheetDefaults.DragHandle() },
+                sheetContent = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 180.dp, max = 410.dp)
+                            .background(
+                                color = EVENT_BACKGROUND_COLOR,
+                                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                            )
+                    ) {
+                        if (isLoading) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(color = Color.White)
+                            }
+                        } else {
+                            if (selectedEvent.isNull()) {
+                                EventList(
+                                    eventsVM = eventsVM,
+                                    eventList = eventList,
+                                    onClickEventItem = { event ->
+                                        event.address?.let { address ->
+                                            Tools.moveCameraTo(
+                                                latLng = LatLng(
+                                                    address.latitude!! - MAP_DISPLAY_OFFSET / EVENT_ZOOMED,
+                                                    address.longitude!!,
+                                                ),
+                                                zoom = EVENT_ZOOMED,
+                                                coroutineScope = coroutineScope,
+                                                cameraPositionState = cameraPositionState
+                                            )
+                                        }
+                                        eventsVM.selectEvent(event)
+                                    },
+                                    onEventMembersCount = { event ->
+                                        EnrollmentService.getEnrollmentsByEventId(event.id)!!
+                                    },
+                                    onRefreshEventList = {
+                                        coroutineScope.launch {
+                                            eventsVM.loadFilteredEvents(
+                                                filters,
+                                                context
+                                            ) { success ->
+                                                if (success) {
+                                                    scope.launch {
+                                                        snackbarHostState.showSnackbar(
+                                                            context.getString(R.string.refresh_event_list_message)
+                                                        )
+                                                    }
                                                 }
                                             }
                                         }
+                                    },
+                                    onFilterEventClicked = {
+                                        showFilterEventSheet = true
+                                    },
+                                    onFilterRemoved = {
+                                        eventsVM.loadFilteredEvents(
+                                            filtersVM.filters.value,
+                                            context
+                                        )
                                     }
-                                },
-                                onFilterEventClicked = {
-                                    showFilterEventSheet = true
-                                },
-                                onFilterRemoved = {
-                                    eventsVM.loadFilteredEvents(filtersVM.filters.value, context)
-                                }
-                            )
-                        } else {
-                            EventDetails(
-                                context,
-                                event = selectedEvent!!,
-                                numberOfMembers = numberOfMembers,
-                                isUserEnrolled = isUserEnrolled,
-                                currentUser = currentUser,
-                                onClose = { event ->
-                                    Tools.moveCameraTo(
-                                        latLng = LatLng(
-                                            event.address?.latitude!! - (MAP_DISPLAY_OFFSET / DEFAULT_ZOOM),
-                                            event.address?.longitude!!
-                                        ),
-                                        zoom = DEFAULT_ZOOM,
-                                        coroutineScope = coroutineScope,
-                                        cameraPositionState = cameraPositionState
-                                    )
-                                    eventsVM.selectEvent(null)
-                                },
-                                onDeleteEvent = { event ->
-                                    eventsVM.deleteEvent { success ->
+                                )
+                            } else {
+                                EventDetails(
+                                    context,
+                                    event = selectedEvent!!,
+                                    numberOfMembers = numberOfMembers,
+                                    isUserEnrolled = isUserEnrolled,
+                                    currentUser = currentUser,
+                                    onClose = { event ->
+                                        Tools.moveCameraTo(
+                                            latLng = LatLng(
+                                                event.address?.latitude!! - (MAP_DISPLAY_OFFSET / DEFAULT_ZOOM),
+                                                event.address?.longitude!!
+                                            ),
+                                            zoom = DEFAULT_ZOOM,
+                                            coroutineScope = coroutineScope,
+                                            cameraPositionState = cameraPositionState
+                                        )
+                                        eventsVM.selectEvent(null)
+                                    },
+                                    onDeleteEvent = { event ->
+                                        eventsVM.deleteEvent { success ->
+                                            if (success) {
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar(
+                                                        context.getString(R.string.event_deleted_message)
+                                                    )
+                                                }
+                                                eventsVM.selectEvent(null)
+                                                eventsVM.loadFilteredEvents(filters, context)
+                                            }
+                                        }
+                                    },
+                                    joinSnackbar = { success ->
                                         if (success) {
                                             scope.launch {
                                                 snackbarHostState.showSnackbar(
-                                                    context.getString(R.string.event_deleted_message)
+                                                    context.getString(R.string.enrollment_created_message)
                                                 )
                                             }
-                                            eventsVM.selectEvent(null)
+                                            eventsVM.setUserEnrolled(true)
+                                            eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
+                                            eventsVM.loadFilteredEvents(filters, context)
+                                        }
+                                    },
+                                    leaveEventSnackbar = { success ->
+                                        if (success) {
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    context.getString(R.string.user_left_event_message)
+                                                )
+                                            }
+                                            eventsVM.setUserEnrolled(false)
+                                            eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
                                             eventsVM.loadFilteredEvents(filters, context)
                                         }
                                     }
-                                },
-                                joinSnackbar = { success ->
-                                    if (success) {
-                                        scope.launch {
-                                            snackbarHostState.showSnackbar(
-                                                context.getString(R.string.enrollment_created_message)
-                                            )
-                                        }
-                                        eventsVM.setUserEnrolled(true)
-                                        eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
-                                        eventsVM.loadFilteredEvents(filters, context)
-                                    }
-                                },
-                                leaveEventSnackbar = { success ->
-                                    if (success) {
-                                        scope.launch {
-                                            snackbarHostState.showSnackbar(
-                                                context.getString(R.string.user_left_event_message)
-                                            )
-                                        }
-                                        eventsVM.setUserEnrolled(false)
-                                        eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
-                                        eventsVM.loadFilteredEvents(filters, context)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                MapScreen(
-                    myLocation = myLocation,
-                    eventList = eventList,
-                    cameraPositionState = cameraPositionState,
-                    onMarkerClick = { event ->
-                        eventsVM.selectEvent(event)
-
-                        Tools.moveCameraTo(
-                            LatLng(
-                                event.address?.latitude!! - MAP_DISPLAY_OFFSET / EVENT_ZOOMED,
-                                event.address?.longitude!!
-                            ),
-                            AppConstants.EVENT_ZOOMED,
-                            coroutineScope,
-                            cameraPositionState
-                        )
-                    }
-                )
-                FloatingActionButton(
-                    onClick = {
-                        val intent = Intent(context, MainMenuActivity::class.java)
-                        context.startActivity(intent)
-                        if (context is Activity) context.finish()
-                    },
-                    containerColor = Color.Black.copy(alpha = 0.9f),
-                    contentColor = Color.White,
-                    shape = CircleShape,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .statusBarsPadding()
-                        .padding(start = 10.dp)
-                        .size(46.dp)
-                        .zIndex(2f)
-                        .border(1.dp, Color.White, CircleShape),
-                    elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 6.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = stringResource(R.string.open_menu_icon_desc)
-                    )
-                }
-
-
-                // Create New Event button and MyLocation button
-                FloatingButtonsMainScreen(
-                    onMyLocationButtonClick = {
-                        if (!hasPermission) {
-                            permissionLauncher.launch(
-                                arrayOf(
-                                    Manifest.permission.ACCESS_FINE_LOCATION,
-                                    Manifest.permission.ACCESS_COARSE_LOCATION
                                 )
-                            )
-                        } else {
-                            getCurrentLocation(context) { latLng ->
-                                if (latLng != null) {
-                                    myLocation = if(useRealLocation) latLng else SeixalCoords
-
-                                    Tools.moveCameraTo(
-                                        latLng = if(useRealLocation) latLng else SeixalCoords,
-                                        zoom = AppConstants.DEFAULT_ZOOM,
-                                        coroutineScope,
-                                        cameraPositionState
-                                    )
-                                }
                             }
                         }
-                    },
-                    onCreateNewEventButtonClick = {
-                        if(currentUser != null) {
-                            (context as Activity).navigateTo(
-                                activity = SelectLocationActivity::class.java,
-                                closeCurrentActivity = false
+                    }
+                }
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    MapScreen(
+                        myLocation = myLocation,
+                        eventList = eventList,
+                        cameraPositionState = cameraPositionState,
+                        onMarkerClick = { event ->
+                            eventsVM.selectEvent(event)
+
+                            Tools.moveCameraTo(
+                                LatLng(
+                                    event.address?.latitude!! - MAP_DISPLAY_OFFSET / EVENT_ZOOMED,
+                                    event.address?.longitude!!
+                                ),
+                                AppConstants.EVENT_ZOOMED,
+                                coroutineScope,
+                                cameraPositionState
                             )
                         }
-                        else (context as Activity).navigateTo(
-                            activity = LoginActivity::class.java,
-                            closeCurrentActivity = false
-                        )
-                    },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = 10.dp, bottom = sheetVisibleHeight - 170.dp)
-                )
-
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 50.dp)
-                ) { data ->
-                    val isSuccess = data.visuals.message.contains("success", ignoreCase = true)
-
-                    Snackbar(
-                        containerColor = if (isSuccess) Color(0xFF025D14) else Color(0xFF880202),
+                    )
+                    FloatingActionButton(
+                        onClick = {
+                            val intent = Intent(context, MainMenuActivity::class.java)
+                            context.startActivity(intent)
+                            if (context is Activity) context.finish()
+                        },
+                        containerColor = Color.Black.copy(alpha = 0.9f),
                         contentColor = Color.White,
-                        shape = RoundedCornerShape(12.dp),
+                        shape = CircleShape,
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .statusBarsPadding()
+                            .padding(start = 10.dp)
+                            .size(46.dp)
+                            .zIndex(2f)
+                            .border(1.dp, Color.White, CircleShape),
+                        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = stringResource(R.string.open_menu_icon_desc)
+                        )
+                    }
+
+
+                    // Create New Event button and MyLocation button
+                    FloatingButtonsMainScreen(
+                        onMyLocationButtonClick = {
+                            if (!hasPermission) {
+                                permissionLauncher.launch(
+                                    arrayOf(
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION
+                                    )
+                                )
+                            } else {
+                                getCurrentLocation(context) { latLng ->
+                                    if (latLng != null) {
+                                        myLocation = if (useRealLocation) latLng else SeixalCoords
+
+                                        Tools.moveCameraTo(
+                                            latLng = if (useRealLocation) latLng else SeixalCoords,
+                                            zoom = AppConstants.DEFAULT_ZOOM,
+                                            coroutineScope,
+                                            cameraPositionState
+                                        )
+                                    }
+                                }
+                            }
+                        },
+                        onCreateNewEventButtonClick = {
+                            if (currentUser != null) {
+                                val intent = Intent(context, SelectLocationActivity::class.java)
+                                intent.putExtra("my_location", myLocation)
+                                context.startActivity(intent)
+                            } else (context as Activity).navigateTo(
+                                activity = LoginActivity::class.java,
+                                closeCurrentActivity = false
+                            )
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(
+                                end = 10.dp, bottom = (screenHeight - sheetOffsetDp - 200.dp).coerceAtLeast(24.dp)
+                            )
+                    )
+
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    SnackbarHost(
+                        hostState = snackbarHostState,
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .widthIn(max = 300.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (isSuccess) Icons.Default.Check else Icons.Default.Close,
-                                tint = if (isSuccess) Color(0xFFFFFFFF) else Color(0xFF000000),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
+                            .padding(top = 50.dp)
+                    ) { data ->
+                        val isSuccess = data.visuals.message.contains("success", ignoreCase = true)
 
-                            Text(
-                                text = data.visuals.message,
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium
-                            )
+                        Snackbar(
+                            containerColor = if (isSuccess) Color(0xFF025D14) else Color(0xFF880202),
+                            contentColor = Color.White,
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .widthIn(max = 300.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Icon(
+                                    imageVector = if (isSuccess) Icons.Default.Check else Icons.Default.Close,
+                                    tint = if (isSuccess) Color(0xFFFFFFFF) else Color(0xFF000000),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+
+                                Text(
+                                    text = data.visuals.message,
+                                    color = Color.White,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            if(showFilterEventSheet) {
-                FilterEventBottomSheet(
-                    context = context,
-                    onDismiss = { showFilterEventSheet = false },
-                    onApplyFilters = { filters ->
-                        eventsVM.loadFilteredEvents(filters, context)
-                    }
-                )
+                if (showFilterEventSheet) {
+                    FilterEventBottomSheet(
+                        context = context,
+                        onDismiss = { showFilterEventSheet = false },
+                        onApplyFilters = { filters ->
+                            eventsVM.loadFilteredEvents(filters, context)
+                        }
+                    )
+                }
             }
         }
     }

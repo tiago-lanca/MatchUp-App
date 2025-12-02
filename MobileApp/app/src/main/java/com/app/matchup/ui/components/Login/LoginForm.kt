@@ -1,13 +1,9 @@
 package com.app.matchup.ui.components.Login
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -15,20 +11,13 @@ import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -46,8 +35,6 @@ fun LoginForm(
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
 ){
-
-
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -86,7 +73,7 @@ fun LoginForm(
                 ),
                 textStyle = LocalTextStyle.current.copy(
                     fontSize = 15.sp,
-                    lineHeight = 2.sp
+                    lineHeight = 17.sp
                 )
             )
 
@@ -113,7 +100,7 @@ fun LoginForm(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(57.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.White,
                     focusedContainerColor = Color.White,
@@ -126,7 +113,7 @@ fun LoginForm(
                 visualTransformation = PasswordVisualTransformation(),
                 textStyle = LocalTextStyle.current.copy(
                     fontSize = 15.sp,
-                    lineHeight = 2.sp
+                    lineHeight = 20.sp
                 )
             )
         }

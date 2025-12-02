@@ -18,6 +18,8 @@ import androidx.compose.material.icons.filled.Male
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -87,6 +89,10 @@ fun CreateEventForm(
             onValueChange = onNameChanged,
             label = { Text(text = "Event Name") },
             isError = validationState.nameError != null,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+            ),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -104,7 +110,6 @@ fun CreateEventForm(
                     items = sports,
                     selectedItem = event.sport,
                     onItemSelected = { onSportChanged(it) },
-                    backgroundColor = Color(0xFFE7E0EC),
                     leadingIcon = {
                         event.sport?.icon?.let { sportIcon ->
                             Box(
@@ -137,6 +142,10 @@ fun CreateEventForm(
                 },
                 isError = validationState.maxMembersError != null,
                 singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.weight(1f)
             )
@@ -153,7 +162,6 @@ fun CreateEventForm(
                 items = genders,
                 selectedItem = event.gender,
                 onItemSelected = { onGenderChanged(it) },
-                backgroundColor = Color(0xFFE7E0EC),
                 leadingIcon = { Tools.GetGenderIcon(event.gender) },
                 getName = { it },
                 composableIcon = { Tools.GetGenderIcon(it) },
@@ -173,6 +181,10 @@ fun CreateEventForm(
                 isError = validationState.durationError != null,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
                 modifier = Modifier
                     .weight(0.95f)
             )
@@ -185,6 +197,10 @@ fun CreateEventForm(
                 isError = validationState.costError != null,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                ),
                 modifier = Modifier
                     .weight(0.45f)
             )
@@ -197,8 +213,11 @@ fun CreateEventForm(
             value = event.notes ?: "",
             onValueChange = { onNotesChanged(it) },
             label = { Text(text = "Notes") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+            )
         )
     }
 }

@@ -147,6 +147,6 @@ object Tools{
                 )
             }
         }
-            .addOnFailureListener { onLocationResult(null) }
+        .addOnFailureListener { onLocationResult(null) }
     }
 }
