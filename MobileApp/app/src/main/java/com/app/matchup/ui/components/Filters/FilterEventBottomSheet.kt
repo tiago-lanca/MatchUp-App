@@ -366,10 +366,10 @@ fun FilterEventBottomSheet(
                     onClick = {
 
                         // apply filters()
-                        onApplyFilters(filters)
-                        EventFilterSession.filters = filters
 
-                        println(filters)
+                        EventFilterSession.filters = filters
+                        onApplyFilters(filters)
+
                         scope.launch {
                             sheetState.hide()
                             onDismiss()

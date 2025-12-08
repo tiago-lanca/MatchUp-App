@@ -21,6 +21,7 @@ class EventsViewModel : ViewModel() {
     private val _selectedEvent = MutableStateFlow<Event?>(null)
     val selectedEvent: StateFlow<Event?> = _selectedEvent
 
+    val eventMembersCountDict = MutableStateFlow<Map<UUID, Int>>(emptyMap())
     private val _numberOfMembers = MutableStateFlow(0)
     val numberOfMembers: StateFlow<Int> = _numberOfMembers
 
@@ -98,7 +99,6 @@ class EventsViewModel : ViewModel() {
 
                 if(filter.startDate != null){
                     _events.value = _events.value.filter { it.date!! >= filter.startDate && it.date!! <= filter.endDate?.addDays(1) }
-
                 }
 
                 _isLoading.value = false
@@ -131,6 +131,16 @@ class EventsViewModel : ViewModel() {
 
                 _numberOfMembers.value = numberEnrollments ?: 0
             }
+        }
+    }
+
+    fun loadMembersCountOnEvents(eventList: List<Event>){
+        viewModelScope.launch {
+            val result = eventList.associate { event ->
+                event.id to EnrollmentService.getEnrollmentsByEventId(event.id)!!
+            }
+
+            eventMembersCountDict.value = result
         }
     }
 

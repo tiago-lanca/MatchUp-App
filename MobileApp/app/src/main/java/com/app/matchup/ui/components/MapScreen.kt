@@ -40,20 +40,15 @@ fun MapScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    // Runs only once is rendered
     LaunchedEffect(myLocation) {
-        /*val mapCenterWithOffset = CameraPosition.fromLatLngZoom(
-            LatLng(SeixalCoords.latitude - 0.004, SeixalCoords.longitude),
-            DEFAULT_ZOOM)
-        cameraPositionState.position = mapCenterWithOffset*/
 
-        if(myLocation != null) {
+        /*if(myLocation != null) {
             val mapCenterWithOffset = CameraPosition.fromLatLngZoom(
                 LatLng(myLocation.latitude, myLocation.longitude),
                 DEFAULT_ZOOM
             )
             cameraPositionState.position = mapCenterWithOffset
-        }
+        }*/
     }
 
     GoogleMap(

@@ -60,6 +60,7 @@ fun EventList(
 
     val filters by filtersVM.filters.collectAsState()
     val context = LocalContext.current
+    val membersCount by eventsVM.eventMembersCountDict.collectAsState()
 
     Box(
         modifier = modifier
@@ -131,7 +132,6 @@ fun EventList(
             )
 
 
-
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -141,21 +141,24 @@ fun EventList(
                         Text(
                             text = stringResource(R.string.empty_event_list_textLabel),
                             color = Color.White,
-                            modifier = Modifier
+
+                             modifier = Modifier
                                 .padding(vertical = 20.dp)
                         )
                     }
                 } else {
                     itemsIndexed(eventList, key = { _, event -> event.id }) { index, event ->
-                        var membersCount by remember { mutableStateOf(0) }
+                        /*var membersCount by remember { mutableStateOf(0) }
 
                         LaunchedEffect(event.id) {
                             membersCount = onEventMembersCount(event)
-                        }
+                        }*/
+
+                        val eventMembersCount = membersCount[event.id] ?: 0
 
                         EventListItem(
                             event,
-                            numberOfMembers = membersCount,
+                            numberOfMembers = eventMembersCount,
                             onClick = { onClickEventItem(event) }
                         )
 

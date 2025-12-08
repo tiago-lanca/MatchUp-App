@@ -181,6 +181,17 @@ fun MainScreen(
         if(hasPermission){
             getCurrentLocation(context){ latLng ->
                 myLocation = if(useRealLocation) latLng else SeixalCoords
+
+                if(selectedEvent == null){
+                    Tools.moveCameraTo(
+                        latLng = LatLng(
+                            myLocation?.latitude!!,
+                            myLocation?.longitude!!
+                        ),
+                        coroutineScope = coroutineScope,
+                        cameraPositionState = cameraPositionState
+                    )
+                }
             }
         }
     }
@@ -227,6 +238,10 @@ fun MainScreen(
         if(currentUser == null) {
             currentUser = UserSession.getUser(context)
         }
+    }
+
+    LaunchedEffect(eventList) {
+        eventsVM.loadMembersCountOnEvents(eventList)
     }
 
     LaunchedEffect(selectedEvent) {
@@ -359,6 +374,7 @@ fun MainScreen(
                                             eventsVM.setUserEnrolled(true)
                                             eventsVM.getNumberOfEnrollmentsOnSelectedEvent()
                                             eventsVM.loadFilteredEvents(filters, context)
+                                            eventsVM.loadMembersCountOnEvents(eventList)
                                         }
                                     },
                                     leaveEventSnackbar = { success ->
@@ -406,7 +422,6 @@ fun MainScreen(
                         onClick = {
                             val intent = Intent(context, MainMenuActivity::class.java)
                             context.startActivity(intent)
-                            if (context is Activity) context.finish()
                         },
                         containerColor = Color.Black.copy(alpha = 0.9f),
                         contentColor = Color.White,
