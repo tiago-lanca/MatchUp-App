@@ -84,6 +84,7 @@ public class UserController {
         if(favSport != null){
             user.getFavoriteSport().setId(favSport.getId());
         }*/
+
         user.setProfilePicture(DEFAULT_PROFILE_IMAGE_BASE64);
         User newUser = _userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
