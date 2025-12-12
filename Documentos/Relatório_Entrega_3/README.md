@@ -65,7 +65,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 
 ### 6. Documentação da API REST
 
-<a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/BaseDados/Relatorio_BD_TiagoLan%C3%A7a.pdf" target="_blank">Link Documentação API REST</a>
+<a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/Programa%C3%A7%C3%A3oOrientadaObjetos/Documentacao_MatchUpAPI.pdf" target="_blank">Link Documentação API REST</a>
 
 ### 7. Manual do Utilizador
 
