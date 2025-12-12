@@ -137,6 +137,8 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 ## 9. 📅 Planeamento e Calendarização
 ![Planeamento e Calendarização em gráfico](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/OnlineGantt20251004.png)
 
+## 10. Auto-Avaliação
+
 
 ## 10. 🔗 Bibliografia
 1. Figma - www.figma.com
