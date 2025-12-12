@@ -102,6 +102,7 @@ import com.app.matchup.utilities.AppConstants.DEFAULT_ZOOM
 import com.app.matchup.utilities.AppConstants.EVENT_ZOOMED
 import com.app.matchup.services.UserSession
 import com.app.matchup.ui.components.Filters.FilterEventBottomSheet
+import com.app.matchup.utilities.AppConstants.IadeCoords
 import com.app.matchup.utilities.EventFilterSession
 import com.app.matchup.utilities.Tools.getCurrentLocation
 import com.app.matchup.viewmodels.EventFiltersViewModel
@@ -116,7 +117,6 @@ fun MainScreen(
     filtersVM: EventFiltersViewModel = viewModel(),
     event: Event? = null
 ) {
-    val useRealLocation = false
     val context = LocalContext.current
     var currentUser by remember { mutableStateOf<User?>(null) }
     val coroutineScope = rememberCoroutineScope()
@@ -180,7 +180,7 @@ fun MainScreen(
     LaunchedEffect(hasPermission) {
         if(hasPermission){
             getCurrentLocation(context){ latLng ->
-                myLocation = if(useRealLocation) latLng else SeixalCoords
+                myLocation = if(AppConstants.USE_REAL_LOCATION) latLng else IadeCoords
 
                 if(selectedEvent == null){
                     Tools.moveCameraTo(
@@ -455,10 +455,10 @@ fun MainScreen(
                             } else {
                                 getCurrentLocation(context) { latLng ->
                                     if (latLng != null) {
-                                        myLocation = if (useRealLocation) latLng else SeixalCoords
+                                        myLocation = if (AppConstants.USE_REAL_LOCATION) latLng else IadeCoords
 
                                         Tools.moveCameraTo(
-                                            latLng = if (useRealLocation) latLng else SeixalCoords,
+                                            latLng = if (AppConstants.USE_REAL_LOCATION) latLng else IadeCoords,
                                             zoom = AppConstants.DEFAULT_ZOOM,
                                             coroutineScope,
                                             cameraPositionState

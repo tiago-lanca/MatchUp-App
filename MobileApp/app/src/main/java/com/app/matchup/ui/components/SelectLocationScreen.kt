@@ -61,6 +61,9 @@ import com.app.matchup.services.GeocodeService
 import com.app.matchup.ui.theme.LOCATION_ICON_COLOR
 import com.app.matchup.ui.theme.MY_LOCATION_ICON_COLOR
 import com.app.matchup.R
+import com.app.matchup.utilities.AppConstants
+import com.app.matchup.utilities.AppConstants.SeixalCoords
+import com.app.matchup.utilities.Tools.getCurrentLocation
 import com.app.matchup.utilities.Tools.navigateTo
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -72,9 +75,8 @@ import java.util.Locale
 
 @Composable
 fun SelectLocationScreen(
-    myLocation: LatLng
+    myLocation: LatLng? = null
 ) {
-    val seixalCoords = LatLng(38.621759, -9.105657)
     val defaultZoom = 15f
 
     var mapLoaded by remember { mutableStateOf(false) }
@@ -82,7 +84,7 @@ fun SelectLocationScreen(
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            seixalCoords, defaultZoom
+            myLocation!!, defaultZoom
         )
     }
 
@@ -114,6 +116,7 @@ fun SelectLocationScreen(
 
         if (fineLocationGranted) {
             hasLocationPermission = true
+
         } else {
             launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
@@ -210,7 +213,7 @@ fun SelectLocationScreen(
                         ) {
                             IconButton(
                                 onClick = {
-                                    if (hasLocationPermission) {
+                                    if (hasLocationPermission && myLocation != null) {
                                         coroutineScope.launch {
                                             cameraPositionState.animate(
                                                 update = CameraUpdateFactory.newLatLngZoom(
@@ -240,82 +243,83 @@ fun SelectLocationScreen(
                                 label = { Text(stringResource(R.string.city_label)) },
                                 singleLine = true,
                                 trailingIcon = {
-                                    Row (
+                                    Row(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(0.dp)
                                     ) {
                                         if (filterLocation.isNotEmpty()) {
-                                                Icon(
-                                                    imageVector = Icons.Default.Close,
-                                                    contentDescription = stringResource(R.string.clear_text_icon_desc),
-                                                    tint = Color.Black,
-                                                    modifier = Modifier
-                                                        .size(20.dp)
-                                                        .padding(0.dp)
-                                                        .clickable { filterLocation = ""}
-                                                )
+                                            Icon(
+                                                imageVector = Icons.Default.Close,
+                                                contentDescription = stringResource(R.string.clear_text_icon_desc),
+                                                tint = Color.Black,
+                                                modifier = Modifier
+                                                    .size(20.dp)
+                                                    .padding(0.dp)
+                                                    .clickable { filterLocation = "" }
+                                            )
                                         }
 
-                                            Icon(
-                                                imageVector = Icons.Default.Search,
-                                                contentDescription = stringResource(R.string.search_icon_desc),
-                                                tint = Color(0xFF006400),
-                                                modifier = Modifier
-                                                    .clickable{
-                                                        if (hasLocationPermission) {
-                                                            val geocoder =
-                                                                Geocoder(context, Locale.getDefault())
+                                        Icon(
+                                            imageVector = Icons.Default.Search,
+                                            contentDescription = stringResource(R.string.search_icon_desc),
+                                            tint = Color(0xFF006400),
+                                            modifier = Modifier
+                                                .clickable {
+                                                    if (hasLocationPermission) {
+                                                        val geocoder =
+                                                            Geocoder(context, Locale.getDefault())
 
-                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                                geocoder.getFromLocationName(
-                                                                    filterLocation,
-                                                                    1
-                                                                ) { addresses ->
-                                                                    val address = addresses.firstOrNull()
-                                                                    if (address != null) {
-                                                                        val latLng = LatLng(
-                                                                            address.latitude,
-                                                                            address.longitude
-                                                                        )
-                                                                        coroutineScope.launch {
-                                                                            cameraPositionState.animate(
-                                                                                CameraUpdateFactory.newLatLngZoom(
-                                                                                    latLng,
-                                                                                    14f
-                                                                                )
-                                                                            )
-                                                                        }
-                                                                    }
-                                                                }
-                                                            } else {
-                                                                coroutineScope.launch {
-                                                                    val addresses =
-                                                                        geocoder.getFromLocationName(
-                                                                            filterLocation,
-                                                                            1
-                                                                        )
-                                                                    val address = addresses?.firstOrNull()
-                                                                    if (address != null) {
-                                                                        val latLng = LatLng(
-                                                                            address.latitude,
-                                                                            address.longitude
-                                                                        )
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                            geocoder.getFromLocationName(
+                                                                filterLocation,
+                                                                1
+                                                            ) { addresses ->
+                                                                val address =
+                                                                    addresses.firstOrNull()
+                                                                if (address != null) {
+                                                                    val latLng = LatLng(
+                                                                        address.latitude,
+                                                                        address.longitude
+                                                                    )
+                                                                    coroutineScope.launch {
                                                                         cameraPositionState.animate(
                                                                             CameraUpdateFactory.newLatLngZoom(
                                                                                 latLng,
                                                                                 14f
-                                                                            ),
-                                                                            durationMs = 2000
+                                                                            )
                                                                         )
                                                                     }
                                                                 }
                                                             }
-
+                                                        } else {
+                                                            coroutineScope.launch {
+                                                                val addresses =
+                                                                    geocoder.getFromLocationName(
+                                                                        filterLocation,
+                                                                        1
+                                                                    )
+                                                                val address =
+                                                                    addresses?.firstOrNull()
+                                                                if (address != null) {
+                                                                    val latLng = LatLng(
+                                                                        address.latitude,
+                                                                        address.longitude
+                                                                    )
+                                                                    cameraPositionState.animate(
+                                                                        CameraUpdateFactory.newLatLngZoom(
+                                                                            latLng,
+                                                                            14f
+                                                                        ),
+                                                                        durationMs = 2000
+                                                                    )
+                                                                }
+                                                            }
                                                         }
-                                                    }
-                                            )
-                                        }
 
+                                                    }
+                                                }
+                                        )
+                                    }
                                 },
                                 colors = TextFieldDefaults.colors(
                                     focusedContainerColor = Color.White,
