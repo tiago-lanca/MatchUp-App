@@ -140,7 +140,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 ## 10. Auto-Avaliação
 
 
-## 10. 🔗 Bibliografia
+## 11. 🔗 Bibliografia
 1. Figma - www.figma.com
 2. Onlinegantt - www.onlinegantt.com
 3. MockUphone - https://mockuphone.com
