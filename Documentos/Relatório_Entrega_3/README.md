@@ -55,23 +55,23 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 
 3. Como tecnologias utilizadas para o desenvolvimento do projeto foi Java para a criação da API com a utilização do IDE IntelliJ ou Visual Studio. Foi usado o SQL Management para desenvolver a base de dados e o Android Studio para o desenvolvimento da aplicação mobile usando a framework Jetpack Compose.
 
-#### 4. Diagrama de Classes
+4. Diagrama de Classes
 
 ![Diagrama de Classes](https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Imagens/DiagramaClasses_MatchUpAPI.drawio.png)
 
-#### 5. Documentação da Base de Dados (Dicionário e Guia de Dados)
+5. Documentação da Base de Dados (Dicionário e Guia de Dados)
 
 <a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/BaseDados/Relatorio_BD_TiagoLan%C3%A7a.pdf" target="_blank">Link Documentação BD</a>
 
-### 6. Documentação da API REST
+6. Documentação da API REST
 
 <a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/Programa%C3%A7%C3%A3oOrientadaObjetos/Documentacao_MatchUpAPI.pdf" target="_blank">Link Documentação API REST</a>
 
-### 7. Manual do Utilizador
+7. Manual do Utilizador
 
 <a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/Manual%20do%20Utilizador%20-%20MatchUp.pdf" target="_blank">Link Manual do Utilizador</a>
 
-### 8. 🗂️ Estrutura da Base de Dados (Diagrama)
+8. 🗂️ Estrutura da Base de Dados (Diagrama)
 
 ![Diagrama da Base de Dados](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/BD_Diagram.png)
 
@@ -134,13 +134,13 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 
 
 
-## 9. 📅 Planeamento e Calendarização
+## 8. 📅 Planeamento e Calendarização
 ![Planeamento e Calendarização em gráfico](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/OnlineGantt20251004.png)
 
-## 10. Auto-Avaliação
+## 9. Auto-Avaliação
 
 
-## 11. 🔗 Bibliografia
+## 10. 🔗 Bibliografia
 1. Figma - www.figma.com
 2. Onlinegantt - www.onlinegantt.com
 3. MockUphone - https://mockuphone.com
