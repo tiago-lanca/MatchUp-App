@@ -47,28 +47,27 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 3. Uma pessoa nova que chegou à cidade e procura integrar-se socialmente através do desporto, com a MatchUp consegue criar conta e procurar desportos em grupo na zona em questão, permitindo não só manter uma rotina saudável de exercicio fisico como tambem conhecer novas pessoas na nova cidade a que se mudou combatendo o isolamento social e a integração na nova comunidade local.
 
 
-## 7. 🛠️ Descrição da Solução a Implementar
-1. A solução será implementada principalmente com o desenvolvimento de uma aplicação mobile interativa e de fácil uso. Terá uma base de dados onde guardará todas as informações necessárias para o uso da aplicação e uma API como ligação da aplicação à base de dados.
+## 7. 🛠️ Descrição da Solução Implementada
+1. A solução implementada é o desenvolvimento de uma aplicação mobile interativa e de fácil uso. Tem uma base de dados onde guarda todas as informações necessárias para o uso da aplicação e uma API como ligação da aplicação à base de dados.
 
 
-2. Como unidades curriculares, contará com a UC de **Programação de Dispositivos Móveis** para o desenvolvimento da aplicação mobile, a UC de **Base de Dados** para o desenvolvimento da própria base de dados da aplicação onde guardará as informações e dados, a UC de **Programação Orientada da Objetos** para o desenvolvimento da API para comunicação entre a base de dados e a aplicação móvel, a UC de **Matemática Discreta** nas funções, condições e cálculos a se usar no código da aplicação e a UC de **Competências Comunicacionais** para desenvolver e melhorar a nossa forma de expressar e apresentar do projeto bem como a nivel de imagem na criação de um video promocional da aplicação e um poster.
+2. Como unidades curriculares, contou com a UC de **Programação de Dispositivos Móveis** para o desenvolvimento da aplicação mobile, a UC de **Base de Dados** para o desenvolvimento da própria base de dados da aplicação onde guarda as informações e dados, a UC de **Programação Orientada da Objetos** para o desenvolvimento da API para comunicação entre a base de dados e a aplicação móvel, a UC de **Matemática Discreta** nas funções, condições e cálculos a se usar no código da aplicação e a UC de **Competências Comunicacionais** para desenvolver e melhorar a nossa forma de expressar e apresentar do projeto bem como a nivel de imagem na criação de um video promocional da aplicação e um poster.
 
-3. Como tecnologias a utilizar para o desenvolvimento do projeto será Java para a criação da API com a utilização do IDE IntelliJ ou Visual Studio. Será usado o SQL Management para desenvolver a base de dados e o Android Studio para o desenvolvimento da aplicação mobile usando a framework Jetpack Compose.
+3. Como tecnologias utilizadas para o desenvolvimento do projeto foi Java para a criação da API com a utilização do IDE IntelliJ ou Visual Studio. Foi usado o SQL Management para desenvolver a base de dados e o Android Studio para o desenvolvimento da aplicação mobile usando a framework Jetpack Compose.
 
-## 8. 🔹 Já Implementado
-- Logotipo
-- Poster
-- Mockups/interfaces Gráficos
-- Base de Dados em SQL
-- Backend (API) em Java Springboot - Endpoints gerais
-- Frontend (Aplicação móvel) em Android Studio - Listagem eventos, login/login e criação de novos eventos
+4. Diagrama de Classes
+![Diagrama de Classes](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/DiagramaClasses_MatchUpAPI.drawio)
 
-## 9. 🔸 Por Implementar
-- Video promocional
-- Backend (API) - Alguns endpoints a serem necessitados no futuro em falta
-- Frontend (Aplicação móvel) - Registo de inscrições nos eventos, registo de novos utilizadores, filtragem de eventos, registo de reports, apagar/desistir de um evento.
+5. Documentação da Base de Dados (Dicionário e Guia de Dados)
+<a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/BaseDados/Relatorio_BD_TiagoLan%C3%A7a.pdf" target="_blank">Link Documentação BD</a>
 
-## 10. 🗂️ Estrutura da Base de Dados (Diagrama)
+6. Documentação da API REST
+<a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/BaseDados/Relatorio_BD_TiagoLan%C3%A7a.pdf" target="_blank">Link Documentação API REST</a>
+
+7. Manual do Utilizador
+<a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/Manual%20do%20Utilizador%20-%20MatchUp.pdf" target="_blank">Link Manual do Utilizador</a>
+
+8. 🗂️ Estrutura da Base de Dados (Diagrama)
 ![Diagrama da Base de Dados](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/BD_Diagram.png)
 
 | **Tabela** | **Campo** | **Tipo de dado** | **Descrição** | **Relação** |
@@ -129,24 +128,12 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 > **FK** = Foreign Key
 
 
-## 11. 📱 Mockups e Interfaces
 
-<p align="center">
-   <img src="https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/Startup1-portrait.png" alt="Mockup Startup" width="300" height="600">
-   <img src="https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/EventsNearby-portrait.png" alt="Mockup Events Nearby" width="300" height="600">
-   <img src="https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/SeeEvents-portrait.png" alt="Mockup See Events" width="300" height="600">
-</p>
-
-## 12. 📅 Planeamento e Calendarização
+## 9. 📅 Planeamento e Calendarização
 ![Planeamento e Calendarização em gráfico](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/OnlineGantt20251004.png)
 
 
-## 13. ✅ Conclusão
-Com a criação desta aplicação, tem-se como principal objetivo facilitar o convivio entre as pessoas, grupos com falta de membros para se realizar uma especifica atividade fisica, uma pessoa introvertida com poucos amigos querendo melhorar a sua vida social e manter uma boa rotina saudavel de desporto, juntamente com uma aplicação interativa e fácil de se usar, bastante prática e uma sistema de localização e maps para facilitar a procura por eventos e uma pesquisa avançada com vários filtros como género, desporto, localidade, etc.
-
-
-
-## 14. 🔗 Bibliografia
+## 10. 🔗 Bibliografia
 1. Figma - www.figma.com
 2. Onlinegantt - www.onlinegantt.com
 3. MockUphone - https://mockuphone.com
