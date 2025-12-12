@@ -18,7 +18,7 @@
     <string name="cost_label">Cost</string>
     <string name="duration_label">Duration</string>
     <string name="max_members_label">Members</string>
-    <string name="close_icon_desc">"Close Icon"</string>
+    <string name="close_icon_desc">Close Icon</string>
     <string name="leave_event">LEAVE</string>
     <string name="delete_button_desc">Delete Button</string>
     <string name="event_deleted_message">Event deleted successfully!</string>
@@ -49,7 +49,7 @@
     <string name="signin_title_text">Sign in to your account</string>
     <string name="login_icon_desc">Login Icon</string>
     <string name="signin_label">Sign In</string>
-    <string name="signup_text_1">"Don’t have an account? "</string>
+    <string name="signup_text_1">Don’t have an account? </string>
     <string name="signup_text_2">Sign Up</string>
     <string name="report_feedback_icon_desc">Report/Feedback Icon</string>
     <string name="report_feedback_label">Report / Feedback Problem</string>
@@ -68,7 +68,7 @@
     <string name="profile_picture_image_desc">Profile Picture</string>
     <string name="go_to_profile_icon_desc">Go To Profile Icon</string>
     <string name="register_label">Register</string>
-    <string name="already_have_account_label">"Already have an account?  "</string>
+    <string name="already_have_account_label">Already have an account?  </string>
     <string name="log_in_label">Log in</string>
     <string name="name_label">Name</string>
     <string name="name_icon_desc">Name Icon</string>
