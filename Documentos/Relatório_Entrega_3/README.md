@@ -55,11 +55,11 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 
 3. Como tecnologias utilizadas para o desenvolvimento do projeto foi Java para a criação da API com a utilização do IDE IntelliJ ou Visual Studio. Foi usado o SQL Management para desenvolver a base de dados e o Android Studio para o desenvolvimento da aplicação mobile usando a framework Jetpack Compose.
 
-### 4. Diagrama de Classes
+#### 4. Diagrama de Classes
 
 ![Diagrama de Classes](https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Imagens/DiagramaClasses_MatchUpAPI.drawio.png)
 
-### 5. Documentação da Base de Dados (Dicionário e Guia de Dados)
+#### 5. Documentação da Base de Dados (Dicionário e Guia de Dados)
 
 <a href="https://github.com/tiago-lanca/MatchUp-App/blob/main/Documentos/Relat%C3%B3rio_Entrega_3/BaseDados/Relatorio_BD_TiagoLan%C3%A7a.pdf" target="_blank">Link Documentação BD</a>
 
