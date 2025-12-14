@@ -138,7 +138,7 @@ Como publico alvo temos todas as pessoas entre os 18 e os 55 anos, pessoas que g
 ![Planeamento e Calendarização em gráfico](https://github.com/tiago-lanca/MatchUp-Tiago-Lanca/blob/main/Documentos/Imagens/OnlineGantt20251004.png)
 
 ## 9. Auto-Avaliação
-
+O projeto correu bastante bem, foi implementado tudo o que foi planeado e sempre cumprindo os deadlines propostos. É uma app com um enorme potencial de evolução de novas funcionalidades, uma app bastante útil e efetiva às pessoas.
 
 ## 10. 🔗 Bibliografia
 1. Figma - www.figma.com
